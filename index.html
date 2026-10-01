@@ -1,0 +1,4055 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Espace Classe — SFDA</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --primary-light: #eff6ff;
+
+    --background: #f4f6fa;
+    --surface: #ffffff;
+    --surface-hover: #f8fafc;
+
+    --text: #172033;
+    --text-secondary: #64748b;
+    --border: #e5e7eb;
+
+    --success: #16a34a;
+    --success-light: #f0fdf4;
+
+    --danger: #dc2626;
+    --danger-light: #fef2f2;
+
+    --warning: #d97706;
+    --warning-light: #fffbeb;
+
+    --sidebar-width: 255px;
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
+body {
+    background: var(--background);
+    color: var(--text);
+}
+
+/* =========================
+   UTILITAIRES
+========================= */
+
+.hidden {
+    display: none !important;
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+/* =========================
+   LOGIN
+========================= */
+
+#loginPage {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+
+    background:
+        radial-gradient(circle at top left, #dbeafe 0%, transparent 35%),
+        radial-gradient(circle at bottom right, #e0e7ff 0%, transparent 35%),
+        #f4f6fa;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 35px;
+    box-shadow: 0 15px 45px rgba(15, 23, 42, 0.10);
+}
+
+.login-logo {
+    width: 62px;
+    height: 62px;
+    border-radius: 16px;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 29px;
+    margin-bottom: 20px;
+}
+
+.login-card h1 {
+    margin: 0;
+    font-size: 27px;
+}
+
+.login-subtitle {
+    color: var(--text-secondary);
+    margin: 7px 0 28px;
+}
+
+.login-card label,
+.form-card label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 15px 0 7px;
+}
+
+.login-card input,
+.form-card input,
+.form-card textarea,
+.form-card select {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 13px;
+    background: white;
+    color: var(--text);
+    outline: none;
+    transition: 0.2s;
+}
+
+.login-card input:focus,
+.form-card input:focus,
+.form-card textarea:focus,
+.form-card select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+.form-card textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.login-button {
+    width: 100%;
+    margin-top: 22px;
+    padding: 13px;
+    border: 0;
+    border-radius: 9px;
+    background: var(--primary);
+    color: white;
+    font-weight: 700;
+}
+
+.login-button:hover {
+    background: var(--primary-dark);
+}
+
+#loginMessage {
+    margin-top: 15px;
+}
+
+/* =========================
+   APPLICATION
+========================= */
+
+#app {
+    min-height: 100vh;
+}
+
+.app-layout {
+    min-height: 100vh;
+    display: flex;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar {
+    width: var(--sidebar-width);
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: white;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+}
+
+.sidebar-brand {
+    height: 76px;
+    padding: 0 21px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.brand-icon {
+    width: 39px;
+    height: 39px;
+    border-radius: 11px;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19px;
+}
+
+.brand-text {
+    min-width: 0;
+}
+
+.brand-title {
+    font-weight: 800;
+    font-size: 16px;
+}
+
+.brand-subtitle {
+    color: var(--text-secondary);
+    font-size: 11px;
+    margin-top: 2px;
+}
+
+.sidebar-menu {
+    padding: 18px 12px;
+    flex: 1;
+}
+
+.menu-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #94a3b8;
+    padding: 0 11px;
+    margin: 4px 0 9px;
+    letter-spacing: 0.5px;
+}
+
+.nav-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    border: 0;
+    background: transparent;
+    color: #475569;
+    padding: 11px 12px;
+    border-radius: 9px;
+    margin-bottom: 4px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.nav-button:hover {
+    background: #f1f5f9;
+    color: var(--text);
+}
+
+.nav-button.active {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+.nav-icon {
+    width: 21px;
+    text-align: center;
+    font-size: 17px;
+}
+
+.sidebar-bottom {
+    padding: 12px;
+    border-top: 1px solid var(--border);
+}
+
+.user-mini {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    margin-bottom: 7px;
+}
+
+.avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #dbeafe;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+}
+
+.user-mini-text {
+    min-width: 0;
+    flex: 1;
+}
+
+.user-mini-name {
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-mini-role {
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.main-content {
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    min-height: 100vh;
+}
+
+.topbar {
+    height: 76px;
+    background: white;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 34px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.page-title {
+    font-size: 21px;
+    font-weight: 750;
+}
+
+.topbar-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.topbar-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--primary-light);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 13px;
+}
+
+.topbar-user {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.topbar-class {
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.content {
+    max-width: 1250px;
+    margin: auto;
+    padding: 30px 34px 50px;
+}
+
+/* =========================
+   ACCUEIL
+========================= */
+
+.welcome {
+    margin-bottom: 27px;
+}
+
+.welcome h1 {
+    font-size: 27px;
+    margin: 0 0 5px;
+}
+
+.welcome p {
+    margin: 0;
+    color: var(--text-secondary);
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.dashboard-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+    transition: 0.18s;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.06);
+}
+
+.dashboard-card-icon {
+    width: 43px;
+    height: 43px;
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 21px;
+    margin-bottom: 16px;
+    background: var(--primary-light);
+}
+
+.dashboard-card h3 {
+    margin: 0 0 6px;
+    font-size: 16px;
+}
+
+.dashboard-card p {
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* =========================
+   SECTIONS
+========================= */
+
+.section {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 25px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.section-header h2 {
+    margin: 0;
+    font-size: 21px;
+}
+
+.section-header p {
+    margin: 5px 0 0;
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.section-separator {
+    border: 0;
+    border-top: 1px solid var(--border);
+    margin: 28px 0;
+}
+
+/* =========================
+   BOUTONS
+========================= */
+
+.btn-primary,
+.btn-success,
+.btn-danger,
+.btn-secondary {
+    border: 0;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-weight: 650;
+    font-size: 13px;
+    transition: 0.15s;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+}
+
+.btn-success {
+    background: var(--success);
+    color: white;
+}
+
+.btn-success:hover {
+    background: #15803d;
+}
+
+.btn-danger {
+    background: var(--danger-light);
+    color: var(--danger);
+}
+
+.btn-danger:hover {
+    background: #fee2e2;
+}
+
+.btn-secondary {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.btn-secondary:hover {
+    background: #e2e8f0;
+}
+
+/* =========================
+   FORMULAIRES
+========================= */
+
+.form-card {
+    max-width: 750px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 18px;
+}
+
+.form-full {
+    grid-column: 1 / -1;
+}
+
+.form-actions {
+    display: flex;
+    gap: 9px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.message {
+    margin-top: 15px;
+    padding: 11px 13px;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+.message.success {
+    background: var(--success-light);
+    color: #166534;
+}
+
+.message.error {
+    background: var(--danger-light);
+    color: #991b1b;
+}
+
+/* =========================
+   ÉLÈVES
+========================= */
+
+.students-list {
+    display: grid;
+    gap: 10px;
+}
+
+.student-card {
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    padding: 15px 17px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.student-card:hover {
+    background: var(--surface-hover);
+}
+
+.student-info {
+    min-width: 0;
+}
+
+.student-name {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.student-class {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+}
+
+.item-actions {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+/* =========================
+   IDÉES
+========================= */
+
+.idea-list {
+    display: grid;
+    gap: 12px;
+}
+
+.idea-card {
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    padding: 17px;
+}
+
+.idea-content {
+    font-size: 14px;
+    line-height: 1.55;
+    white-space: pre-wrap;
+}
+
+.idea-meta {
+    color: var(--text-secondary);
+    font-size: 11px;
+    margin-top: 10px;
+}
+
+/* =========================
+   COMPTES-RENDUS
+========================= */
+
+.report-list {
+    display: grid;
+    gap: 12px;
+}
+
+.report-card {
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    padding: 18px;
+}
+
+.report-title {
+    font-size: 15px;
+    font-weight: 750;
+    margin-bottom: 7px;
+}
+
+.report-date {
+    color: var(--text-secondary);
+    font-size: 11px;
+    margin-bottom: 13px;
+}
+
+.report-content {
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.report-student {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 5px 8px;
+    border-radius: 6px;
+    background: var(--primary-light);
+    color: var(--primary);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* =========================
+   PROFIL
+========================= */
+
+.profile-card {
+    max-width: 650px;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 20px;
+}
+
+.profile-avatar {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: var(--primary-light);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 20px;
+}
+
+.profile-name {
+    font-size: 18px;
+    font-weight: 750;
+}
+
+.profile-role {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 3px;
+}
+
+.profile-info {
+    display: grid;
+    gap: 14px;
+}
+
+.profile-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 12px;
+}
+
+.profile-label {
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.profile-value {
+    font-size: 13px;
+    font-weight: 650;
+    text-align: right;
+}
+
+/* =========================
+   MOBILE NAV
+========================= */
+
+.mobile-nav {
+    display: none;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 950px) {
+
+    .dashboard-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 720px) {
+
+    :root {
+        --sidebar-width: 0px;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+        padding-bottom: 76px;
+    }
+
+    .topbar {
+        height: 65px;
+        padding: 0 17px;
+    }
+
+    .page-title {
+        font-size: 18px;
+    }
+
+    .topbar-user {
+        display: none;
+    }
+
+    .content {
+        padding: 20px 15px 30px;
+    }
+
+    .welcome h1 {
+        font-size: 23px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .section {
+        padding: 18px;
+        border-radius: 12px;
+    }
+
+    .section-header {
+        align-items: flex-start;
+    }
+
+    .section-header h2 {
+        font-size: 18px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-full {
+        grid-column: auto;
+    }
+
+    .student-card {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .item-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .item-actions button {
+        flex: 1;
+    }
+
+    .mobile-nav {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 68px;
+        background: white;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        z-index: 200;
+        padding: 5px;
+    }
+
+    .mobile-nav button {
+        border: 0;
+        background: transparent;
+        color: #64748b;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        font-size: 10px;
+        font-weight: 650;
+        min-width: 60px;
+    }
+
+    .mobile-nav button span:first-child {
+        font-size: 19px;
+    }
+
+    .mobile-nav button.active {
+        color: var(--primary);
+    }
+
+    .login-card {
+        padding: 25px;
+    }
+}
+
+@media (max-width: 420px) {
+
+    .topbar-profile {
+        display: none;
+    }
+
+    .welcome {
+        margin-bottom: 20px;
+    }
+
+    .dashboard-card {
+        padding: 18px;
+    }
+
+    .section-header {
+        flex-direction: column;
+    }
+
+    .section-header button {
+        width: 100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     LOGIN
+========================= -->
+
+<div id="loginPage">
+
+    <div class="login-card">
+
+        <div class="login-logo">
+            🎓
+        </div>
+
+        <h1>Espace Classe</h1>
+
+        <p class="login-subtitle">
+            Lycée Saint-François d'Assise
+        </p>
+
+        <label for="email">Adresse e-mail</label>
+        <input
+            type="email"
+            id="email"
+            placeholder="exemple@email.com"
+            autocomplete="email"
+        >
+
+        <label for="password">Mot de passe</label>
+        <input
+            type="password"
+            id="password"
+            placeholder="Votre mot de passe"
+            autocomplete="current-password"
+        >
+
+        <button
+            class="login-button"
+            onclick="connexion()"
+        >
+            Se connecter
+        </button>
+
+        <div id="loginMessage"></div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     APPLICATION
+========================= -->
+
+<div id="app" class="hidden">
+
+    <div class="app-layout">
+
+        <!-- SIDEBAR -->
+
+        <aside class="sidebar">
+
+            <div class="sidebar-brand">
+
+                <div class="brand-icon">
+                    🎓
+                </div>
+
+                <div class="brand-text">
+
+                    <div class="brand-title">
+                        Espace Classe
+                    </div>
+
+                    <div class="brand-subtitle">
+                        Saint-François d'Assise
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <nav class="sidebar-menu">
+
+                <div class="menu-title">
+                    Navigation
+                </div>
+
+                <button
+                    id="navAccueil"
+                    class="nav-button active"
+                    onclick="retourAccueil()"
+                >
+                    <span class="nav-icon">🏠</span>
+                    Accueil
+                </button>
+
+                <button
+                    class="nav-button"
+                    onclick="ouvrirIdees()"
+                >
+                    <span class="nav-icon">💡</span>
+                    Idées de la classe
+                </button>
+
+                <button
+                    class="nav-button"
+                    onclick="ouvrirMesComptesRendus()"
+                >
+                    <span class="nav-icon">📝</span>
+                    Mes comptes-rendus
+                </button>
+
+
+                <div
+                    id="menuAdmin"
+                    class="hidden"
+                >
+
+                    <div class="menu-title" style="margin-top:25px;">
+                        Administration
+                    </div>
+
+                    <button
+                        class="nav-button"
+                        onclick="ouvrirGestionEleves()"
+                    >
+                        <span class="nav-icon">👥</span>
+                        Gestion des élèves
+                    </button>
+
+                    <button
+                        class="nav-button"
+                        onclick="ouvrirIdeesAdmin()"
+                    >
+                        <span class="nav-icon">🗂️</span>
+                        Gestion des idées
+                    </button>
+
+                    <button
+                        class="nav-button"
+                        onclick="ouvrirComptesRendusAdmin()"
+                    >
+                        <span class="nav-icon">📋</span>
+                        Gestion des comptes-rendus
+                    </button>
+
+                </div>
+
+            </nav>
+
+
+            <div class="sidebar-bottom">
+
+                <div class="user-mini">
+
+                    <div
+                        id="sidebarAvatar"
+                        class="avatar"
+                    >
+                        ?
+                    </div>
+
+                    <div class="user-mini-text">
+
+                        <div
+                            id="sidebarUserName"
+                            class="user-mini-name"
+                        >
+                            Chargement...
+                        </div>
+
+                        <div
+                            id="sidebarUserRole"
+                            class="user-mini-role"
+                        >
+                            ...
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <button
+                    class="nav-button"
+                    onclick="ouvrirProfil()"
+                >
+                    <span class="nav-icon">👤</span>
+                    Mon profil
+                </button>
+
+                <button
+                    class="nav-button"
+                    onclick="deconnexion()"
+                >
+                    <span class="nav-icon">↪️</span>
+                    Se déconnecter
+                </button>
+
+            </div>
+
+        </aside>
+
+
+        <!-- CONTENU PRINCIPAL -->
+
+        <main class="main-content">
+
+            <header class="topbar">
+
+                <div
+                    id="pageTitle"
+                    class="page-title"
+                >
+                    Accueil
+                </div>
+
+                <div class="topbar-profile">
+
+                    <div
+                        id="topbarAvatar"
+                        class="topbar-avatar"
+                    >
+                        ?
+                    </div>
+
+                    <div>
+
+                        <div
+                            id="topbarUserName"
+                            class="topbar-user"
+                        >
+                            Chargement...
+                        </div>
+
+                        <div
+                            id="topbarClass"
+                            class="topbar-class"
+                        >
+                            ...
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <div class="content">
+
+
+                <!-- =========================
+                     ACCUEIL
+                ========================= -->
+
+                <section
+                    id="accueil"
+                    class="section"
+                >
+
+                    <div class="welcome">
+
+                        <h1>
+                            Bonjour <span id="prenomAccueil">👋</span>
+                        </h1>
+
+                        <p>
+                            Bienvenue dans votre espace classe.
+                        </p>
+
+                    </div>
+
+
+                    <div class="dashboard-grid">
+
+                        <div
+                            class="dashboard-card"
+                            onclick="ouvrirIdees()"
+                            style="cursor:pointer;"
+                        >
+
+                            <div class="dashboard-card-icon">
+                                💡
+                            </div>
+
+                            <h3>
+                                Idées de la classe
+                            </h3>
+
+                            <p>
+                                Proposez vos idées et consultez
+                                celles de vos camarades.
+                            </p>
+
+                        </div>
+
+
+                        <div
+                            class="dashboard-card"
+                            onclick="ouvrirMesComptesRendus()"
+                            style="cursor:pointer;"
+                        >
+
+                            <div class="dashboard-card-icon">
+                                📝
+                            </div>
+
+                            <h3>
+                                Mes comptes-rendus
+                            </h3>
+
+                            <p>
+                                Consultez les comptes-rendus
+                                qui vous concernent.
+                            </p>
+
+                        </div>
+
+
+                        <div
+                            class="dashboard-card"
+                            onclick="ouvrirProfil()"
+                            style="cursor:pointer;"
+                        >
+
+                            <div class="dashboard-card-icon">
+                                👤
+                            </div>
+
+                            <h3>
+                                Mon profil
+                            </h3>
+
+                            <p>
+                                Consultez vos informations
+                                personnelles et votre classe.
+                            </p>
+
+                        </div>
+
+
+                        <div
+                            id="adminCardEleves"
+                            class="dashboard-card hidden"
+                            onclick="ouvrirGestionEleves()"
+                            style="cursor:pointer;"
+                        >
+
+                            <div class="dashboard-card-icon">
+                                👥
+                            </div>
+
+                            <h3>
+                                Gestion des élèves
+                            </h3>
+
+                            <p>
+                                Créez, modifiez ou supprimez
+                                les comptes élèves.
+                            </p>
+
+                        </div>
+
+
+                        <div
+                            id="adminCardIdees"
+                            class="dashboard-card hidden"
+                            onclick="ouvrirIdeesAdmin()"
+                            style="cursor:pointer;"
+                        >
+
+                            <div class="dashboard-card-icon">
+                                🗂️
+                            </div>
+
+                            <h3>
+                                Gestion des idées
+                            </h3>
+
+                            <p>
+                                Consultez et gérez les idées
+                                proposées par la classe.
+                            </p>
+
+                        </div>
+
+
+                        <div
+                            id="adminCardRapports"
+                            class="dashboard-card hidden"
+                            onclick="ouvrirComptesRendusAdmin()"
+                            style="cursor:pointer;"
+                        >
+
+                            <div class="dashboard-card-icon">
+                                📋
+                            </div>
+
+                            <h3>
+                                Gestion des comptes-rendus
+                            </h3>
+
+                            <p>
+                                Créez et gérez les comptes-rendus
+                                des élèves.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     PROFIL
+                ========================= -->
+
+                <section
+                    id="profil"
+                    class="section profile-card hidden"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <h2>👤 Mon profil</h2>
+                            <p>
+                                Vos informations personnelles
+                            </p>
+                        </div>
+
+                        <button
+                            class="btn-secondary"
+                            onclick="retourAccueil()"
+                        >
+                            ← Retour
+                        </button>
+
+                    </div>
+
+
+                    <div class="profile-header">
+
+                        <div
+                            id="profileAvatar"
+                            class="profile-avatar"
+                        >
+                            ?
+                        </div>
+
+                        <div>
+
+                            <div
+                                id="profileName"
+                                class="profile-name"
+                            >
+                                -
+                            </div>
+
+                            <div
+                                id="profileRole"
+                                class="profile-role"
+                            >
+                                -
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="profile-info">
+
+                        <div class="profile-row">
+
+                            <span class="profile-label">
+                                Prénom
+                            </span>
+
+                            <span
+                                id="profilePrenom"
+                                class="profile-value"
+                            >
+                                -
+                            </span>
+
+                        </div>
+
+
+                        <div class="profile-row">
+
+                            <span class="profile-label">
+                                Nom
+                            </span>
+
+                            <span
+                                id="profileNom"
+                                class="profile-value"
+                            >
+                                -
+                            </span>
+
+                        </div>
+
+
+                        <div class="profile-row">
+
+                            <span class="profile-label">
+                                Classe
+                            </span>
+
+                            <span
+                                id="profileClasse"
+                                class="profile-value"
+                            >
+                                -
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     IDÉES
+                ========================= -->
+
+                <section
+                    id="idees"
+                    class="section hidden"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <h2>💡 Idées de la classe</h2>
+                            <p>
+                                Proposez une idée et consultez
+                                celles de vos camarades.
+                            </p>
+                        </div>
+
+                        <button
+                            class="btn-secondary"
+                            onclick="retourAccueil()"
+                        >
+                            ← Retour
+                        </button>
+
+                    </div>
+
+
+                    <div class="form-card">
+
+                        <label for="ideeContenu">
+                            Votre idée
+                        </label>
+
+                        <textarea
+                            id="ideeContenu"
+                            placeholder="Écrivez votre idée..."
+                        ></textarea>
+
+                        <div class="form-actions">
+
+                            <button
+                                class="btn-primary"
+                                onclick="envoyerIdee()"
+                            >
+                                💡 Publier l'idée
+                            </button>
+
+                        </div>
+
+                        <div id="ideeMessage"></div>
+
+                    </div>
+
+
+                    <hr class="section-separator">
+
+
+                    <h3>
+                        Toutes les idées
+                    </h3>
+
+                    <br>
+
+                    <div
+                        id="listeIdees"
+                        class="idea-list"
+                    >
+                        Chargement...
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     MES COMPTES-RENDUS
+                ========================= -->
+
+                <section
+                    id="mesComptesRendus"
+                    class="section hidden"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <h2>📝 Mes comptes-rendus</h2>
+                            <p>
+                                Les comptes-rendus qui vous concernent.
+                            </p>
+                        </div>
+
+                        <button
+                            class="btn-secondary"
+                            onclick="retourAccueil()"
+                        >
+                            ← Retour
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        id="listeMesComptesRendus"
+                        class="report-list"
+                    >
+                        Chargement...
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     GESTION ÉLÈVES
+                ========================= -->
+
+                <section
+                    id="gestionEleves"
+                    class="section hidden"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <h2>👥 Gestion des élèves</h2>
+                            <p>
+                                Créer, modifier et supprimer
+                                les comptes élèves.
+                            </p>
+                        </div>
+
+                        <button
+                            class="btn-secondary"
+                            onclick="retourAccueil()"
+                        >
+                            ← Retour
+                        </button>
+
+                    </div>
+
+
+                    <div class="form-card">
+
+                        <h3>
+                            ➕ Créer un élève
+                        </h3>
+
+
+                        <div class="form-grid">
+
+                            <div>
+
+                                <label for="elevePrenom">
+                                    Prénom
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="elevePrenom"
+                                    placeholder="Prénom"
+                                >
+
+                            </div>
+
+
+                            <div>
+
+                                <label for="eleveNom">
+                                    Nom
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="eleveNom"
+                                    placeholder="Nom"
+                                >
+
+                            </div>
+
+
+                            <div>
+
+                                <label for="eleveClasse">
+                                    Classe
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="eleveClasse"
+                                    placeholder="Ex : 1ère CIEL"
+                                >
+
+                            </div>
+
+
+                            <div>
+
+                                <label for="eleveEmail">
+                                    Adresse e-mail
+                                </label>
+
+                                <input
+                                    type="email"
+                                    id="eleveEmail"
+                                    placeholder="Adresse e-mail"
+                                >
+
+                            </div>
+
+
+                            <div class="form-full">
+
+                                <label for="elevePassword">
+                                    Mot de passe
+                                </label>
+
+                                <input
+                                    type="password"
+                                    id="elevePassword"
+                                    placeholder="Mot de passe"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-actions">
+
+                            <button
+                                class="btn-success"
+                                onclick="creerEleve()"
+                            >
+                                ➕ Créer l'élève
+                            </button>
+
+                        </div>
+
+
+                        <div id="eleveMessage"></div>
+
+                    </div>
+
+
+                    <!-- MODIFICATION -->
+
+                    <div
+                        id="modifierElevePanel"
+                        class="form-card hidden"
+                        style="
+                            margin-top:30px;
+                            padding-top:25px;
+                            border-top:1px solid var(--border);
+                        "
+                    >
+
+                        <h3>
+                            ✏️ Modifier un élève
+                        </h3>
+
+                        <input
+                            type="hidden"
+                            id="modifierEleveId"
+                        >
+
+
+                        <div class="form-grid">
+
+                            <div>
+
+                                <label for="modifierElevePrenom">
+                                    Prénom
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="modifierElevePrenom"
+                                >
+
+                            </div>
+
+
+                            <div>
+
+                                <label for="modifierEleveNom">
+                                    Nom
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="modifierEleveNom"
+                                >
+
+                            </div>
+
+
+                            <div class="form-full">
+
+                                <label for="modifierEleveClasse">
+                                    Classe
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="modifierEleveClasse"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-actions">
+
+                            <button
+                                class="btn-success"
+                                onclick="modifierEleve()"
+                            >
+                                💾 Enregistrer
+                            </button>
+
+                            <button
+                                class="btn-secondary"
+                                onclick="annulerModificationEleve()"
+                            >
+                                Annuler
+                            </button>
+
+                        </div>
+
+
+                        <div id="modifierEleveMessage"></div>
+
+                    </div>
+
+
+                    <hr class="section-separator">
+
+
+                    <h3>
+                        👥 Élèves existants
+                    </h3>
+
+                    <br>
+
+                    <div
+                        id="listeEleves"
+                        class="students-list"
+                    >
+                        Chargement...
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     GESTION IDÉES
+                ========================= -->
+
+                <section
+                    id="gestionIdees"
+                    class="section hidden"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <h2>🗂️ Gestion des idées</h2>
+                            <p>
+                                Administration des idées de la classe.
+                            </p>
+                        </div>
+
+                        <button
+                            class="btn-secondary"
+                            onclick="retourAccueil()"
+                        >
+                            ← Retour
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        id="listeIdeesAdmin"
+                        class="idea-list"
+                    >
+                        Chargement...
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     GESTION COMPTES-RENDUS
+                ========================= -->
+
+                <section
+                    id="gestionComptesRendus"
+                    class="section hidden"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <h2>📋 Gestion des comptes-rendus</h2>
+                            <p>
+                                Créez et gérez les comptes-rendus
+                                associés aux élèves.
+                            </p>
+                        </div>
+
+                        <button
+                            class="btn-secondary"
+                            onclick="retourAccueil()"
+                        >
+                            ← Retour
+                        </button>
+
+                    </div>
+
+
+                    <div class="form-card">
+
+                        <h3>
+                            ➕ Nouveau compte-rendu
+                        </h3>
+
+
+                        <label for="compteRenduEleve">
+                            Élève concerné
+                        </label>
+
+                        <select id="compteRenduEleve">
+                            <option value="">
+                                Sélectionner un élève
+                            </option>
+                        </select>
+
+
+                        <label for="compteRenduTitre">
+                            Titre
+                        </label>
+
+                        <input
+                            type="text"
+                            id="compteRenduTitre"
+                            placeholder="Ex : Entretien avec l'élève"
+                        >
+
+
+                        <label for="compteRenduContenu">
+                            Compte-rendu
+                        </label>
+
+                        <textarea
+                            id="compteRenduContenu"
+                            placeholder="Écrivez le compte-rendu..."
+                        ></textarea>
+
+
+                        <label for="compteRenduDate">
+                            Date de réunion
+                        </label>
+
+                        <input
+                            type="date"
+                            id="compteRenduDate"
+                        >
+
+
+                        <div class="form-actions">
+
+                            <button
+                                class="btn-success"
+                                onclick="creerCompteRendu()"
+                            >
+                                📝 Enregistrer
+                            </button>
+
+                        </div>
+
+
+                        <div id="compteRenduMessage"></div>
+
+                    </div>
+
+
+                    <hr class="section-separator">
+
+
+                    <h3>
+                        📋 Comptes-rendus existants
+                    </h3>
+
+                    <br>
+
+                    <div
+                        id="listeComptesRendusAdmin"
+                        class="report-list"
+                    >
+                        Chargement...
+                    </div>
+
+                </section>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <!-- NAVIGATION MOBILE -->
+
+    <nav class="mobile-nav">
+
+        <button
+            id="mobileAccueil"
+            class="active"
+            onclick="retourAccueil()"
+        >
+            <span>🏠</span>
+            Accueil
+        </button>
+
+        <button onclick="ouvrirIdees()">
+            <span>💡</span>
+            Idées
+        </button>
+
+        <button onclick="ouvrirMesComptesRendus()">
+            <span>📝</span>
+            Rapports
+        </button>
+
+        <button onclick="ouvrirProfil()">
+            <span>👤</span>
+            Profil
+        </button>
+
+    </nav>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   CONFIGURATION SUPABASE
+===================================================== */
+
+const SUPABASE_URL =
+    "https://vwmcmhjxsaqvlnymoedh.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable_NiTiGJaWmcFw9UHB2t0izA_JLVXtUaR";
+
+const supabaseClient =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+let utilisateur = null;
+let profilUtilisateur = null;
+let elevesEnMemoire = [];
+
+
+/* =====================================================
+   OUTILS
+===================================================== */
+
+function escapeHtml(value) {
+
+    if (value === null || value === undefined) {
+        return "";
+    }
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+function formatDate(date) {
+
+    if (!date) {
+        return "";
+    }
+
+    return new Date(date).toLocaleDateString(
+        "fr-FR",
+        {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric"
+        }
+    );
+}
+
+
+function initiales(prenom, nom) {
+
+    const p =
+        prenom
+            ? prenom.charAt(0)
+            : "";
+
+    const n =
+        nom
+            ? nom.charAt(0)
+            : "";
+
+    return (p + n).toUpperCase();
+}
+
+
+function afficherMessage(
+    elementId,
+    texte,
+    type = "success"
+) {
+
+    const element =
+        document.getElementById(elementId);
+
+    if (!element) {
+        return;
+    }
+
+    element.innerHTML =
+        "<div class='message " +
+        type +
+        "'>" +
+        escapeHtml(texte) +
+        "</div>";
+}
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+function cacherToutesLesSections() {
+
+    const sections = [
+        "accueil",
+        "profil",
+        "idees",
+        "mesComptesRendus",
+        "gestionEleves",
+        "gestionIdees",
+        "gestionComptesRendus"
+    ];
+
+    sections.forEach(id => {
+
+        const element =
+            document.getElementById(id);
+
+        if (element) {
+            element.classList.add("hidden");
+        }
+
+    });
+}
+
+
+function changerTitre(titre) {
+
+    document.getElementById(
+        "pageTitle"
+    ).textContent = titre;
+}
+
+
+function retourAccueil() {
+
+    cacherToutesLesSections();
+
+    document
+        .getElementById("accueil")
+        .classList.remove("hidden");
+
+    changerTitre("Accueil");
+
+    mettreNavigationActive("accueil");
+}
+
+
+function ouvrirProfil() {
+
+    cacherToutesLesSections();
+
+    document
+        .getElementById("profil")
+        .classList.remove("hidden");
+
+    changerTitre("Mon profil");
+
+    mettreNavigationActive("profil");
+
+    chargerProfilAffichage();
+}
+
+
+function ouvrirIdees() {
+
+    cacherToutesLesSections();
+
+    document
+        .getElementById("idees")
+        .classList.remove("hidden");
+
+    changerTitre("Idées de la classe");
+
+    mettreNavigationActive("idees");
+
+    chargerIdees();
+}
+
+
+function ouvrirMesComptesRendus() {
+
+    cacherToutesLesSections();
+
+    document
+        .getElementById("mesComptesRendus")
+        .classList.remove("hidden");
+
+    changerTitre("Mes comptes-rendus");
+
+    mettreNavigationActive("rapports");
+
+    chargerMesComptesRendus();
+}
+
+
+function ouvrirGestionEleves() {
+
+    if (
+        !profilUtilisateur ||
+        profilUtilisateur.role !== "admin"
+    ) {
+        return;
+    }
+
+    cacherToutesLesSections();
+
+    document
+        .getElementById("gestionEleves")
+        .classList.remove("hidden");
+
+    changerTitre("Gestion des élèves");
+
+    mettreNavigationActive("admin");
+
+    chargerEleves();
+}
+
+
+function ouvrirIdeesAdmin() {
+
+    if (
+        !profilUtilisateur ||
+        profilUtilisateur.role !== "admin"
+    ) {
+        return;
+    }
+
+    cacherToutesLesSections();
+
+    document
+        .getElementById("gestionIdees")
+        .classList.remove("hidden");
+
+    changerTitre("Gestion des idées");
+
+    mettreNavigationActive("admin");
+
+    chargerIdeesAdmin();
+}
+
+
+function ouvrirComptesRendusAdmin() {
+
+    if (
+        !profilUtilisateur ||
+        profilUtilisateur.role !== "admin"
+    ) {
+        return;
+    }
+
+    cacherToutesLesSections();
+
+    document
+        .getElementById("gestionComptesRendus")
+        .classList.remove("hidden");
+
+    changerTitre(
+        "Gestion des comptes-rendus"
+    );
+
+    mettreNavigationActive("admin");
+
+    chargerElevesPourCompteRendu();
+
+    chargerComptesRendusAdmin();
+}
+
+
+function mettreNavigationActive(page) {
+
+    document
+        .querySelectorAll(".nav-button")
+        .forEach(button => {
+            button.classList.remove("active");
+        });
+
+    document
+        .querySelectorAll(".mobile-nav button")
+        .forEach(button => {
+            button.classList.remove("active");
+        });
+
+    if (page === "accueil") {
+
+        const el =
+            document.getElementById(
+                "navAccueil"
+            );
+
+        if (el) {
+            el.classList.add("active");
+        }
+
+        const mobile =
+            document.getElementById(
+                "mobileAccueil"
+            );
+
+        if (mobile) {
+            mobile.classList.add("active");
+        }
+
+    }
+}
+
+
+/* =====================================================
+   CONNEXION
+===================================================== */
+
+async function connexion() {
+
+    const email =
+        document
+            .getElementById("email")
+            .value
+            .trim();
+
+    const password =
+        document
+            .getElementById("password")
+            .value;
+
+    if (!email || !password) {
+
+        afficherMessage(
+            "loginMessage",
+            "Veuillez remplir tous les champs.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    afficherMessage(
+        "loginMessage",
+        "Connexion en cours..."
+    );
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient.auth.signInWithPassword({
+            email,
+            password
+        });
+
+
+    if (error) {
+
+        afficherMessage(
+            "loginMessage",
+            error.message,
+            "error"
+        );
+
+        return;
+    }
+
+
+    utilisateur = data.user;
+
+    await chargerApplication();
+}
+
+
+async function chargerApplication() {
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.functions.invoke(
+                "get-my-profile"
+            );
+
+
+        if (error) {
+            throw error;
+        }
+
+        if (
+            !data ||
+            !data.profile
+        ) {
+            throw new Error(
+                "Profil introuvable."
+            );
+        }
+
+
+        profilUtilisateur =
+            data.profile;
+
+
+        document
+            .getElementById("loginPage")
+            .classList.add("hidden");
+
+        document
+            .getElementById("app")
+            .classList.remove("hidden");
+
+
+        mettreAJourInterface();
+
+
+        retourAccueil();
+
+
+        chargerIdees();
+
+
+        if (
+            profilUtilisateur.role === "admin"
+        ) {
+
+            document
+                .getElementById("menuAdmin")
+                .classList.remove("hidden");
+
+            document
+                .getElementById("adminCardEleves")
+                .classList.remove("hidden");
+
+            document
+                .getElementById("adminCardIdees")
+                .classList.remove("hidden");
+
+            document
+                .getElementById("adminCardRapports")
+                .classList.remove("hidden");
+
+        } else {
+
+            document
+                .getElementById("menuAdmin")
+                .classList.add("hidden");
+
+            document
+                .getElementById("adminCardEleves")
+                .classList.add("hidden");
+
+            document
+                .getElementById("adminCardIdees")
+                .classList.add("hidden");
+
+            document
+                .getElementById("adminCardRapports")
+                .classList.add("hidden");
+        }
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        await deconnexion();
+
+        afficherMessage(
+            "loginMessage",
+            "Impossible de charger votre profil.",
+            "error"
+        );
+    }
+}
+
+
+function mettreAJourInterface() {
+
+    const prenom =
+        profilUtilisateur.prenom || "";
+
+    const nom =
+        profilUtilisateur.nom || "";
+
+    const classe =
+        profilUtilisateur.classe ||
+        "Classe non renseignée";
+
+
+    document.getElementById(
+        "prenomAccueil"
+    ).textContent =
+        prenom + " 👋";
+
+
+    document.getElementById(
+        "sidebarUserName"
+    ).textContent =
+        prenom + " " + nom;
+
+
+    document.getElementById(
+        "sidebarUserRole"
+    ).textContent =
+        profilUtilisateur.role === "admin"
+            ? "Administrateur"
+            : "Élève";
+
+
+    document.getElementById(
+        "sidebarAvatar"
+    ).textContent =
+        initiales(prenom, nom);
+
+
+    document.getElementById(
+        "topbarUserName"
+    ).textContent =
+        prenom + " " + nom;
+
+
+    document.getElementById(
+        "topbarClass"
+    ).textContent =
+        classe;
+
+
+    document.getElementById(
+        "topbarAvatar"
+    ).textContent =
+        initiales(prenom, nom);
+}
+
+
+/* =====================================================
+   PROFIL
+===================================================== */
+
+function chargerProfilAffichage() {
+
+    if (!profilUtilisateur) {
+        return;
+    }
+
+    const prenom =
+        profilUtilisateur.prenom || "";
+
+    const nom =
+        profilUtilisateur.nom || "";
+
+
+    document.getElementById(
+        "profileAvatar"
+    ).textContent =
+        initiales(prenom, nom);
+
+
+    document.getElementById(
+        "profileName"
+    ).textContent =
+        prenom + " " + nom;
+
+
+    document.getElementById(
+        "profileRole"
+    ).textContent =
+        profilUtilisateur.role === "admin"
+            ? "Administrateur"
+            : "Élève";
+
+
+    document.getElementById(
+        "profilePrenom"
+    ).textContent =
+        prenom || "-";
+
+
+    document.getElementById(
+        "profileNom"
+    ).textContent =
+        nom || "-";
+
+
+    document.getElementById(
+        "profileClasse"
+    ).textContent =
+        profilUtilisateur.classe ||
+        "Non renseignée";
+}
+
+
+/* =====================================================
+   GESTION DES ÉLÈVES
+===================================================== */
+
+async function chargerEleves() {
+
+    const liste =
+        document.getElementById(
+            "listeEleves"
+        );
+
+    liste.innerHTML =
+        "Chargement...";
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("profiles")
+            .select(
+                "id, nom, prenom, classe, role"
+            )
+            .eq("role", "eleve")
+            .order("nom");
+
+
+    if (error) {
+
+        liste.innerHTML =
+            "<div class='message error'>" +
+            escapeHtml(error.message) +
+            "</div>";
+
+        return;
+    }
+
+
+    elevesEnMemoire =
+        data || [];
+
+
+    if (
+        elevesEnMemoire.length === 0
+    ) {
+
+        liste.innerHTML =
+            "<p style='color:var(--text-secondary);'>" +
+            "Aucun élève." +
+            "</p>";
+
+        return;
+    }
+
+
+    liste.innerHTML = "";
+
+
+    elevesEnMemoire.forEach(
+        eleve => {
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+            card.className =
+                "student-card";
+
+
+            const nomComplet =
+                (
+                    (eleve.prenom || "") +
+                    " " +
+                    (eleve.nom || "")
+                ).trim();
+
+
+            card.innerHTML =
+
+                "<div class='student-info'>" +
+
+                    "<div class='student-name'>" +
+                        "👤 " +
+                        escapeHtml(
+                            nomComplet
+                        ) +
+                    "</div>" +
+
+                    "<div class='student-class'>" +
+                        "Classe : " +
+                        escapeHtml(
+                            eleve.classe ||
+                            "Non renseignée"
+                        ) +
+                    "</div>" +
+
+                "</div>" +
+
+                "<div class='item-actions'>" +
+
+                    "<button " +
+                        "class='btn-primary' " +
+                        "onclick=\"ouvrirModificationEleve('" +
+                            escapeHtml(eleve.id) +
+                        "')\">" +
+                        "✏️ Modifier" +
+                    "</button>" +
+
+                    "<button " +
+                        "class='btn-danger' " +
+                        "onclick=\"supprimerEleve('" +
+                            escapeHtml(eleve.id) +
+                        "')\">" +
+                        "🗑️ Supprimer" +
+                    "</button>" +
+
+                "</div>";
+
+
+            liste.appendChild(card);
+        }
+    );
+}
+
+
+function ouvrirModificationEleve(id) {
+
+    const eleve =
+        elevesEnMemoire.find(
+            e => e.id === id
+        );
+
+
+    if (!eleve) {
+        return;
+    }
+
+
+    document.getElementById(
+        "modifierEleveId"
+    ).value =
+        eleve.id;
+
+
+    document.getElementById(
+        "modifierElevePrenom"
+    ).value =
+        eleve.prenom || "";
+
+
+    document.getElementById(
+        "modifierEleveNom"
+    ).value =
+        eleve.nom || "";
+
+
+    document.getElementById(
+        "modifierEleveClasse"
+    ).value =
+        eleve.classe || "";
+
+
+    document.getElementById(
+        "modifierEleveMessage"
+    ).innerHTML =
+        "";
+
+
+    document
+        .getElementById(
+            "modifierElevePanel"
+        )
+        .classList.remove("hidden");
+
+
+    document
+        .getElementById(
+            "modifierElevePanel"
+        )
+        .scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+}
+
+
+function annulerModificationEleve() {
+
+    document
+        .getElementById(
+            "modifierElevePanel"
+        )
+        .classList.add("hidden");
+
+    document.getElementById(
+        "modifierEleveMessage"
+    ).innerHTML = "";
+}
+
+
+async function modifierEleve() {
+
+    const id =
+        document.getElementById(
+            "modifierEleveId"
+        ).value;
+
+
+    const prenom =
+        document.getElementById(
+            "modifierElevePrenom"
+        ).value.trim();
+
+
+    const nom =
+        document.getElementById(
+            "modifierEleveNom"
+        ).value.trim();
+
+
+    const classe =
+        document.getElementById(
+            "modifierEleveClasse"
+        ).value.trim();
+
+
+    if (
+        !id ||
+        !prenom ||
+        !nom ||
+        !classe
+    ) {
+
+        afficherMessage(
+            "modifierEleveMessage",
+            "Veuillez remplir tous les champs.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.functions.invoke(
+                "update-student",
+                {
+                    body: {
+                        id,
+                        prenom,
+                        nom,
+                        classe
+                    }
+                }
+            );
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        if (
+            data &&
+            data.error
+        ) {
+            throw new Error(
+                data.error
+            );
+        }
+
+
+        afficherMessage(
+            "modifierEleveMessage",
+            "Élève modifié avec succès."
+        );
+
+
+        await chargerEleves();
+
+        await chargerElevesPourCompteRendu();
+
+
+        setTimeout(() => {
+
+            annulerModificationEleve();
+
+        }, 700);
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        afficherMessage(
+            "modifierEleveMessage",
+            error.message ||
+            "Impossible de modifier l'élève.",
+            "error"
+        );
+    }
+}
+
+
+async function creerEleve() {
+
+    const prenom =
+        document.getElementById(
+            "elevePrenom"
+        ).value.trim();
+
+    const nom =
+        document.getElementById(
+            "eleveNom"
+        ).value.trim();
+
+    const classe =
+        document.getElementById(
+            "eleveClasse"
+        ).value.trim();
+
+    const email =
+        document.getElementById(
+            "eleveEmail"
+        ).value.trim();
+
+    const password =
+        document.getElementById(
+            "elevePassword"
+        ).value;
+
+
+    if (
+        !prenom ||
+        !nom ||
+        !classe ||
+        !email ||
+        !password
+    ) {
+
+        afficherMessage(
+            "eleveMessage",
+            "Veuillez remplir tous les champs.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.functions.invoke(
+                "create-student",
+                {
+                    body: {
+                        prenom,
+                        nom,
+                        classe,
+                        email,
+                        password
+                    }
+                }
+            );
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        if (
+            data &&
+            data.error
+        ) {
+            throw new Error(
+                data.error
+            );
+        }
+
+
+        afficherMessage(
+            "eleveMessage",
+            "Élève créé avec succès."
+        );
+
+
+        document.getElementById(
+            "elevePrenom"
+        ).value = "";
+
+        document.getElementById(
+            "eleveNom"
+        ).value = "";
+
+        document.getElementById(
+            "eleveClasse"
+        ).value = "";
+
+        document.getElementById(
+            "eleveEmail"
+        ).value = "";
+
+        document.getElementById(
+            "elevePassword"
+        ).value = "";
+
+
+        await chargerEleves();
+
+        await chargerElevesPourCompteRendu();
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        afficherMessage(
+            "eleveMessage",
+            error.message ||
+            "Impossible de créer l'élève.",
+            "error"
+        );
+    }
+}
+
+
+async function supprimerEleve(id) {
+
+    if (
+        !confirm(
+            "Voulez-vous vraiment supprimer cet élève ?"
+        )
+    ) {
+        return;
+    }
+
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.functions.invoke(
+                "delete-student",
+                {
+                    body: {
+                        id
+                    }
+                }
+            );
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        if (
+            data &&
+            data.error
+        ) {
+            throw new Error(
+                data.error
+            );
+        }
+
+
+        await chargerEleves();
+
+        await chargerElevesPourCompteRendu();
+
+
+        afficherMessage(
+            "eleveMessage",
+            "Élève supprimé avec succès."
+        );
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        afficherMessage(
+            "eleveMessage",
+            error.message ||
+            "Impossible de supprimer l'élève.",
+            "error"
+        );
+    }
+}
+
+
+/* =====================================================
+   IDÉES
+===================================================== */
+
+async function envoyerIdee() {
+
+    const contenu =
+        document.getElementById(
+            "ideeContenu"
+        ).value.trim();
+
+
+    if (!contenu) {
+
+        afficherMessage(
+            "ideeMessage",
+            "Veuillez écrire une idée.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.functions.invoke(
+                "manage-idee",
+                {
+                    body: {
+                        action: "create",
+                        contenu
+                    }
+                }
+            );
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        if (
+            data &&
+            data.error
+        ) {
+            throw new Error(
+                data.error
+            );
+        }
+
+
+        document.getElementById(
+            "ideeContenu"
+        ).value = "";
+
+
+        afficherMessage(
+            "ideeMessage",
+            "Votre idée a été publiée."
+        );
+
+
+        await chargerIdees();
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        afficherMessage(
+            "ideeMessage",
+            error.message ||
+            "Impossible de publier l'idée.",
+            "error"
+        );
+    }
+}
+
+
+async function chargerIdees() {
+
+    const liste =
+        document.getElementById(
+            "listeIdees"
+        );
+
+    if (!liste) {
+        return;
+    }
+
+    liste.innerHTML =
+        "Chargement...";
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.functions.invoke(
+                "manage-idee",
+                {
+                    body: {
+                        action: "list"
+                    }
+                }
+            );
+
+        if (error) {
+            throw error;
+        }
+
+        if (
+            !data ||
+            data.error
+        ) {
+            throw new Error(
+                data?.error ||
+                "Impossible de charger les idées."
+            );
+        }
+
+        const idees =
+            data.idees || [];
+
+        if (idees.length === 0) {
+
+            liste.innerHTML =
+                "<p style='color:var(--text-secondary);'>" +
+                "Aucune idée pour le moment." +
+                "</p>";
+
+            return;
+        }
+
+        liste.innerHTML = "";
+
+        idees.forEach(idee => {
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+            card.className =
+                "idea-card";
+
+            const auteur =
+                idee.auteurProfil
+                    ? (
+                        (idee.auteurProfil.prenom || "") +
+                        " " +
+                        (idee.auteurProfil.nom || "")
+                    ).trim()
+                    : "Élève";
+
+            card.innerHTML =
+
+                "<div class='idea-content'>" +
+                    escapeHtml(
+                        idee.contenu
+                    ) +
+                "</div>" +
+
+                "<div class='idea-meta'>" +
+                    "👤 " +
+                    escapeHtml(auteur) +
+                    " · " +
+                    formatDate(
+                        idee.created_at
+                    ) +
+                "</div>";
+
+            liste.appendChild(card);
+
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Erreur chargement idées :",
+            error
+        );
+
+        liste.innerHTML =
+            "<div class='message error'>" +
+            escapeHtml(
+                error.message ||
+                "Impossible de charger les idées."
+            ) +
+            "</div>";
+    }
+}
+
+
+async function chargerIdeesAdmin() {
+
+    const liste =
+        document.getElementById(
+            "listeIdeesAdmin"
+        );
+
+
+    liste.innerHTML =
+        "Chargement...";
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient.functions.invoke(
+            "manage-idee",
+            {
+                body: {
+                    action: "list"
+                }
+            }
+        );
+
+
+    if (error) {
+
+        liste.innerHTML =
+            "<div class='message error'>" +
+            escapeHtml(error.message) +
+            "</div>";
+
+        return;
+    }
+
+
+    if (
+        !data ||
+        !data.idees ||
+        data.idees.length === 0
+    ) {
+
+        liste.innerHTML =
+            "<p style='color:var(--text-secondary);'>" +
+            "Aucune idée." +
+            "</p>";
+
+        return;
+    }
+
+
+    liste.innerHTML = "";
+
+
+    data.idees.forEach(idee => {
+
+        const card =
+            document.createElement(
+                "div"
+            );
+
+
+        card.className =
+            "idea-card";
+
+
+        card.innerHTML =
+
+            "<div class='idea-content'>" +
+                escapeHtml(
+                    idee.contenu
+                ) +
+            "</div>" +
+
+            "<div class='idea-meta'>" +
+                "👤 " +
+                escapeHtml(
+                    idee.auteurProfil
+                        ? (
+                            idee.auteurProfil.prenom +
+                            " " +
+                            idee.auteurProfil.nom
+                        )
+                        : "Élève"
+                ) +
+                " · " +
+                formatDate(
+                    idee.created_at
+                ) +
+            "</div>" +
+
+            "<div class='item-actions' style='margin-top:12px;'>" +
+
+                "<button " +
+                    "class='btn-danger' " +
+                    "onclick=\"supprimerIdee('" +
+                        escapeHtml(idee.id) +
+                    "')\">" +
+                    "🗑️ Supprimer" +
+                "</button>" +
+
+            "</div>";
+
+
+        liste.appendChild(card);
+
+    });
+}
+
+
+async function supprimerIdee(id) {
+
+    if (
+        !confirm(
+            "Supprimer cette idée ?"
+        )
+    ) {
+        return;
+    }
+
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.functions.invoke(
+                "manage-idee",
+                {
+                    body: {
+                        action: "delete",
+                        id
+                    }
+                }
+            );
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        if (
+            data &&
+            data.error
+        ) {
+            throw new Error(
+                data.error
+            );
+        }
+
+
+        await chargerIdeesAdmin();
+
+        await chargerIdees();
+
+
+    } catch (error) {
+
+        alert(
+            error.message ||
+            "Impossible de supprimer l'idée."
+        );
+    }
+}
+
+
+/* =====================================================
+   COMPTES-RENDUS
+===================================================== */
+
+async function chargerElevesPourCompteRendu() {
+
+    const select =
+        document.getElementById(
+            "compteRenduEleve"
+        );
+
+
+    if (!select) {
+        return;
+    }
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("profiles")
+            .select(
+                "id, prenom, nom, classe"
+            )
+            .eq("role", "eleve")
+            .order("nom");
+
+
+    if (error) {
+
+        select.innerHTML =
+            "<option value=''>" +
+            "Erreur de chargement" +
+            "</option>";
+
+        return;
+    }
+
+
+    select.innerHTML =
+        "<option value=''>" +
+        "Sélectionner un élève" +
+        "</option>";
+
+
+    (data || []).forEach(eleve => {
+
+        const option =
+            document.createElement(
+                "option"
+            );
+
+
+        option.value =
+            eleve.id;
+
+
+        option.textContent =
+            (
+                eleve.prenom +
+                " " +
+                eleve.nom
+            ) +
+            (
+                eleve.classe
+                    ? " — " +
+                      eleve.classe
+                    : ""
+            );
+
+
+        select.appendChild(option);
+
+    });
+}
+
+
+async function creerCompteRendu() {
+
+    const eleve =
+        document.getElementById(
+            "compteRenduEleve"
+        ).value;
+
+
+    const titre =
+        document.getElementById(
+            "compteRenduTitre"
+        ).value.trim();
+
+
+    const contenu =
+        document.getElementById(
+            "compteRenduContenu"
+        ).value.trim();
+
+
+    const dateReunion =
+        document.getElementById(
+            "compteRenduDate"
+        ).value;
+
+
+    if (
+        !eleve ||
+        !titre ||
+        !contenu
+    ) {
+
+        afficherMessage(
+            "compteRenduMessage",
+            "Veuillez remplir les champs obligatoires.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.functions.invoke(
+                "manage-compte-rendu",
+                {
+                    body: {
+                        action: "create",
+                        titre,
+                        contenu,
+                        date_reunion:
+                            dateReunion ||
+                            null,
+                        auteur: eleve
+                    }
+                }
+            );
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        if (
+            data &&
+            data.error
+        ) {
+            throw new Error(
+                data.error
+            );
+        }
+
+
+        document.getElementById(
+            "compteRenduEleve"
+        ).value = "";
+
+        document.getElementById(
+            "compteRenduTitre"
+        ).value = "";
+
+        document.getElementById(
+            "compteRenduContenu"
+        ).value = "";
+
+        document.getElementById(
+            "compteRenduDate"
+        ).value = "";
+
+
+        afficherMessage(
+            "compteRenduMessage",
+            "Compte-rendu enregistré."
+        );
+
+
+        await chargerComptesRendusAdmin();
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        afficherMessage(
+            "compteRenduMessage",
+            error.message ||
+            "Impossible d'enregistrer le compte-rendu.",
+            "error"
+        );
+    }
+}
+
+
+async function chargerComptesRendusAdmin() {
+
+    const liste =
+        document.getElementById(
+            "listeComptesRendusAdmin"
+        );
+
+
+    liste.innerHTML =
+        "Chargement...";
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient.functions.invoke(
+            "manage-compte-rendu",
+            {
+                body: {
+                    action: "list"
+                }
+            }
+        );
+
+
+    if (error) {
+
+        liste.innerHTML =
+            "<div class='message error'>" +
+            escapeHtml(error.message) +
+            "</div>";
+
+        return;
+    }
+
+
+    if (
+        !data ||
+        !data.comptesRendus ||
+        data.comptesRendus.length === 0
+    ) {
+
+        liste.innerHTML =
+            "<p style='color:var(--text-secondary);'>" +
+            "Aucun compte-rendu." +
+            "</p>";
+
+        return;
+    }
+
+
+    liste.innerHTML = "";
+
+
+    data.comptesRendus.forEach(
+        compteRendu => {
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "report-card";
+
+
+            const eleve =
+                compteRendu.auteurProfil
+                    ? (
+                        compteRendu
+                            .auteurProfil
+                            .prenom +
+                        " " +
+                        compteRendu
+                            .auteurProfil
+                            .nom
+                    )
+                    : "Élève";
+
+
+            card.innerHTML =
+
+                "<div class='report-title'>" +
+                    escapeHtml(
+                        compteRendu.titre
+                    ) +
+                "</div>" +
+
+                "<div class='report-date'>" +
+                    (
+                        compteRendu.date_reunion
+                            ? "Réunion : " +
+                              formatDate(
+                                  compteRendu.date_reunion
+                              )
+                            : "Date non renseignée"
+                    ) +
+                "</div>" +
+
+                "<div class='report-content'>" +
+                    escapeHtml(
+                        compteRendu.contenu
+                    ) +
+                "</div>" +
+
+                "<div class='report-student'>" +
+                    "👤 " +
+                    escapeHtml(eleve) +
+                "</div>" +
+
+                "<div class='item-actions' style='margin-top:14px;'>" +
+
+                    "<button " +
+                        "class='btn-danger' " +
+                        "onclick=\"supprimerCompteRendu('" +
+                            escapeHtml(
+                                compteRendu.id
+                            ) +
+                        "')\">" +
+                        "🗑️ Supprimer" +
+                    "</button>" +
+
+                "</div>";
+
+
+            liste.appendChild(card);
+
+        }
+    );
+}
+
+
+async function chargerMesComptesRendus() {
+
+    const liste =
+        document.getElementById(
+            "listeMesComptesRendus"
+        );
+
+
+    liste.innerHTML =
+        "Chargement...";
+
+
+    if (!utilisateur) {
+        return;
+    }
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("comptes_rendus")
+            .select("*")
+            .eq(
+                "auteur",
+                utilisateur.id
+            )
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            );
+
+
+    if (error) {
+
+        liste.innerHTML =
+            "<div class='message error'>" +
+            escapeHtml(error.message) +
+            "</div>";
+
+        return;
+    }
+
+
+    if (!data || data.length === 0) {
+
+        liste.innerHTML =
+            "<p style='color:var(--text-secondary);'>" +
+            "Aucun compte-rendu ne vous concerne pour le moment." +
+            "</p>";
+
+        return;
+    }
+
+
+    liste.innerHTML = "";
+
+
+    data.forEach(
+        compteRendu => {
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "report-card";
+
+
+            card.innerHTML =
+
+                "<div class='report-title'>" +
+                    escapeHtml(
+                        compteRendu.titre
+                    ) +
+                "</div>" +
+
+                "<div class='report-date'>" +
+                    (
+                        compteRendu.date_reunion
+                            ? "Réunion : " +
+                              formatDate(
+                                  compteRendu.date_reunion
+                              )
+                            : "Date non renseignée"
+                    ) +
+                "</div>" +
+
+                "<div class='report-content'>" +
+                    escapeHtml(
+                        compteRendu.contenu
+                    ) +
+                "</div>";
+
+
+            liste.appendChild(card);
+
+        }
+    );
+}
+
+
+async function supprimerCompteRendu(id) {
+
+    if (
+        !confirm(
+            "Supprimer ce compte-rendu ?"
+        )
+    ) {
+        return;
+    }
+
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.functions.invoke(
+                "manage-compte-rendu",
+                {
+                    body: {
+                        action: "delete",
+                        id
+                    }
+                }
+            );
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        if (
+            data &&
+            data.error
+        ) {
+            throw new Error(
+                data.error
+            );
+        }
+
+
+        await chargerComptesRendusAdmin();
+
+
+    } catch (error) {
+
+        alert(
+            error.message ||
+            "Impossible de supprimer le compte-rendu."
+        );
+    }
+}
+
+
+/* =====================================================
+   DÉCONNEXION
+===================================================== */
+
+async function deconnexion() {
+
+    await supabaseClient.auth.signOut();
+
+    utilisateur = null;
+    profilUtilisateur = null;
+
+
+    document
+        .getElementById("menuAdmin")
+        .classList.add("hidden");
+
+    document
+        .getElementById("adminCardEleves")
+        .classList.add("hidden");
+
+    document
+        .getElementById("adminCardIdees")
+        .classList.add("hidden");
+
+    document
+        .getElementById("adminCardRapports")
+        .classList.add("hidden");
+
+
+    document
+        .getElementById("app")
+        .classList.add("hidden");
+
+
+    document
+        .getElementById("loginPage")
+        .classList.remove("hidden");
+
+
+    document.getElementById(
+        "password"
+    ).value = "";
+
+
+    document.getElementById(
+        "loginMessage"
+    ).innerHTML = "";
+}
+
+
+/* =====================================================
+   SESSION AU CHARGEMENT
+===================================================== */
+
+async function verifierSession() {
+
+    const {
+        data
+    } =
+        await supabaseClient.auth.getSession();
+
+
+    if (
+        data &&
+        data.session &&
+        data.session.user
+    ) {
+
+        utilisateur =
+            data.session.user;
+
+        await chargerApplication();
+    }
+}
+
+
+verifierSession();
+
+</script>
+
+</body>
+</html>
