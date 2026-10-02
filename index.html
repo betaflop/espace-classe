@@ -3379,130 +3379,91 @@ async function modifierEleve() {
 
 async function creerEleve() {
 
-    const prenom =
-        document.getElementById(
-            "elevePrenom"
-        ).value.trim();
+    const prenom = document.getElementById("elevePrenom")?.value.trim();
+    const nom = document.getElementById("eleveNom")?.value.trim();
+    const classe = document.getElementById("eleveClasse")?.value.trim();
+    const email = document.getElementById("eleveEmail")?.value.trim();
+    const password = document.getElementById("elevePassword")?.value || "";
 
-    const nom =
-        document.getElementById(
-            "eleveNom"
-        ).value.trim();
-
-    const classe =
-        document.getElementById(
-            "eleveClasse"
-        ).value.trim();
-
-    const email =
-        document.getElementById(
-            "eleveEmail"
-        ).value.trim();
-
-    const password =
-        document.getElementById(
-            "elevePassword"
-        ).value;
-
-
-    if (
-        !prenom ||
-        !nom ||
-        !classe ||
-        !email ||
-        !password
-    ) {
-
-        afficherMessage(
-            "eleveMessage",
-            "Veuillez remplir tous les champs.",
-            "error"
-        );
-
+    if (!prenom || !nom || !classe || !email || !password) {
+        afficherMessage("eleveMessage", "Veuillez remplir tous les champs.", "error");
         return;
     }
 
-
     try {
+        const sessionResult = await supabaseClient.auth.getSession();
+        const token = sessionResult?.data?.session?.access_token;
 
-        const {
-            data,
-            error
-        } =
-            await supabaseClient.functions.invoke(
-                "create-student",
-                {
-                    body: {
-                        prenom,
-                        nom,
-                        classe,
-                        email,
-                        password
-                    }
-                }
-            );
-
-
-        if (error) {
-            throw error;
+        if (!token) {
+            afficherMessage("eleveMessage", "Session administrateur introuvable. Reconnectez-vous.", "error");
+            return;
         }
 
+        const response = await fetch(
+            `${SUPABASE_URL}/functions/v1/create-student`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    prenom,
+                    nom,
+                    classe,
+                    email,
+                    password
+                })
+            }
+        );
 
-        if (
-            data &&
-            data.error
-        ) {
+        const texte = await response.text();
+        console.log("create-student HTTP :", response.status);
+        console.log("create-student réponse :", texte);
+
+        let data = null;
+        try {
+            data = texte ? JSON.parse(texte) : null;
+        } catch {
+            data = { error: texte || "Réponse vide de Supabase." };
+        }
+
+        if (!response.ok) {
             throw new Error(
-                data.error
+                data?.error ||
+                data?.message ||
+                `Erreur HTTP ${response.status}`
             );
         }
 
+        if (data?.error) {
+            throw new Error(data.error);
+        }
 
         afficherMessage(
             "eleveMessage",
             "Élève créé avec succès."
         );
 
-
-        document.getElementById(
-            "elevePrenom"
-        ).value = "";
-
-        document.getElementById(
-            "eleveNom"
-        ).value = "";
-
-        document.getElementById(
-            "eleveClasse"
-        ).value = "";
-
-        document.getElementById(
-            "eleveEmail"
-        ).value = "";
-
-        document.getElementById(
-            "elevePassword"
-        ).value = "";
-
+        document.getElementById("elevePrenom").value = "";
+        document.getElementById("eleveNom").value = "";
+        document.getElementById("eleveClasse").value = "";
+        document.getElementById("eleveEmail").value = "";
+        document.getElementById("elevePassword").value = "";
 
         await chargerEleves();
-
         await chargerElevesPourCompteRendu();
 
-
     } catch (error) {
-
-        console.error(error);
-
+        console.error("Erreur création élève :", error);
         afficherMessage(
             "eleveMessage",
-            error.message ||
-            "Impossible de créer l'élève.",
+            error.message || "Impossible de créer l'élève.",
             "error"
         );
     }
 }
-
 
 async function supprimerEleve(id) {
 
@@ -4718,7 +4679,7 @@ async function creerAPProf() {
     const salle = document.getElementById("apSalleProf")?.value.trim() || null;
     const commentaire_prof = document.getElementById("apCommentaireProf")?.value.trim() || null;
     if (!eleve_ids.length || !matiere || !besoin) { afficherMessage("apProfMessage", "Sélectionnez au moins un élève et remplissez la matière et le contenu de l'AP.", "error"); return; }
-    const { data, error } = await supabaseClient.functions.invoke("manage-ap", { body: { action: "create", eleve_ids, matiere, besoin, date_ap, heure_ap, salle, commentaire_prof } });
+    const { data, error } = await supabaseClient.functions.invoke("manage-ap", { body: { action: "create", eleves: eleve_ids, matiere, besoin, date_ap, heure_ap, salle, commentaire_prof } });
     if (error) { afficherMessage("apProfMessage", error.message || "Impossible de créer l'AP.", "error"); return; }
     if (data?.error) { afficherMessage("apProfMessage", data.error, "error"); return; }
     Array.from(select.options).forEach(o => o.selected = false);
