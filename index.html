@@ -708,6 +708,95 @@ button {
 }
 
 /* =========================
+   AP
+========================= */
+
+.ap-list {
+    display: grid;
+    gap: 14px;
+}
+
+.ap-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+}
+
+.ap-card:hover {
+    background: var(--surface-hover);
+}
+
+.ap-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.ap-title {
+    font-size: 15px;
+    font-weight: 750;
+}
+
+.ap-meta {
+    color: var(--text-secondary);
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.ap-besoin {
+    margin-top: 13px;
+    font-size: 13px;
+    line-height: 1.55;
+    white-space: pre-wrap;
+}
+
+.ap-status {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 750;
+    white-space: nowrap;
+}
+
+.ap-status.en_attente { background: var(--warning-light); color: #92400e; }
+.ap-status.acceptee { background: var(--success-light); color: #166534; }
+.ap-status.refusee { background: var(--danger-light); color: #991b1b; }
+.ap-status.annulee { background: #f1f5f9; color: #475569; }
+.ap-status.terminee { background: var(--primary-light); color: var(--primary); }
+
+.ap-details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.ap-detail {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.ap-detail-label {
+    color: var(--text-secondary);
+    font-size: 10px;
+    margin-bottom: 3px;
+}
+
+.ap-detail-value {
+    font-size: 12px;
+    font-weight: 650;
+}
+
+@media (max-width: 720px) {
+    .ap-details {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================
    PROFIL
 ========================= */
 
@@ -1032,6 +1121,7 @@ button {
                 </button>
 
                 <button
+                    id="navIdeesEleve"
                     class="nav-button"
                     onclick="ouvrirIdees()"
                 >
@@ -1039,7 +1129,10 @@ button {
                     Idées de la classe
                 </button>
 
+
+
                 <button
+                    id="navRapportsEleve"
                     class="nav-button"
                     onclick="ouvrirMesComptesRendus()"
                 >
@@ -1047,6 +1140,34 @@ button {
                     Mes comptes-rendus
                 </button>
 
+
+                <button
+                    id="navDemandeAP"
+                    class="nav-button"
+                    onclick="ouvrirDemandeAP()"
+                >
+                    <span class="nav-icon">🆘</span>
+                    Demande d’AP
+                </button>
+
+                <div
+                    id="menuProfesseur"
+                    class="hidden"
+                >
+
+                    <div class="menu-title" style="margin-top:25px;">
+                        Professeur
+                    </div>
+
+                    <button
+                        class="nav-button"
+                        onclick="ouvrirGestionAP()"
+                    >
+                        <span class="nav-icon">🆘</span>
+                        Gestion des AP
+                    </button>
+
+                </div>
 
                 <div
                     id="menuAdmin"
@@ -1079,6 +1200,22 @@ button {
                     >
                         <span class="nav-icon">📋</span>
                         Gestion des comptes-rendus
+                    </button>
+
+                    <button
+                        class="nav-button"
+                        onclick="ouvrirGestionProfesseurs()"
+                    >
+                        <span class="nav-icon">👨‍🏫</span>
+                        Gestion des professeurs
+                    </button>
+
+                    <button
+                        class="nav-button"
+                        onclick="ouvrirGestionAP()"
+                    >
+                        <span class="nav-icon">🆘</span>
+                        Gestion des AP
                     </button>
 
                 </div>
@@ -1211,6 +1348,7 @@ button {
                     <div class="dashboard-grid">
 
                         <div
+                            id="studentCardIdees"
                             class="dashboard-card"
                             onclick="ouvrirIdees()"
                             style="cursor:pointer;"
@@ -1230,9 +1368,8 @@ button {
                             </p>
 
                         </div>
-
-
-                        <div
+<div
+                            id="studentCardRapports"
                             class="dashboard-card"
                             onclick="ouvrirMesComptesRendus()"
                             style="cursor:pointer;"
@@ -1271,6 +1408,72 @@ button {
                             <p>
                                 Consultez vos informations
                                 personnelles et votre classe.
+                            </p>
+
+                        </div>
+
+
+                        <div
+                            id="studentCardAP"
+                            class="dashboard-card"
+                            onclick="ouvrirDemandeAP()"
+                            style="cursor:pointer;"
+                        >
+
+                            <div class="dashboard-card-icon">
+                                🆘
+                            </div>
+
+                            <h3>
+                                Demande d’AP
+                            </h3>
+
+                            <p>
+                                Demandez une aide personnalisée à un professeur.
+                            </p>
+
+                        </div>
+
+
+                        <div
+                            id="profCardAP"
+                            class="dashboard-card hidden"
+                            onclick="ouvrirGestionAP()"
+                            style="cursor:pointer;"
+                        >
+
+                            <div class="dashboard-card-icon">
+                                🆘
+                            </div>
+
+                            <h3>
+                                Gestion des AP
+                            </h3>
+
+                            <p>
+                                Consultez et traitez les demandes d’aide personnalisée.
+                            </p>
+
+                        </div>
+
+
+                        <div
+                            id="adminCardAP"
+                            class="dashboard-card hidden"
+                            onclick="ouvrirGestionAP()"
+                            style="cursor:pointer;"
+                        >
+
+                            <div class="dashboard-card-icon">
+                                🆘
+                            </div>
+
+                            <h3>
+                                Gestion des AP
+                            </h3>
+
+                            <p>
+                                Consultez et gérez toutes les demandes d’AP.
                             </p>
 
                         </div>
@@ -1340,6 +1543,28 @@ button {
                             <p>
                                 Créez et gérez les comptes-rendus
                                 des élèves.
+                            </p>
+
+                        </div>
+
+
+                        <div
+                            id="adminCardProfesseurs"
+                            class="dashboard-card hidden"
+                            onclick="ouvrirGestionProfesseurs()"
+                            style="cursor:pointer;"
+                        >
+
+                            <div class="dashboard-card-icon">
+                                👨‍🏫
+                            </div>
+
+                            <h3>
+                                Gestion des professeurs
+                            </h3>
+
+                            <p>
+                                Créez et gérez les comptes des professeurs.
                             </p>
 
                         </div>
@@ -1540,7 +1765,7 @@ button {
                      MES COMPTES-RENDUS
                 ========================= -->
 
-                <section
+<section
                     id="mesComptesRendus"
                     class="section hidden"
                 >
@@ -1818,6 +2043,206 @@ button {
 
 
                 <!-- =========================
+                     DEMANDE / GESTION AP
+                ========================= -->
+
+                <section
+                    id="demandeAP"
+                    class="section hidden"
+                >
+
+                    <div class="section-header">
+                        <div>
+                            <h2>🆘 Demande d’AP</h2>
+                            <p>Demandez une aide personnalisée à un professeur.</p>
+                        </div>
+                        <button class="btn-secondary" onclick="retourAccueil()">← Retour</button>
+                    </div>
+
+                    <div class="form-card">
+                        <div class="form-grid">
+                            <div class="form-full">
+                                <label for="apProfesseur">👨‍🏫 Professeur souhaité</label>
+                                <select id="apProfesseur" onchange="apProfesseurChange()">
+                                    <option value="">Chargement des professeurs...</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="apMatiere">Matière</label>
+                                <input type="text" id="apMatiere" placeholder="Matière" readonly>
+                            </div>
+                            <div>
+                                <label for="apDateSouhaitee">Date souhaitée</label>
+                                <input type="date" id="apDateSouhaitee">
+                            </div>
+                            <div class="form-full">
+                                <label for="apBesoin">De quoi avez-vous besoin ?</label>
+                                <textarea id="apBesoin" placeholder="Expliquez ce que vous souhaitez travailler..."></textarea>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn-primary" onclick="creerDemandeAP()">🆘 Envoyer la demande</button>
+                        </div>
+                        <div id="apMessage"></div>
+                    </div>
+
+                    <hr class="section-separator">
+                    <h3>📋 Mes demandes d’AP</h3>
+                    <br>
+                    <div id="listeMesAP" class="ap-list">Chargement...</div>
+
+                </section>
+
+
+                <section
+                    id="gestionAP"
+                    class="section hidden"
+                >
+
+                    <div class="section-header">
+                        <div>
+                            <h2>🆘 Gestion des AP</h2>
+                            <p id="gestionAPDescription">Consultez et traitez les demandes d’aide personnalisée.</p>
+                        </div>
+                        <button class="btn-secondary" onclick="retourAccueil()">← Retour</button>
+                    </div>
+
+                    <div id="creationAPProf" class="form-card" style="margin-bottom:24px;">
+                        <h3>➕ Créer une AP</h3>
+                        <p style="color:var(--text-secondary);margin-bottom:18px;">Créez une AP pour un élève, plusieurs élèves ou toute une classe.</p>
+                        <div class="form-grid">
+                            <div class="form-full">
+                                <label for="apClasseProf">🏫 Classe entière</label>
+                                <select id="apClasseProf" onchange="selectionnerClasseAP()">
+                                    <option value="">— Ne pas sélectionner toute une classe —</option>
+                                </select>
+                            </div>
+                            <div class="form-full">
+                                <label for="apElevesProf">👥 Élèves concernés</label>
+                                <select id="apElevesProf" multiple size="7"></select>
+                                <small style="color:var(--text-secondary);">Ctrl + clic pour sélectionner plusieurs élèves.</small>
+                            </div>
+                            <div>
+                                <label for="apMatiereProf">📚 Matière</label>
+                                <input type="text" id="apMatiereProf" placeholder="Ex : Mathématiques">
+                            </div>
+                            <div>
+                                <label for="apDateProf">📅 Date</label>
+                                <input type="date" id="apDateProf">
+                            </div>
+                            <div>
+                                <label for="apHeureProf">🕐 Heure</label>
+                                <input type="time" id="apHeureProf">
+                            </div>
+                            <div>
+                                <label for="apSalleProf">🚪 Salle</label>
+                                <input type="text" id="apSalleProf" placeholder="Ex : B204">
+                            </div>
+                            <div class="form-full">
+                                <label for="apBesoinProf">📝 Contenu / besoin</label>
+                                <textarea id="apBesoinProf" placeholder="Expliquez ce qui sera travaillé pendant l'AP..."></textarea>
+                            </div>
+                            <div class="form-full">
+                                <label for="apCommentaireProf">💬 Commentaire pour les élèves</label>
+                                <textarea id="apCommentaireProf" placeholder="Informations complémentaires..."></textarea>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn-primary" onclick="creerAPProf()">🆘 Créer l’AP</button>
+                        </div>
+                        <div id="apProfMessage"></div>
+                    </div>
+
+                    <h3>📋 Demandes d’AP reçues</h3>
+                    <br>
+                    <div id="listeGestionAP" class="ap-list">Chargement...</div>
+
+                </section>
+
+
+                <!-- =========================
+                     GESTION PROFESSEURS
+                ========================= -->
+
+                <section
+                    id="gestionProfesseurs"
+                    class="section hidden"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+                            <h2>👨‍🏫 Gestion des professeurs</h2>
+                            <p>
+                                Créez et consultez les comptes des professeurs.
+                            </p>
+                        </div>
+
+                        <button
+                            class="btn-secondary"
+                            onclick="retourAccueil()"
+                        >
+                            ← Retour
+                        </button>
+
+                    </div>
+
+                    <div class="form-card">
+
+                        <h3>➕ Créer un professeur</h3>
+
+                        <div class="form-grid">
+
+                            <div>
+                                <label for="profPrenom">Prénom</label>
+                                <input type="text" id="profPrenom" placeholder="Prénom">
+                            </div>
+
+                            <div>
+                                <label for="profNom">Nom</label>
+                                <input type="text" id="profNom" placeholder="Nom">
+                            </div>
+
+                            <div>
+                                <label for="profMatiere">Matière</label>
+                                <input type="text" id="profMatiere" placeholder="Ex : Mathématiques">
+                            </div>
+
+                            <div>
+                                <label for="profEmail">Adresse e-mail</label>
+                                <input type="email" id="profEmail" placeholder="Adresse e-mail">
+                            </div>
+
+                            <div class="form-full">
+                                <label for="profPassword">Mot de passe</label>
+                                <input type="password" id="profPassword" placeholder="Mot de passe (8 caractères minimum)">
+                            </div>
+
+                        </div>
+
+                        <div class="form-actions">
+                            <button class="btn-success" onclick="creerProfesseur()">
+                                ➕ Créer le professeur
+                            </button>
+                        </div>
+
+                        <div id="profMessage"></div>
+
+                    </div>
+
+                    <hr class="section-separator">
+
+                    <h3>👨‍🏫 Professeurs existants</h3>
+                    <br>
+
+                    <div id="listeProfesseurs" class="students-list">
+                        Chargement...
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
                      GESTION IDÉES
                 ========================= -->
 
@@ -1988,14 +2413,20 @@ button {
             Accueil
         </button>
 
-        <button onclick="ouvrirIdees()">
+        <button id="mobileIdees" onclick="ouvrirIdees()">
             <span>💡</span>
             Idées
         </button>
 
-        <button onclick="ouvrirMesComptesRendus()">
+
+        <button id="mobileRapports" onclick="ouvrirMesComptesRendus()">
             <span>📝</span>
             Rapports
+        </button>
+
+        <button id="mobileAP" onclick="ouvrirDemandeAP()">
+            <span>🆘</span>
+            AP
         </button>
 
         <button onclick="ouvrirProfil()">
@@ -2034,6 +2465,7 @@ const supabaseClient =
 let utilisateur = null;
 let profilUtilisateur = null;
 let elevesEnMemoire = [];
+let professeursEnMemoire = [];
 
 
 /* =====================================================
@@ -2123,7 +2555,10 @@ function cacherToutesLesSections() {
         "mesComptesRendus",
         "gestionEleves",
         "gestionIdees",
-        "gestionComptesRendus"
+        "gestionComptesRendus",
+        "gestionProfesseurs",
+        "demandeAP",
+        "gestionAP"
     ];
 
     sections.forEach(id => {
@@ -2209,6 +2644,35 @@ function ouvrirMesComptesRendus() {
 }
 
 
+function ouvrirDemandeAP() {
+
+    if (!profilUtilisateur || profilUtilisateur.role !== "eleve") {
+        return;
+    }
+
+    cacherToutesLesSections();
+    document.getElementById("demandeAP").classList.remove("hidden");
+    changerTitre("Demande d’AP");
+    mettreNavigationActive("ap");
+    chargerProfesseursPourAP();
+    chargerMesAP();
+}
+
+
+function ouvrirGestionAP() {
+
+    if (!profilUtilisateur || !["professeur", "admin"].includes(profilUtilisateur.role)) {
+        return;
+    }
+
+    cacherToutesLesSections();
+    document.getElementById("gestionAP").classList.remove("hidden");
+    changerTitre("Gestion des AP");
+    mettreNavigationActive("ap");
+    chargerGestionAP();
+}
+
+
 function ouvrirGestionEleves() {
 
     if (
@@ -2229,6 +2693,27 @@ function ouvrirGestionEleves() {
     mettreNavigationActive("admin");
 
     chargerEleves();
+}
+
+
+function ouvrirGestionProfesseurs() {
+
+    if (
+        !profilUtilisateur ||
+        profilUtilisateur.role !== "admin"
+    ) {
+        return;
+    }
+
+    cacherToutesLesSections();
+
+    document
+        .getElementById("gestionProfesseurs")
+        .classList.remove("hidden");
+
+    changerTitre("Gestion des professeurs");
+    mettreNavigationActive("admin");
+    chargerProfesseurs();
 }
 
 
@@ -2284,38 +2769,28 @@ function ouvrirComptesRendusAdmin() {
 
 function mettreNavigationActive(page) {
 
-    document
-        .querySelectorAll(".nav-button")
-        .forEach(button => {
-            button.classList.remove("active");
-        });
+    document.querySelectorAll(".nav-button").forEach(button => {
+        button.classList.remove("active");
+    });
 
-    document
-        .querySelectorAll(".mobile-nav button")
-        .forEach(button => {
-            button.classList.remove("active");
-        });
+    document.querySelectorAll(".mobile-nav button").forEach(button => {
+        button.classList.remove("active");
+    });
 
     if (page === "accueil") {
-
-        const el =
-            document.getElementById(
-                "navAccueil"
-            );
-
-        if (el) {
-            el.classList.add("active");
-        }
-
-        const mobile =
-            document.getElementById(
-                "mobileAccueil"
-            );
-
-        if (mobile) {
-            mobile.classList.add("active");
-        }
-
+        document.getElementById("navAccueil")?.classList.add("active");
+        document.getElementById("mobileAccueil")?.classList.add("active");
+    } else if (page === "idees") {
+        document.getElementById("navIdeesEleve")?.classList.add("active");
+        document.getElementById("mobileIdees")?.classList.add("active");
+    } else if (page === "rapports") {
+        document.getElementById("navRapportsEleve")?.classList.add("active");
+        document.getElementById("mobileRapports")?.classList.add("active");
+    } else if (page === "ap") {
+        document.getElementById("navDemandeAP")?.classList.add("active");
+        document.querySelectorAll(".mobile-nav button").forEach(button => {
+            if (button.id === "mobileAP") button.classList.add("active");
+        });
     }
 }
 
@@ -2432,44 +2907,31 @@ async function chargerApplication() {
         chargerIdees();
 
 
-        if (
-            profilUtilisateur.role === "admin"
-        ) {
+        const isAdmin = profilUtilisateur.role === "admin";
+        const isProf = profilUtilisateur.role === "professeur";
+        const isEleve = profilUtilisateur.role === "eleve";
 
-            document
-                .getElementById("menuAdmin")
-                .classList.remove("hidden");
+        document.getElementById("menuAdmin").classList.toggle("hidden", !isAdmin);
+        document.getElementById("menuProfesseur").classList.toggle("hidden", !isProf);
 
-            document
-                .getElementById("adminCardEleves")
-                .classList.remove("hidden");
+        document.getElementById("navIdeesEleve").classList.toggle("hidden", !isEleve || isAdmin || isProf);
+        document.getElementById("navRapportsEleve").classList.toggle("hidden", !isEleve || isAdmin || isProf);
+        document.getElementById("navDemandeAP").classList.toggle("hidden", !isEleve);
 
-            document
-                .getElementById("adminCardIdees")
-                .classList.remove("hidden");
+        document.getElementById("studentCardIdees").classList.toggle("hidden", !isEleve);
+        document.getElementById("studentCardRapports").classList.toggle("hidden", !isEleve);
+        document.getElementById("studentCardAP").classList.toggle("hidden", !isEleve);
+        document.getElementById("profCardAP").classList.toggle("hidden", !isProf);
+        document.getElementById("adminCardAP").classList.toggle("hidden", !isAdmin);
 
-            document
-                .getElementById("adminCardRapports")
-                .classList.remove("hidden");
+        document.getElementById("adminCardEleves").classList.toggle("hidden", !isAdmin);
+        document.getElementById("adminCardIdees").classList.toggle("hidden", !isAdmin);
+        document.getElementById("adminCardRapports").classList.toggle("hidden", !isAdmin);
+        document.getElementById("adminCardProfesseurs").classList.toggle("hidden", !isAdmin);
 
-        } else {
-
-            document
-                .getElementById("menuAdmin")
-                .classList.add("hidden");
-
-            document
-                .getElementById("adminCardEleves")
-                .classList.add("hidden");
-
-            document
-                .getElementById("adminCardIdees")
-                .classList.add("hidden");
-
-            document
-                .getElementById("adminCardRapports")
-                .classList.add("hidden");
-        }
+        document.getElementById("mobileIdees").classList.toggle("hidden", !isEleve);
+        document.getElementById("mobileRapports").classList.toggle("hidden", !isEleve);
+        document.getElementById("mobileAP").classList.toggle("hidden", !isEleve);
 
 
     } catch (error) {
@@ -2517,7 +2979,9 @@ function mettreAJourInterface() {
     ).textContent =
         profilUtilisateur.role === "admin"
             ? "Administrateur"
-            : "Élève";
+            : profilUtilisateur.role === "professeur"
+                ? "Professeur"
+                : "Élève";
 
 
     document.getElementById(
@@ -3108,6 +3572,123 @@ async function supprimerEleve(id) {
 
 
 /* =====================================================
+   GESTION DES PROFESSEURS
+===================================================== */
+
+async function chargerProfesseurs() {
+
+    const liste = document.getElementById("listeProfesseurs");
+
+    if (!liste) return;
+
+    liste.innerHTML = "Chargement...";
+
+    const { data, error } =
+        await supabaseClient
+            .from("profiles")
+            .select("id, nom, prenom, classe, role")
+            .eq("role", "professeur")
+            .order("nom");
+
+    if (error) {
+        liste.innerHTML =
+            "<div class='message error'>" +
+            escapeHtml(error.message) +
+            "</div>";
+        return;
+    }
+
+    professeursEnMemoire = data || [];
+
+    if (!professeursEnMemoire.length) {
+        liste.innerHTML =
+            "<p style='color:var(--text-secondary);'>Aucun professeur pour le moment.</p>";
+        return;
+    }
+
+    liste.innerHTML = "";
+
+    professeursEnMemoire.forEach(prof => {
+
+        const card = document.createElement("div");
+        card.className = "student-card";
+
+        const nomComplet =
+            ((prof.prenom || "") + " " + (prof.nom || "")).trim();
+
+        card.innerHTML =
+            "<div class='student-info'>" +
+                "<div class='student-name'>👨‍🏫 " +
+                    escapeHtml(nomComplet) +
+                "</div>" +
+                "<div class='student-class'>Matière : " +
+                    escapeHtml(prof.classe || "Non renseignée") +
+                "</div>" +
+            "</div>";
+
+        liste.appendChild(card);
+    });
+}
+
+
+async function creerProfesseur() {
+
+    const prenom = document.getElementById("profPrenom").value.trim();
+    const nom = document.getElementById("profNom").value.trim();
+    const matiere = document.getElementById("profMatiere").value.trim();
+    const email = document.getElementById("profEmail").value.trim();
+    const password = document.getElementById("profPassword").value;
+
+    if (!prenom || !nom || !email || !password) {
+        afficherMessage("profMessage", "Veuillez remplir tous les champs obligatoires.", "error");
+        return;
+    }
+
+    if (password.length < 8) {
+        afficherMessage("profMessage", "Le mot de passe doit contenir au moins 8 caractères.", "error");
+        return;
+    }
+
+    try {
+
+        const { data, error } =
+            await supabaseClient.functions.invoke(
+                "create-professeur",
+                {
+                    body: {
+                        prenom,
+                        nom,
+                        matiere,
+                        email,
+                        password
+                    }
+                }
+            );
+
+        if (error) throw error;
+        if (data && data.error) throw new Error(data.error);
+
+        document.getElementById("profPrenom").value = "";
+        document.getElementById("profNom").value = "";
+        document.getElementById("profMatiere").value = "";
+        document.getElementById("profEmail").value = "";
+        document.getElementById("profPassword").value = "";
+
+        afficherMessage("profMessage", "Professeur créé avec succès.");
+        await chargerProfesseurs();
+
+    } catch (error) {
+        console.error(error);
+        afficherMessage(
+            "profMessage",
+            error.message || "Impossible de créer le professeur.",
+            "error"
+        );
+    }
+}
+
+
+/* =====================================================
    IDÉES
 ===================================================== */
 
@@ -3474,6 +4055,7 @@ async function supprimerIdee(id) {
         );
     }
 }
+
 
 
 /* =====================================================
@@ -3972,6 +4554,297 @@ async function supprimerCompteRendu(id) {
 
 
 /* =====================================================
+   AP
+===================================================== */
+
+function libelleStatut(statut) {
+    const labels = {
+        en_attente: "En attente",
+        acceptee: "Acceptée",
+        refusee: "Refusée",
+        annulee: "Annulée",
+        terminee: "Terminée"
+    };
+    return labels[statut] || statut || "Inconnu";
+}
+
+function formatHeure(heure) {
+    if (!heure) return "Non renseignée";
+    return String(heure).slice(0, 5);
+}
+
+function afficherCarteAP(demande, mode) {
+    const eleve = demande.eleve || {};
+    const nomEleve = ((eleve.prenom || "") + " " + (eleve.nom || "")).trim() || "Élève";
+    const peutAgir = mode === "admin" || (mode === "professeur" && demande.statut === "en_attente");
+    const estAttribue = mode === "professeur" && demande.professeur_id === profilUtilisateur?.id;
+    let actions = "";
+
+    if (mode === "admin" || estAttribue) {
+        actions = `
+            <div class="form-actions">
+                ${demande.statut === "en_attente" ? `
+                    <button class="btn-success" onclick="accepterAP('${demande.id}')">✅ Accepter</button>
+                    <button class="btn-danger" onclick="refuserAP('${demande.id}')">❌ Refuser</button>
+                ` : ""}
+                <button class="btn-primary" onclick="ouvrirModificationAP('${demande.id}')">✏️ Modifier</button>
+                <button class="btn-danger" onclick="supprimerAP('${demande.id}')">🗑️ Supprimer</button>
+            </div>`;
+    }
+
+    return `
+        <div class="ap-card">
+            <div class="ap-top">
+                <div>
+                    <div class="ap-title">🆘 ${escapeHtml(mode === "eleve" ? demande.matiere : nomEleve)}</div>
+                    <div class="ap-meta">${escapeHtml(mode === "eleve" ? "Demande envoyée" : `${nomEleve} · ${demande.matiere || "Matière non renseignée"}`)}</div>
+                </div>
+                <span class="ap-status ${escapeHtml(demande.statut)}">${escapeHtml(libelleStatut(demande.statut))}</span>
+            </div>
+            <div class="ap-besoin">${escapeHtml(demande.besoin)}</div>
+            <div class="ap-details">
+                <div class="ap-detail"><div class="ap-detail-label">Date souhaitée</div><div class="ap-detail-value">${escapeHtml(formatDate(demande.date_souhaitee) || "Non renseignée")}</div></div>
+                <div class="ap-detail"><div class="ap-detail-label">Date de l’AP</div><div class="ap-detail-value">${escapeHtml(formatDate(demande.date_ap) || "Non renseignée")}</div></div>
+                <div class="ap-detail"><div class="ap-detail-label">Heure</div><div class="ap-detail-value">${escapeHtml(formatHeure(demande.heure_ap))}</div></div>
+                <div class="ap-detail"><div class="ap-detail-label">Salle</div><div class="ap-detail-value">${escapeHtml(demande.salle || "Non renseignée")}</div></div>
+                <div class="ap-detail"><div class="ap-detail-label">Commentaire professeur</div><div class="ap-detail-value">${escapeHtml(demande.commentaire_prof || "Aucun")}</div></div>
+            </div>
+            ${actions}
+        </div>`;
+}
+
+async function chargerProfesseursPourAP() {
+    const select = document.getElementById("apProfesseur");
+    if (!select) return;
+    select.innerHTML = "<option value=\"\">Chargement...</option>";
+    const { data, error } = await supabaseClient.functions.invoke("manage-ap", { body: { action: "list_professeurs" } });
+    if (error || data?.error) { select.innerHTML = "<option value=\"\">Impossible de charger les professeurs</option>"; return; }
+    professeursEnMemoire = data?.professeurs || [];
+    select.innerHTML = "<option value=\"\">— Choisir un professeur —</option>";
+    professeursEnMemoire.forEach(prof => {
+        const option = document.createElement("option");
+        option.value = prof.id;
+        option.textContent = `${prof.prenom || ""} ${prof.nom || ""}${prof.classe ? " — " + prof.classe : ""}`.trim();
+        select.appendChild(option);
+    });
+}
+
+function apProfesseurChange() {
+    const select = document.getElementById("apProfesseur");
+    const matiere = document.getElementById("apMatiere");
+    if (!select || !matiere) return;
+    const prof = professeursEnMemoire.find(p => p.id === select.value);
+    matiere.value = prof?.classe || "";
+}
+
+async function creerDemandeAP() {
+    const professeur_id = document.getElementById("apProfesseur")?.value;
+    const matiere = document.getElementById("apMatiere")?.value.trim();
+    const besoin = document.getElementById("apBesoin")?.value.trim();
+    const date_souhaitee = document.getElementById("apDateSouhaitee")?.value || null;
+    if (!professeur_id || !matiere || !besoin) { afficherMessage("apMessage", "Choisissez un professeur et indiquez votre besoin.", "error"); return; }
+    const { data, error } = await supabaseClient.functions.invoke("manage-ap", { body: { action: "create_request", professeur_id, matiere, besoin, date_souhaitee } });
+    if (error) { afficherMessage("apMessage", error.message || "Impossible d'envoyer la demande.", "error"); return; }
+    if (data?.error) { afficherMessage("apMessage", data.error, "error"); return; }
+    document.getElementById("apProfesseur").value = "";
+    document.getElementById("apMatiere").value = "";
+    document.getElementById("apBesoin").value = "";
+    document.getElementById("apDateSouhaitee").value = "";
+    afficherMessage("apMessage", "Votre demande a été envoyée au professeur sélectionné.");
+    await chargerMesAP();
+}
+
+async function chargerMesAP() {
+    const liste = document.getElementById("listeMesAP");
+    if (!liste || !utilisateur) return;
+    liste.innerHTML = "Chargement...";
+
+    const { data, error } = await supabaseClient
+        .from("ap_demandes")
+        .select("*")
+        .eq("eleve_id", utilisateur.id)
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        liste.innerHTML = `<div class="message error">${escapeHtml(error.message)}</div>`;
+        return;
+    }
+
+    if (!data?.length) {
+        liste.innerHTML = `<p style="color:var(--text-secondary);">Aucune demande d’AP pour le moment.</p>`;
+        return;
+    }
+
+    liste.innerHTML = data.map(d => afficherCarteAP(d, "eleve")).join("");
+}
+
+async function chargerElevesPourAPProf() {
+    const select = document.getElementById("apElevesProf");
+    const classeSelect = document.getElementById("apClasseProf");
+    if (!select) return;
+    const { data, error } = await supabaseClient.functions.invoke("manage-ap", { body: { action: "list_eleves" } });
+    if (error || data?.error) { select.innerHTML = "<option>Impossible de charger les élèves</option>"; return; }
+    elevesEnMemoire = data?.eleves || [];
+    select.innerHTML = "";
+    elevesEnMemoire.forEach(eleve => {
+        const option = document.createElement("option");
+        option.value = eleve.id;
+        option.textContent = `${eleve.prenom || ""} ${eleve.nom || ""}${eleve.classe ? " — " + eleve.classe : ""}`.trim();
+        select.appendChild(option);
+    });
+    if (classeSelect) {
+        const classes = [...new Set(elevesEnMemoire.map(e => e.classe).filter(Boolean))].sort();
+        classeSelect.innerHTML = "<option value=\"\">— Ne pas sélectionner toute une classe —</option>";
+        classes.forEach(classe => { const option = document.createElement("option"); option.value = classe; option.textContent = classe; classeSelect.appendChild(option); });
+    }
+    const matiere = document.getElementById("apMatiereProf");
+    if (matiere && profilUtilisateur?.role === "professeur") matiere.value = profilUtilisateur.classe || "";
+}
+
+function selectionnerClasseAP() {
+    const classe = document.getElementById("apClasseProf")?.value;
+    const select = document.getElementById("apElevesProf");
+    if (!select) return;
+    Array.from(select.options).forEach(option => { const eleve = elevesEnMemoire.find(e => e.id === option.value); option.selected = !!classe && eleve?.classe === classe; });
+}
+
+async function creerAPProf() {
+    const select = document.getElementById("apElevesProf");
+    const eleve_ids = Array.from(select?.selectedOptions || []).map(o => o.value);
+    const matiere = document.getElementById("apMatiereProf")?.value.trim();
+    const besoin = document.getElementById("apBesoinProf")?.value.trim();
+    const date_ap = document.getElementById("apDateProf")?.value || null;
+    const heure_ap = document.getElementById("apHeureProf")?.value || null;
+    const salle = document.getElementById("apSalleProf")?.value.trim() || null;
+    const commentaire_prof = document.getElementById("apCommentaireProf")?.value.trim() || null;
+    if (!eleve_ids.length || !matiere || !besoin) { afficherMessage("apProfMessage", "Sélectionnez au moins un élève et remplissez la matière et le contenu de l'AP.", "error"); return; }
+    const { data, error } = await supabaseClient.functions.invoke("manage-ap", { body: { action: "create", eleve_ids, matiere, besoin, date_ap, heure_ap, salle, commentaire_prof } });
+    if (error) { afficherMessage("apProfMessage", error.message || "Impossible de créer l'AP.", "error"); return; }
+    if (data?.error) { afficherMessage("apProfMessage", data.error, "error"); return; }
+    Array.from(select.options).forEach(o => o.selected = false);
+    document.getElementById("apClasseProf").value = "";
+    document.getElementById("apDateProf").value = "";
+    document.getElementById("apHeureProf").value = "";
+    document.getElementById("apSalleProf").value = "";
+    document.getElementById("apBesoinProf").value = "";
+    document.getElementById("apCommentaireProf").value = "";
+    afficherMessage("apProfMessage", data.message || "AP créée avec succès.");
+    await chargerGestionAP();
+}
+
+async function chargerGestionAP() {
+    const liste = document.getElementById("listeGestionAP");
+    if (!liste || !profilUtilisateur) return;
+    liste.innerHTML = "Chargement...";
+
+    await chargerElevesPourAPProf();
+
+    const { data, error } = await supabaseClient.functions.invoke("manage-ap", {
+        body: { action: "list" }
+    });
+
+    if (error) {
+        liste.innerHTML = `<div class="message error">${escapeHtml(error.message)}</div>`;
+        return;
+    }
+    if (data?.error) {
+        liste.innerHTML = `<div class="message error">${escapeHtml(data.error)}</div>`;
+        return;
+    }
+
+    const demandes = data?.demandes || [];
+    window.apDemandesEnMemoire = demandes;
+    if (!demandes.length) {
+        liste.innerHTML = `<p style="color:var(--text-secondary);">Aucune demande d’AP à traiter.</p>`;
+        return;
+    }
+
+    const mode = profilUtilisateur.role === "admin" ? "admin" : "professeur";
+    liste.innerHTML = demandes.map(d => afficherCarteAP(d, mode)).join("");
+}
+
+async function modifierInfosAP(id, statut) {
+    const date_ap = prompt("Date de l’AP (AAAA-MM-JJ) :", "");
+    if (date_ap === null) return;
+    const heure_ap = prompt("Heure de l’AP (HH:MM) :", "");
+    if (heure_ap === null) return;
+    const salle = prompt("Salle :", "");
+    if (salle === null) return;
+    const commentaire_prof = prompt("Commentaire pour l’élève :", "");
+    if (commentaire_prof === null) return;
+
+    const action = statut === "refusee" ? "refuser" : "accepter";
+    const { data, error } = await supabaseClient.functions.invoke("manage-ap", {
+        body: { action, id, date_ap, heure_ap, salle, commentaire_prof }
+    });
+    if (error) { alert(error.message); return; }
+    if (data?.error) { alert(data.error); return; }
+    await chargerGestionAP();
+}
+
+async function ouvrirModificationAP(id) {
+    const demande = window.apDemandesEnMemoire?.find(d => d.id === id);
+    if (!demande) {
+        alert("AP introuvable. Actualisez la page puis réessayez.");
+        return;
+    }
+
+    const matiere = prompt("Matière :", demande.matiere || "");
+    if (matiere === null) return;
+    const besoin = prompt("Contenu / besoin de l’AP :", demande.besoin || "");
+    if (besoin === null) return;
+    const date_ap = prompt("Date de l’AP (AAAA-MM-JJ) :", demande.date_ap || demande.date_souhaitee || "");
+    if (date_ap === null) return;
+    const heure_ap = prompt("Heure de l’AP (HH:MM) :", demande.heure_ap ? String(demande.heure_ap).slice(0,5) : "");
+    if (heure_ap === null) return;
+    const salle = prompt("Salle :", demande.salle || "");
+    if (salle === null) return;
+    const commentaire_prof = prompt("Commentaire pour l’élève :", demande.commentaire_prof || "");
+    if (commentaire_prof === null) return;
+    const statut = prompt("Statut (en_attente / acceptee / refusee / annulee / terminee) :", demande.statut || "en_attente");
+    if (statut === null) return;
+
+    const { data, error } = await supabaseClient.functions.invoke("manage-ap", {
+        body: { action: "modifier", id, matiere, besoin, date_ap: date_ap || null, heure_ap: heure_ap || null, salle, commentaire_prof, statut }
+    });
+
+    if (error) { alert(error.message || "Impossible de modifier l’AP."); return; }
+    if (data?.error) { alert(data.error); return; }
+
+    await chargerGestionAP();
+    alert("AP modifié avec succès.");
+}
+
+async function supprimerAP(id) {
+    if (!confirm("Voulez-vous vraiment supprimer cet AP ? Cette action est irréversible.")) return;
+
+    const { data, error } = await supabaseClient.functions.invoke("manage-ap", {
+        body: { action: "supprimer", id }
+    });
+
+    if (error) { alert(error.message || "Impossible de supprimer l’AP."); return; }
+    if (data?.error) { alert(data.error); return; }
+
+    await chargerGestionAP();
+}
+
+async function accepterAP(id) {
+    await modifierInfosAP(id, "acceptee");
+}
+
+async function refuserAP(id) {
+    const commentaire_prof = prompt("Motif ou commentaire pour l’élève :", "");
+    if (commentaire_prof === null) return;
+    const { data, error } = await supabaseClient.functions.invoke("manage-ap", {
+        body: { action: "refuser", id, commentaire_prof }
+    });
+    if (error) { alert(error.message); return; }
+    if (data?.error) { alert(data.error); return; }
+    await chargerGestionAP();
+}
+
+
+/* =====================================================
    DÉCONNEXION
 ===================================================== */
 
@@ -3998,6 +4871,23 @@ async function deconnexion() {
     document
         .getElementById("adminCardRapports")
         .classList.add("hidden");
+
+    document
+        .getElementById("adminCardProfesseurs")
+        .classList.add("hidden");
+
+    document.getElementById("menuProfesseur")?.classList.add("hidden");
+    document.getElementById("adminCardAP")?.classList.add("hidden");
+    document.getElementById("profCardAP")?.classList.add("hidden");
+    document.getElementById("studentCardAP")?.classList.remove("hidden");
+    document.getElementById("studentCardIdees")?.classList.remove("hidden");
+    document.getElementById("studentCardRapports")?.classList.remove("hidden");
+    document.getElementById("navIdeesEleve")?.classList.remove("hidden");
+    document.getElementById("navRapportsEleve")?.classList.remove("hidden");
+    document.getElementById("navDemandeAP")?.classList.remove("hidden");
+    document.getElementById("mobileIdees")?.classList.remove("hidden");
+    document.getElementById("mobileRapports")?.classList.remove("hidden");
+    document.getElementById("mobileAP")?.classList.remove("hidden");
 
 
     document
