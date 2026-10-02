@@ -1046,7 +1046,8 @@ body.dark-mode .mobile-nav {
 body.dark-mode .login-card input,
 body.dark-mode .form-card input,
 body.dark-mode .form-card textarea,
-body.dark-mode .form-card select {
+body.dark-mode .form-card select,
+body.dark-mode .forum-reply textarea {
     background: #0f172a;
     color: var(--text);
     border-color: var(--border);
@@ -1066,6 +1067,195 @@ body.dark-mode .loginPage { background: #0f172a; }
     border-radius: 8px;
     padding: 8px 10px;
     font-weight: 650;
+}
+
+
+
+/* =========================
+   FORUMS
+========================= */
+
+.forum-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 18px;
+    min-height: 500px;
+}
+
+.forum-panel {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+    overflow: hidden;
+}
+
+.forum-panel-header {
+    padding: 15px 17px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.forum-panel-header h3 {
+    margin: 0;
+    font-size: 14px;
+}
+
+.forum-discussions {
+    max-height: 520px;
+    overflow-y: auto;
+}
+
+.forum-discussion-item {
+    padding: 14px 15px;
+    border: 0;
+    border-bottom: 1px solid var(--border);
+    background: transparent;
+    width: 100%;
+    text-align: left;
+    color: var(--text);
+}
+
+.forum-discussion-item:hover,
+.forum-discussion-item.active {
+    background: var(--primary-light);
+}
+
+.forum-discussion-title {
+    font-weight: 750;
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.forum-discussion-meta {
+    color: var(--text-secondary);
+    font-size: 11px;
+}
+
+.forum-conversation {
+    display: flex;
+    flex-direction: column;
+    min-height: 500px;
+}
+
+.forum-conversation-header {
+    padding: 17px;
+    border-bottom: 1px solid var(--border);
+}
+
+.forum-conversation-header h3 {
+    margin: 0 0 5px;
+    font-size: 16px;
+}
+
+.forum-conversation-header p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
+.forum-messages {
+    flex: 1;
+    padding: 18px;
+    overflow-y: auto;
+    max-height: 470px;
+}
+
+.forum-message {
+    max-width: 82%;
+    margin-bottom: 13px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: var(--surface-hover);
+    border: 1px solid var(--border);
+}
+
+.forum-message.mine {
+    margin-left: auto;
+    background: var(--primary-light);
+    border-color: rgba(37, 99, 235, 0.18);
+}
+
+.forum-message-author {
+    font-size: 11px;
+    font-weight: 750;
+    margin-bottom: 5px;
+}
+
+.forum-message-content {
+    font-size: 13px;
+    line-height: 1.55;
+    white-space: pre-wrap;
+}
+
+.forum-message-date {
+    color: var(--text-secondary);
+    font-size: 10px;
+    margin-top: 7px;
+}
+
+.forum-reply {
+    padding: 15px;
+    border-top: 1px solid var(--border);
+}
+
+.forum-reply textarea {
+    min-height: 80px;
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 11px 12px;
+    background: var(--surface);
+    color: var(--text);
+    resize: vertical;
+    outline: none;
+}
+
+.forum-empty {
+    padding: 25px 18px;
+    color: var(--text-secondary);
+    text-align: center;
+    font-size: 13px;
+}
+
+.forum-private-banner {
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: var(--primary-light);
+    color: var(--primary);
+    font-size: 12px;
+    line-height: 1.5;
+    margin-bottom: 18px;
+}
+
+.forum-private-badge {
+    display: inline-block;
+    padding: 4px 7px;
+    border-radius: 999px;
+    background: var(--primary-light);
+    color: var(--primary);
+    font-size: 10px;
+    font-weight: 750;
+}
+
+body.dark-mode .forum-panel {
+    background: var(--surface);
+}
+
+@media (max-width: 850px) {
+    .forum-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .forum-discussions {
+        max-height: 300px;
+    }
+
+    .forum-message {
+        max-width: 92%;
+    }
 }
 
 </style>
@@ -1197,6 +1387,24 @@ body.dark-mode .loginPage { background: #0f172a; }
                 >
                     <span class="nav-icon">🆘</span>
                     Demande d’AP
+                </button>
+
+                <button
+                    id="navForumGeneral"
+                    class="nav-button"
+                    onclick="ouvrirForumGeneral()"
+                >
+                    <span class="nav-icon">💬</span>
+                    Forum général
+                </button>
+
+                <button
+                    id="navForumPrive"
+                    class="nav-button hidden"
+                    onclick="ouvrirForumPrive()"
+                >
+                    <span class="nav-icon">🔒</span>
+                    Délégués
                 </button>
 
                 <div
@@ -1485,6 +1693,50 @@ body.dark-mode .loginPage { background: #0f172a; }
 
                             <p>
                                 Demandez une aide personnalisée à un professeur.
+                            </p>
+
+                        </div>
+
+
+                        <div
+                            id="cardForumGeneral"
+                            class="dashboard-card"
+                            onclick="ouvrirForumGeneral()"
+                            style="cursor:pointer;"
+                        >
+
+                            <div class="dashboard-card-icon">
+                                💬
+                            </div>
+
+                            <h3>
+                                Forum général
+                            </h3>
+
+                            <p>
+                                Posez vos questions et discutez avec les élèves, professeurs et délégués.
+                            </p>
+
+                        </div>
+
+
+                        <div
+                            id="cardForumPrive"
+                            class="dashboard-card hidden"
+                            onclick="ouvrirForumPrive()"
+                            style="cursor:pointer;"
+                        >
+
+                            <div class="dashboard-card-icon">
+                                🔒
+                            </div>
+
+                            <h3>
+                                Parler aux délégués
+                            </h3>
+
+                            <p>
+                                Contactez directement le délégué de votre choix en cas de problème.
                             </p>
 
                         </div>
@@ -2164,7 +2416,7 @@ body.dark-mode .loginPage { background: #0f172a; }
 
                     <div id="creationAPProf" class="form-card" style="margin-bottom:24px;">
                         <h3>➕ Créer une AP</h3>
-                        <p style="color:var(--text-secondary);margin-bottom:18px;">Créez une AP pour un élève, plusieurs élèves ou toute une classe.</p>
+                        <p style="color:var(--text-secondary);margin-bottom:18px;">Créez un seul bloc d’AP et choisissez les élèves concernés.</p>
                         <div class="form-grid">
                             <div class="form-full">
                                 <label for="apClasseProf">🏫 Classe entière</label>
@@ -2173,9 +2425,9 @@ body.dark-mode .loginPage { background: #0f172a; }
                                 </select>
                             </div>
                             <div class="form-full">
-                                <label for="apElevesProf">👥 Élèves concernés</label>
+                                <label for="apElevesProf">👥 Qui est concerné ?</label>
                                 <select id="apElevesProf" multiple size="7"></select>
-                                <small style="color:var(--text-secondary);">Ctrl + clic pour sélectionner plusieurs élèves.</small>
+                                <small style="color:var(--text-secondary);">Sélectionnez un ou plusieurs élèves. Une seule AP sera créée pour tout le groupe.</small>
                             </div>
                             <div>
                                 <label for="apMatiereProf">📚 Matière</label>
@@ -2203,25 +2455,169 @@ body.dark-mode .loginPage { background: #0f172a; }
                             </div>
                         </div>
                         <div class="form-actions">
-                            <button class="btn-primary" onclick="creerAPProf()">🆘 Créer l’AP</button>
+                            <button id="apProfSubmit" class="btn-primary" onclick="creerAPProf()">🆘 Créer l’AP</button>
+                            <button id="apProfCancel" class="btn-secondary hidden" onclick="annulerModificationAP()">Annuler la modification</button>
                         </div>
                         <div id="apProfMessage"></div>
                     </div>
 
-                    <div id="apBulkActions" class="form-actions" style="margin-bottom:18px;">
-                        <button class="btn-danger" onclick="supprimerAPSelectionnees()">🗑️ Supprimer les AP sélectionnées</button>
-                        <button class="btn-secondary" onclick="supprimerToutesAPAffichees()">🗑️ Supprimer toutes les AP affichées</button>
-                    </div>
-
-                    <h3>📋 Demandes d’AP reçues</h3>
+                    <h3>📋 AP créées et demandes reçues</h3>
                     <br>
                     <div id="listeGestionAP" class="ap-list">Chargement...</div>
+
+                </section>
+
+                <!-- =========================
+                     FORUM GÉNÉRAL
+                ========================= -->
+
+                <section
+                    id="forumGeneral"
+                    class="section hidden"
+                >
+
+                    <div class="section-header">
+                        <div>
+                            <h2>💬 Forum général</h2>
+                            <p>Questions et discussions entre élèves, professeurs et délégués.</p>
+                        </div>
+                        <button class="btn-secondary" onclick="retourAccueil()">← Retour</button>
+                    </div>
+
+                    <div class="form-card" style="margin-bottom:22px;">
+                        <h3>➕ Nouvelle discussion</h3>
+
+                        <label for="forumTitre">Titre</label>
+                        <input type="text" id="forumTitre" placeholder="Ex : Question sur le prochain cours">
+
+                        <label for="forumContenu">Votre message</label>
+                        <textarea id="forumContenu" placeholder="Posez votre question ou lancez une discussion..."></textarea>
+
+                        <div class="form-actions">
+                            <button class="btn-primary" onclick="creerDiscussionForum()">💬 Publier la discussion</button>
+                            <button class="btn-secondary" onclick="chargerForumGeneral()">↻ Actualiser</button>
+                        </div>
+
+                        <div id="forumMessage"></div>
+                    </div>
+
+                    <div class="forum-layout">
+
+                        <div class="forum-panel">
+                            <div class="forum-panel-header">
+                                <h3>Discussions</h3>
+                                <button class="btn-secondary" onclick="chargerForumGeneral()">↻</button>
+                            </div>
+                            <div id="listeForumDiscussions" class="forum-discussions">
+                                <div class="forum-empty">Chargement...</div>
+                            </div>
+                        </div>
+
+                        <div class="forum-panel forum-conversation">
+                            <div id="forumConversationHeader" class="forum-conversation-header">
+                                <h3>Sélectionnez une discussion</h3>
+                                <p>Les réponses apparaîtront ici.</p>
+                            </div>
+                            <div id="forumMessages" class="forum-messages">
+                                <div class="forum-empty">Sélectionnez une discussion à gauche.</div>
+                            </div>
+                            <div id="forumReply" class="forum-reply hidden">
+                                <textarea id="forumReponse" placeholder="Écrivez votre réponse..."></textarea>
+                                <div class="form-actions">
+                                    <button class="btn-primary" onclick="envoyerReponseForum()">↩️ Répondre</button>
+                                </div>
+                                <div id="forumReplyMessage"></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     FORUM PRIVÉ DÉLÉGUÉS
+                ========================= -->
+
+                <section
+                    id="forumPrive"
+                    class="section hidden"
+                >
+
+                    <div class="section-header">
+                        <div>
+                            <h2>🔒 Parler aux délégués</h2>
+                            <p>Un espace privé entre un élève et le délégué qu’il a choisi.</p>
+                        </div>
+                        <button class="btn-secondary" onclick="retourAccueil()">← Retour</button>
+                    </div>
+
+                    <div class="forum-private-banner">
+                        🔐 Les messages de cette partie ne sont pas publiés dans le forum général. Lorsque vous démarrez une conversation, vous choisissez le délégué qui la recevra.
+                    </div>
+
+                    <div id="forumPriveNouvelle" class="form-card" style="margin-bottom:22px;">
+                        <h3>➕ Nouvelle conversation</h3>
+
+                        <div class="form-grid">
+                            <div class="form-full">
+                                <label for="forumDelegue">Délégué destinataire</label>
+                                <select id="forumDelegue">
+                                    <option value="">Chargement des délégués...</option>
+                                </select>
+                            </div>
+                            <div class="form-full">
+                                <label for="forumPriveSujet">Sujet</label>
+                                <input type="text" id="forumPriveSujet" placeholder="Ex : Problème avec un cours">
+                            </div>
+                            <div class="form-full">
+                                <label for="forumPriveContenu">Message</label>
+                                <textarea id="forumPriveContenu" placeholder="Expliquez votre problème ou votre demande..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button class="btn-primary" onclick="creerConversationPrivee()">🔒 Envoyer au délégué</button>
+                            <button class="btn-secondary" onclick="chargerForumPrive()">↻ Actualiser</button>
+                        </div>
+                        <div id="forumPriveMessage"></div>
+                    </div>
+
+                    <div class="forum-layout">
+                        <div class="forum-panel">
+                            <div class="forum-panel-header">
+                                <h3>Mes conversations</h3>
+                                <button class="btn-secondary" onclick="chargerForumPrive()">↻</button>
+                            </div>
+                            <div id="listeForumPrive" class="forum-discussions">
+                                <div class="forum-empty">Chargement...</div>
+                            </div>
+                        </div>
+
+                        <div class="forum-panel forum-conversation">
+                            <div id="forumPriveHeader" class="forum-conversation-header">
+                                <h3>Sélectionnez une conversation</h3>
+                                <p>La conversation privée apparaîtra ici.</p>
+                            </div>
+                            <div id="forumPriveMessages" class="forum-messages">
+                                <div class="forum-empty">Sélectionnez une conversation à gauche.</div>
+                            </div>
+                            <div id="forumPriveReply" class="forum-reply hidden">
+                                <textarea id="forumPriveReponse" placeholder="Écrivez votre réponse..."></textarea>
+                                <div class="form-actions">
+                                    <button class="btn-primary" onclick="envoyerReponsePrivee()">↩️ Répondre</button>
+                                </div>
+                                <div id="forumPriveReplyMessage"></div>
+                            </div>
+                        </div>
+                    </div>
 
                 </section>
 
 
                 <!-- =========================
                      GESTION PROFESSEURS
+                =========================
                 ========================= -->
 
                 <section
@@ -2489,6 +2885,16 @@ body.dark-mode .loginPage { background: #0f172a; }
             AP
         </button>
 
+        <button id="mobileForum" onclick="ouvrirForumGeneral()">
+            <span>💬</span>
+            Forum
+        </button>
+
+        <button id="mobileForumPrive" class="hidden" onclick="ouvrirForumPrive()">
+            <span>🔒</span>
+            Délégués
+        </button>
+
         <button onclick="ouvrirProfil()">
             <span>👤</span>
             Profil
@@ -2634,14 +3040,12 @@ async function chargerInfosAccueil() {
     bloc.innerHTML = "<div class='message'>Chargement des informations...</div>";
 
     try {
-        const { data, error } = await supabaseClient
-            .from("ap_demandes")
-            .select("id, eleve_id, matiere, besoin, date_souhaitee, statut, professeur_id, date_ap, heure_ap, salle, commentaire_prof, created_at")
-            .eq("eleve_id", utilisateur.id)
-            .in("statut", ["acceptee", "en_attente"])
-            .order("date_ap", { ascending: true, nullsFirst: false });
-
-        if (error) throw error;
+        let data = [];
+        if (profilUtilisateur?.role === "eleve") {
+            const result = await supabaseClient.functions.invoke("manage-ap", { body: { action: "list_my" } });
+            if (result.error || result.data?.error) throw new Error(result.error?.message || result.data?.error);
+            data = result.data?.demandes || [];
+        }
 
         const { data: rapports, error: rapportError } = await supabaseClient
             .from("comptes_rendus")
@@ -2656,7 +3060,7 @@ async function chargerInfosAccueil() {
 
         if (data?.length) {
             data.forEach(ap => {
-                const statut = ap.statut === "acceptee" ? "Acceptée" : "En attente";
+                const statut = ap.statut === "acceptee" ? "Acceptée" : ap.statut === "en_attente" ? "En attente" : libelleStatut(ap.statut);
                 const date = ap.date_ap ? formatDate(ap.date_ap) : (ap.date_souhaitee ? formatDate(ap.date_souhaitee) : "Date non renseignée");
                 const heure = ap.heure_ap ? String(ap.heure_ap).slice(0,5) : "";
                 html += `<div class="dashboard-card" style="border-left:4px solid var(--primary);">
@@ -2697,7 +3101,9 @@ function cacherToutesLesSections() {
         "gestionComptesRendus",
         "gestionProfesseurs",
         "demandeAP",
-        "gestionAP"
+        "gestionAP",
+        "forumGeneral",
+        "forumPrive"
     ];
 
     sections.forEach(id => {
@@ -2810,6 +3216,32 @@ function ouvrirGestionAP() {
     changerTitre("Gestion des AP");
     mettreNavigationActive("ap");
     chargerGestionAP();
+}
+
+
+function ouvrirForumGeneral() {
+
+    if (!profilUtilisateur) return;
+
+    cacherToutesLesSections();
+    document.getElementById("forumGeneral").classList.remove("hidden");
+    changerTitre("Forum général");
+    mettreNavigationActive("forum");
+    chargerForumGeneral();
+}
+
+
+function ouvrirForumPrive() {
+
+    if (!profilUtilisateur || !["eleve", "admin"].includes(profilUtilisateur.role)) {
+        return;
+    }
+
+    cacherToutesLesSections();
+    document.getElementById("forumPrive").classList.remove("hidden");
+    changerTitre("Parler aux délégués");
+    mettreNavigationActive("forumPrive");
+    chargerForumPrive();
 }
 
 
@@ -2931,6 +3363,12 @@ function mettreNavigationActive(page) {
         document.querySelectorAll(".mobile-nav button").forEach(button => {
             if (button.id === "mobileAP") button.classList.add("active");
         });
+    } else if (page === "forum") {
+        document.getElementById("navForumGeneral")?.classList.add("active");
+        document.getElementById("mobileForum")?.classList.add("active");
+    } else if (page === "forumPrive") {
+        document.getElementById("navForumPrive")?.classList.add("active");
+        document.getElementById("mobileForumPrive")?.classList.add("active");
     }
 }
 
@@ -2998,9 +3436,62 @@ async function connexion() {
 }
 
 
+async function obtenirUtilisateurAuthentifie({forcerRefresh = false} = {}) {
+    let { data: sessionData, error: sessionError } =
+        await supabaseClient.auth.getSession();
+
+    if (sessionError) throw sessionError;
+
+    let session = sessionData?.session || null;
+
+    if (forcerRefresh || !session) {
+        const { data: refreshed, error: refreshError } =
+            await supabaseClient.auth.refreshSession();
+
+        if (refreshError) throw refreshError;
+        session = refreshed?.session || null;
+    }
+
+    if (!session?.user) {
+        return null;
+    }
+
+    const { data: userData, error: userError } =
+        await supabaseClient.auth.getUser();
+
+    if (userError || !userData?.user) {
+        if (!forcerRefresh) {
+            return obtenirUtilisateurAuthentifie({ forcerRefresh: true });
+        }
+        return null;
+    }
+
+    utilisateur = userData.user;
+    return userData.user;
+}
+
+
+async function verifierUtilisateurCourant() {
+    const user = await obtenirUtilisateurAuthentifie();
+
+    if (!user) {
+        await deconnexion(false);
+        return false;
+    }
+
+    return true;
+}
+
+
 async function chargerApplication() {
 
     try {
+
+        const currentUser = await obtenirUtilisateurAuthentifie();
+
+        if (!currentUser) {
+            throw new Error("Session utilisateur introuvable.");
+        }
 
         const {
             data,
@@ -3073,6 +3564,12 @@ async function chargerApplication() {
         document.getElementById("mobileIdees").classList.toggle("hidden", !isEleve);
         document.getElementById("mobileRapports").classList.toggle("hidden", !isEleve);
         document.getElementById("mobileAP").classList.toggle("hidden", !isEleve);
+        document.getElementById("navForumGeneral").classList.toggle("hidden", false);
+        document.getElementById("navForumPrive").classList.toggle("hidden", !(isEleve || isAdmin));
+        document.getElementById("cardForumGeneral").classList.toggle("hidden", false);
+        document.getElementById("cardForumPrive").classList.toggle("hidden", !(isEleve || isAdmin));
+        document.getElementById("mobileForum").classList.toggle("hidden", false);
+        document.getElementById("mobileForumPrive").classList.toggle("hidden", !(isEleve || isAdmin));
 
 
     } catch (error) {
@@ -4694,8 +5191,10 @@ async function supprimerCompteRendu(id) {
 }
 
 
+let apEditionId = null;
+
 /* =====================================================
-   AP
+   AP — BLOCS GROUPÉS
 ===================================================== */
 
 function libelleStatut(statut) {
@@ -4714,14 +5213,18 @@ function formatHeure(heure) {
     return String(heure).slice(0, 5);
 }
 
+function nomsElevesAP(demande) {
+    const eleves = Array.isArray(demande.eleves) ? demande.eleves : [];
+    if (!eleves.length) return "Aucun élève";
+    return eleves.map(e => `${e.prenom || ""} ${e.nom || ""}`.trim()).filter(Boolean).join(", ");
+}
+
 function afficherCarteAP(demande, mode) {
-    const eleve = demande.eleve || {};
-    const nomEleve = ((eleve.prenom || "") + " " + (eleve.nom || "")).trim() || "Élève";
-    const peutAgir = mode === "admin" || (mode === "professeur" && demande.statut === "en_attente");
-    const estAttribue = mode === "professeur" && demande.professeur_id === profilUtilisateur?.id;
+    const eleves = Array.isArray(demande.eleves) ? demande.eleves : [];
+    const peutAgir = mode === "admin" || (mode === "professeur" && demande.professeur_id === profilUtilisateur?.id);
     let actions = "";
 
-    if (mode === "admin" || estAttribue) {
+    if (peutAgir) {
         actions = `
             <div class="form-actions">
                 ${demande.statut === "en_attente" ? `
@@ -4733,18 +5236,27 @@ function afficherCarteAP(demande, mode) {
             </div>`;
     }
 
-    const checkbox = mode === "admin" || estAttribue ? `<label style="display:flex;align-items:center;gap:6px;font-size:12px;margin-top:10px;"><input type="checkbox" class="ap-selection" value="${escapeHtml(demande.id)}"> Sélectionner</label>` : "";
+    const elevesHtml = eleves.length
+        ? eleves.map(e => `<span style="display:inline-block;background:var(--primary-light);color:var(--primary);padding:5px 8px;border-radius:7px;font-size:11px;font-weight:650;margin:3px 4px 3px 0;">${escapeHtml(`${e.prenom || ""} ${e.nom || ""}`.trim())}${e.classe ? ` · ${escapeHtml(e.classe)}` : ""}</span>`).join("")
+        : `<span style="color:var(--text-secondary);font-size:12px;">Aucun élève renseigné</span>`;
 
     return `
         <div class="ap-card">
             <div class="ap-top">
                 <div>
-                    <div class="ap-title">🆘 ${escapeHtml(mode === "eleve" ? demande.matiere : nomEleve)}</div>
-                    <div class="ap-meta">${escapeHtml(mode === "eleve" ? "Demande envoyée" : `${nomEleve} · ${demande.matiere || "Matière non renseignée"}`)}</div>
+                    <div class="ap-title">🆘 ${escapeHtml(demande.matiere || "AP")}</div>
+                    <div class="ap-meta">${mode === "eleve" ? "Votre AP" : `${eleves.length} élève${eleves.length > 1 ? "s" : ""} concerné${eleves.length > 1 ? "s" : ""}`}</div>
                 </div>
                 <span class="ap-status ${escapeHtml(demande.statut)}">${escapeHtml(libelleStatut(demande.statut))}</span>
             </div>
-            <div class="ap-besoin">${escapeHtml(demande.besoin)}</div>
+
+            <div style="margin-top:13px;">
+                <div class="ap-detail-label" style="margin-bottom:6px;">👥 Élèves concernés</div>
+                <div>${elevesHtml}</div>
+            </div>
+
+            <div class="ap-besoin">${escapeHtml(demande.besoin || "")}</div>
+
             <div class="ap-details">
                 <div class="ap-detail"><div class="ap-detail-label">Date souhaitée</div><div class="ap-detail-value">${escapeHtml(formatDate(demande.date_souhaitee) || "Non renseignée")}</div></div>
                 <div class="ap-detail"><div class="ap-detail-label">Date de l’AP</div><div class="ap-detail-value">${escapeHtml(formatDate(demande.date_ap) || "Non renseignée")}</div></div>
@@ -4752,7 +5264,6 @@ function afficherCarteAP(demande, mode) {
                 <div class="ap-detail"><div class="ap-detail-label">Salle</div><div class="ap-detail-value">${escapeHtml(demande.salle || "Non renseignée")}</div></div>
                 <div class="ap-detail"><div class="ap-detail-label">Commentaire professeur</div><div class="ap-detail-value">${escapeHtml(demande.commentaire_prof || "Aucun")}</div></div>
             </div>
-            ${checkbox}
             ${actions}
         </div>`;
 }
@@ -4803,31 +5314,32 @@ async function chargerMesAP() {
     if (!liste || !utilisateur) return;
     liste.innerHTML = "Chargement...";
 
-    const { data, error } = await supabaseClient
-        .from("ap_demandes")
-        .select("*")
-        .eq("eleve_id", utilisateur.id)
-        .order("created_at", { ascending: false });
+    const { data, error } = await supabaseClient.functions.invoke("manage-ap", {
+        body: { action: "list_my" }
+    });
 
-    if (error) {
-        liste.innerHTML = `<div class="message error">${escapeHtml(error.message)}</div>`;
+    if (error || data?.error) {
+        liste.innerHTML = `<div class="message error">${escapeHtml(error?.message || data?.error || "Impossible de charger vos AP.")}</div>`;
         return;
     }
 
-    if (!data?.length) {
+    const demandes = data?.demandes || [];
+    if (!demandes.length) {
         liste.innerHTML = `<p style="color:var(--text-secondary);">Aucune demande d’AP pour le moment.</p>`;
         return;
     }
 
-    liste.innerHTML = data.map(d => afficherCarteAP(d, "eleve")).join("");
+    liste.innerHTML = demandes.map(d => afficherCarteAP(d, "eleve")).join("");
 }
 
 async function chargerElevesPourAPProf() {
     const select = document.getElementById("apElevesProf");
     const classeSelect = document.getElementById("apClasseProf");
     if (!select) return;
+
     const { data, error } = await supabaseClient.functions.invoke("manage-ap", { body: { action: "list_eleves" } });
     if (error || data?.error) { select.innerHTML = "<option>Impossible de charger les élèves</option>"; return; }
+
     elevesEnMemoire = data?.eleves || [];
     select.innerHTML = "";
     elevesEnMemoire.forEach(eleve => {
@@ -4836,11 +5348,18 @@ async function chargerElevesPourAPProf() {
         option.textContent = `${eleve.prenom || ""} ${eleve.nom || ""}${eleve.classe ? " — " + eleve.classe : ""}`.trim();
         select.appendChild(option);
     });
+
     if (classeSelect) {
         const classes = [...new Set(elevesEnMemoire.map(e => e.classe).filter(Boolean))].sort();
         classeSelect.innerHTML = "<option value=\"\">— Ne pas sélectionner toute une classe —</option>";
-        classes.forEach(classe => { const option = document.createElement("option"); option.value = classe; option.textContent = classe; classeSelect.appendChild(option); });
+        classes.forEach(classe => {
+            const option = document.createElement("option");
+            option.value = classe;
+            option.textContent = classe;
+            classeSelect.appendChild(option);
+        });
     }
+
     const matiere = document.getElementById("apMatiereProf");
     if (matiere && profilUtilisateur?.role === "professeur") matiere.value = profilUtilisateur.classe || "";
 }
@@ -4849,31 +5368,83 @@ function selectionnerClasseAP() {
     const classe = document.getElementById("apClasseProf")?.value;
     const select = document.getElementById("apElevesProf");
     if (!select) return;
-    Array.from(select.options).forEach(option => { const eleve = elevesEnMemoire.find(e => e.id === option.value); option.selected = !!classe && eleve?.classe === classe; });
+    Array.from(select.options).forEach(option => {
+        const eleve = elevesEnMemoire.find(e => e.id === option.value);
+        option.selected = !!classe && eleve?.classe === classe;
+    });
 }
 
 async function creerAPProf() {
     const select = document.getElementById("apElevesProf");
-    const eleve_ids = Array.from(select?.selectedOptions || []).map(o => o.value);
+    const eleves = Array.from(select?.selectedOptions || []).map(o => o.value);
     const matiere = document.getElementById("apMatiereProf")?.value.trim();
     const besoin = document.getElementById("apBesoinProf")?.value.trim();
     const date_ap = document.getElementById("apDateProf")?.value || null;
     const heure_ap = document.getElementById("apHeureProf")?.value || null;
     const salle = document.getElementById("apSalleProf")?.value.trim() || null;
     const commentaire_prof = document.getElementById("apCommentaireProf")?.value.trim() || null;
-    if (!eleve_ids.length || !matiere || !besoin) { afficherMessage("apProfMessage", "Sélectionnez au moins un élève et remplissez la matière et le contenu de l'AP.", "error"); return; }
-    const { data, error } = await supabaseClient.functions.invoke("manage-ap", { body: { action: "create", eleves: eleve_ids, matiere, besoin, date_ap, heure_ap, salle, commentaire_prof } });
-    if (error) { afficherMessage("apProfMessage", error.message || "Impossible de créer l'AP.", "error"); return; }
+
+    if (!eleves.length || !matiere || !besoin) {
+        afficherMessage("apProfMessage", "Sélectionnez au moins un élève et remplissez la matière et le contenu de l'AP.", "error");
+        return;
+    }
+
+    const action = apEditionId ? "modifier" : "create";
+    const body = apEditionId
+        ? { action, id: apEditionId, eleves, matiere, besoin, date_ap, heure_ap, salle, commentaire_prof }
+        : { action, eleves, matiere, besoin, date_ap, heure_ap, salle, commentaire_prof };
+
+    const { data, error } = await supabaseClient.functions.invoke("manage-ap", { body });
+
+    if (error) { afficherMessage("apProfMessage", error.message || "Impossible d'enregistrer l'AP.", "error"); return; }
     if (data?.error) { afficherMessage("apProfMessage", data.error, "error"); return; }
-    Array.from(select.options).forEach(o => o.selected = false);
-    document.getElementById("apClasseProf").value = "";
-    document.getElementById("apDateProf").value = "";
-    document.getElementById("apHeureProf").value = "";
-    document.getElementById("apSalleProf").value = "";
-    document.getElementById("apBesoinProf").value = "";
-    document.getElementById("apCommentaireProf").value = "";
-    afficherMessage("apProfMessage", data.message || "AP créée avec succès.");
+
+    annulerModificationAP(true);
+    afficherMessage("apProfMessage", data.message || "AP enregistrée avec succès.");
     await chargerGestionAP();
+    chargerInfosAccueil();
+}
+
+function preparerModificationAP(demande) {
+    apEditionId = demande.id;
+
+    const select = document.getElementById("apElevesProf");
+    const ids = new Set((demande.eleves || []).map(e => e.id));
+    Array.from(select?.options || []).forEach(o => { o.selected = ids.has(o.value); });
+
+    document.getElementById("apClasseProf").value = "";
+    document.getElementById("apMatiereProf").value = demande.matiere || "";
+    document.getElementById("apDateProf").value = demande.date_ap || "";
+    document.getElementById("apHeureProf").value = demande.heure_ap ? String(demande.heure_ap).slice(0,5) : "";
+    document.getElementById("apSalleProf").value = demande.salle || "";
+    document.getElementById("apBesoinProf").value = demande.besoin || "";
+    document.getElementById("apCommentaireProf").value = demande.commentaire_prof || "";
+
+    document.getElementById("apProfSubmit").textContent = "💾 Enregistrer les modifications";
+    document.getElementById("apProfCancel").classList.remove("hidden");
+    document.getElementById("creationAPProf")?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function annulerModificationAP(apresSauvegarde = false) {
+    apEditionId = null;
+
+    const select = document.getElementById("apElevesProf");
+    if (select) Array.from(select.options).forEach(o => o.selected = false);
+    const classe = document.getElementById("apClasseProf");
+    if (classe) classe.value = "";
+    ["apMatiereProf","apDateProf","apHeureProf","apSalleProf","apBesoinProf","apCommentaireProf"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = "";
+    });
+
+    const submit = document.getElementById("apProfSubmit");
+    if (submit) submit.textContent = "🆘 Créer l’AP";
+    document.getElementById("apProfCancel")?.classList.add("hidden");
+
+    if (!apresSauvegarde) {
+        const msg = document.getElementById("apProfMessage");
+        if (msg) msg.innerHTML = "";
+    }
 }
 
 async function chargerGestionAP() {
@@ -4899,8 +5470,9 @@ async function chargerGestionAP() {
     const demandes = data?.demandes || [];
     window.apDemandesEnMemoire = demandes;
     apDemandesEnMemoire = demandes;
+
     if (!demandes.length) {
-        liste.innerHTML = `<p style="color:var(--text-secondary);">Aucune demande d’AP à traiter.</p>`;
+        liste.innerHTML = `<p style="color:var(--text-secondary);">Aucune AP à traiter.</p>`;
         return;
     }
 
@@ -4933,36 +5505,11 @@ async function ouvrirModificationAP(id) {
         alert("AP introuvable. Actualisez la page puis réessayez.");
         return;
     }
-
-    const matiere = prompt("Matière :", demande.matiere || "");
-    if (matiere === null) return;
-    const besoin = prompt("Contenu / besoin de l’AP :", demande.besoin || "");
-    if (besoin === null) return;
-    const date_ap = prompt("Date de l’AP (AAAA-MM-JJ) :", demande.date_ap || demande.date_souhaitee || "");
-    if (date_ap === null) return;
-    const heure_ap = prompt("Heure de l’AP (HH:MM) :", demande.heure_ap ? String(demande.heure_ap).slice(0,5) : "");
-    if (heure_ap === null) return;
-    const salle = prompt("Salle :", demande.salle || "");
-    if (salle === null) return;
-    const commentaire_prof = prompt("Commentaire pour l’élève :", demande.commentaire_prof || "");
-    if (commentaire_prof === null) return;
-    const statut = prompt("Statut (en_attente / acceptee / refusee / annulee / terminee) :", demande.statut || "en_attente");
-    if (statut === null) return;
-
-    const { data, error } = await supabaseClient.functions.invoke("manage-ap", {
-        body: { action: "modifier", id, matiere, besoin, date_ap: date_ap || null, heure_ap: heure_ap || null, salle, commentaire_prof, statut }
-    });
-
-    if (error) { alert(error.message || "Impossible de modifier l’AP."); return; }
-    if (data?.error) { alert(data.error); return; }
-
-    await chargerGestionAP();
-    chargerInfosAccueil();
-    alert("AP modifié avec succès.");
+    preparerModificationAP(demande);
 }
 
 async function supprimerAP(id) {
-    if (!confirm("Voulez-vous vraiment supprimer cet AP ? Cette action est irréversible.")) return;
+    if (!confirm("Voulez-vous vraiment supprimer cet AP ? Il sera supprimé pour tous les élèves concernés.")) return;
 
     const { data, error } = await supabaseClient.functions.invoke("manage-ap", {
         body: { action: "supprimer", id }
@@ -4990,28 +5537,570 @@ async function refuserAP(id) {
     await chargerGestionAP();
 }
 
+/* =====================================================
+   FORUM GÉNÉRAL
+===================================================== */
 
-async function supprimerAPSelectionnees() {
-    const ids = Array.from(document.querySelectorAll(".ap-selection:checked")).map(c => c.value);
-    if (!ids.length) { alert("Sélectionnez au moins une AP."); return; }
-    if (!confirm(`Supprimer ${ids.length} AP sélectionnée(s) ?`)) return;
-    for (const id of ids) {
-        const { data, error } = await supabaseClient.functions.invoke("manage-ap", { body: { action: "supprimer", id } });
-        if (error || data?.error) { alert(error?.message || data?.error || "Impossible de supprimer une AP."); break; }
-    }
-    await chargerGestionAP();
+let forumDiscussionSelectionnee = null;
+let forumPriveSelectionnee = null;
+let forumDiscussionsMemoire = [];
+let forumPriveMemoire = [];
+
+
+async function chargerProfilsForum(ids) {
+    const uniques = [...new Set((ids || []).filter(Boolean))];
+    if (!uniques.length) return [];
+
+    const { data, error } = await supabaseClient
+        .rpc("forum_get_profiles", { p_ids: uniques });
+
+    if (error) throw error;
+    return data || [];
 }
 
-async function supprimerToutesAPAffichees() {
-    const ids = (window.apDemandesEnMemoire || []).map(d => d.id);
-    if (!ids.length) { alert("Aucune AP à supprimer."); return; }
-    if (!confirm(`Supprimer les ${ids.length} AP affichées ?`)) return;
-    for (const id of ids) {
-        const { data, error } = await supabaseClient.functions.invoke("manage-ap", { body: { action: "supprimer", id } });
-        if (error || data?.error) { alert(error?.message || data?.error || "Impossible de supprimer une AP."); break; }
+
+function nomProfilForum(profil, fallback = "Utilisateur") {
+    if (!profil) return fallback;
+    return `${profil.prenom || ""} ${profil.nom || ""}`.trim() || fallback;
+}
+
+
+async function creerDiscussionForum() {
+    const currentUser = await obtenirUtilisateurAuthentifie();
+    if (!currentUser) {
+        afficherMessage("forumMessage", "Votre session a expiré. Reconnectez-vous.", "error");
+        return;
     }
-    await chargerGestionAP();
-    chargerInfosAccueil();
+
+    const titre = document.getElementById("forumTitre")?.value.trim();
+    const contenu = document.getElementById("forumContenu")?.value.trim();
+
+    if (!titre || !contenu) {
+        afficherMessage("forumMessage", "Veuillez remplir le titre et le message.", "error");
+        return;
+    }
+
+    const { data, error } = await supabaseClient
+        .from("forum_discussions")
+        .insert({
+            titre,
+            contenu,
+            auteur_id: currentUser.id
+        })
+        .select("*")
+        .single();
+
+    if (error) {
+        afficherMessage("forumMessage", error.message, "error");
+        return;
+    }
+
+    document.getElementById("forumTitre").value = "";
+    document.getElementById("forumContenu").value = "";
+    afficherMessage("forumMessage", "Discussion publiée.");
+
+    forumDiscussionSelectionnee = data.id;
+    await chargerForumGeneral();
+}
+
+
+async function chargerForumGeneral() {
+    const liste = document.getElementById("listeForumDiscussions");
+    if (!liste) return;
+
+    liste.innerHTML = "<div class='forum-empty'>Chargement...</div>";
+
+    const { data, error } = await supabaseClient
+        .from("forum_discussions")
+        .select("id, titre, contenu, auteur_id, created_at, updated_at")
+        .order("updated_at", { ascending: false });
+
+    if (error) {
+        liste.innerHTML = `<div class='message error'>${escapeHtml(error.message)}</div>`;
+        return;
+    }
+
+    forumDiscussionsMemoire = data || [];
+
+    if (!forumDiscussionsMemoire.length) {
+        liste.innerHTML = "<div class='forum-empty'>Aucune discussion pour le moment.<br>Créez la première !</div>";
+        document.getElementById("forumConversationHeader").innerHTML = "<h3>Aucune discussion</h3><p>Créez une discussion pour commencer.</p>";
+        document.getElementById("forumMessages").innerHTML = "<div class='forum-empty'>Aucun message.</div>";
+        document.getElementById("forumReply")?.classList.add("hidden");
+        return;
+    }
+
+    const profils = await chargerProfilsForum(forumDiscussionsMemoire.map(d => d.auteur_id));
+
+    liste.innerHTML = forumDiscussionsMemoire.map(d => {
+        const profil = profils.find(p => p.id === d.auteur_id);
+        return `
+            <button class="forum-discussion-item ${forumDiscussionSelectionnee === d.id ? "active" : ""}" onclick="ouvrirDiscussionForum('${escapeHtml(d.id)}')">
+                <div class="forum-discussion-title">${escapeHtml(d.titre)}</div>
+                <div class="forum-discussion-meta">👤 ${escapeHtml(nomProfilForum(profil))} · ${formatDate(d.updated_at || d.created_at)}</div>
+            </button>`;
+    }).join("");
+
+    if (!forumDiscussionSelectionnee || !forumDiscussionsMemoire.some(d => d.id === forumDiscussionSelectionnee)) {
+        forumDiscussionSelectionnee = forumDiscussionsMemoire[0].id;
+    }
+
+    await ouvrirDiscussionForum(forumDiscussionSelectionnee, false);
+}
+
+
+async function ouvrirDiscussionForum(id, actualiserListe = true) {
+    forumDiscussionSelectionnee = id;
+    const discussion = forumDiscussionsMemoire.find(d => d.id === id);
+    if (!discussion) return;
+
+    if (actualiserListe) {
+        const liste = document.getElementById("listeForumDiscussions");
+        if (liste) {
+            const boutons = liste.querySelectorAll(".forum-discussion-item");
+            boutons.forEach(b => b.classList.remove("active"));
+        }
+    }
+
+    const profils = await chargerProfilsForum([discussion.auteur_id]);
+    const auteur = nomProfilForum(profils.find(p => p.id === discussion.auteur_id));
+
+    document.getElementById("forumConversationHeader").innerHTML = `
+        <h3>${escapeHtml(discussion.titre)}</h3>
+        <p>👤 ${escapeHtml(auteur)} · ${formatDate(discussion.created_at)}</p>
+        <div style="margin-top:12px;font-size:13px;line-height:1.55;white-space:pre-wrap;">${escapeHtml(discussion.contenu)}</div>
+        ${profilUtilisateur?.role === "admin" ? `<div class="form-actions" style="margin-top:12px;"><button class="btn-danger" onclick="supprimerDiscussionForum('${escapeHtml(discussion.id)}')">🗑️ Supprimer la discussion</button></div>` : ""}
+    `;
+
+    await chargerMessagesForum(id);
+    document.getElementById("forumReply")?.classList.remove("hidden");
+}
+
+
+async function chargerMessagesForum(discussionId) {
+    const zone = document.getElementById("forumMessages");
+    if (!zone) return;
+
+    zone.innerHTML = "<div class='forum-empty'>Chargement...</div>";
+
+    const { data, error } = await supabaseClient
+        .from("forum_messages")
+        .select("id, discussion_id, auteur_id, contenu, created_at")
+        .eq("discussion_id", discussionId)
+        .order("created_at", { ascending: true });
+
+    if (error) {
+        zone.innerHTML = `<div class='message error'>${escapeHtml(error.message)}</div>`;
+        return;
+    }
+
+    if (!data?.length) {
+        zone.innerHTML = "<div class='forum-empty'>Aucune réponse pour le moment.<br>Soyez le premier à répondre !</div>";
+        return;
+    }
+
+    const profils = await chargerProfilsForum(data.map(m => m.auteur_id));
+
+    zone.innerHTML = data.map(m => {
+        const profil = profils.find(p => p.id === m.auteur_id);
+        const mine = m.auteur_id === utilisateur.id;
+        return `
+            <div class="forum-message ${mine ? "mine" : ""}">
+                <div class="forum-message-author">${escapeHtml(nomProfilForum(profil))}${profil?.role === "professeur" ? " · Professeur" : profil?.role === "admin" ? " · Délégué" : ""}</div>
+                <div class="forum-message-content">${escapeHtml(m.contenu)}</div>
+                <div class="forum-message-date">${formatDateHeureForum(m.created_at)}</div>
+                ${profilUtilisateur?.role === "admin" ? `<div style="margin-top:8px;"><button class="btn-danger" style="padding:5px 8px;font-size:11px;" onclick="supprimerMessageForum('${escapeHtml(m.id)}')">🗑️</button></div>` : ""}
+            </div>`;
+    }).join("");
+
+    zone.scrollTop = zone.scrollHeight;
+}
+
+
+function formatDateHeureForum(date) {
+    if (!date) return "";
+    return new Date(date).toLocaleString("fr-FR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+}
+
+
+async function envoyerReponseForum() {
+    if (!forumDiscussionSelectionnee) return;
+
+    const textarea = document.getElementById("forumReponse");
+    const contenu = textarea?.value.trim();
+
+    if (!contenu) {
+        afficherMessage("forumReplyMessage", "Écrivez une réponse.", "error");
+        return;
+    }
+
+    const { error } = await supabaseClient
+        .from("forum_messages")
+        .insert({
+            discussion_id: forumDiscussionSelectionnee,
+            auteur_id: utilisateur.id,
+            contenu
+        });
+
+    if (error) {
+        afficherMessage("forumReplyMessage", error.message, "error");
+        return;
+    }
+
+    textarea.value = "";
+    document.getElementById("forumReplyMessage").innerHTML = "";
+
+    await supabaseClient
+        .from("forum_discussions")
+        .update({ updated_at: new Date().toISOString() })
+        .eq("id", forumDiscussionSelectionnee);
+
+    await chargerForumGeneral();
+}
+
+
+async function supprimerDiscussionForum(id) {
+    if (!confirm("Supprimer cette discussion et toutes ses réponses ?")) return;
+
+    const { error } = await supabaseClient
+        .from("forum_discussions")
+        .delete()
+        .eq("id", id);
+
+    if (error) {
+        alert(error.message);
+        return;
+    }
+
+    forumDiscussionSelectionnee = null;
+    await chargerForumGeneral();
+}
+
+
+async function supprimerMessageForum(id) {
+    if (!confirm("Supprimer cette réponse ?")) return;
+
+    const { error } = await supabaseClient
+        .from("forum_messages")
+        .delete()
+        .eq("id", id);
+
+    if (error) {
+        alert(error.message);
+        return;
+    }
+
+    await chargerMessagesForum(forumDiscussionSelectionnee);
+}
+
+
+/* =====================================================
+   FORUM PRIVÉ DÉLÉGUÉS
+===================================================== */
+
+async function chargerDeleguesForum() {
+    const select = document.getElementById("forumDelegue");
+    if (!select) return;
+
+    const { data, error } = await supabaseClient
+        .from("profiles")
+        .select("id, prenom, nom")
+        .eq("role", "admin")
+        .order("nom", { ascending: true });
+
+    if (error) {
+        select.innerHTML = "<option value=''>Impossible de charger les délégués</option>";
+        return;
+    }
+
+    select.innerHTML = "<option value=''>Sélectionner un délégué</option>";
+    (data || []).forEach(p => {
+        const option = document.createElement("option");
+        option.value = p.id;
+        option.textContent = nomProfilForum(p);
+        select.appendChild(option);
+    });
+}
+
+
+async function creerConversationPrivee() {
+    if (profilUtilisateur?.role !== "eleve") {
+        return;
+    }
+
+    const delegue_id = document.getElementById("forumDelegue")?.value;
+    const sujet = document.getElementById("forumPriveSujet")?.value.trim();
+    const contenu = document.getElementById("forumPriveContenu")?.value.trim();
+
+    if (!delegue_id || !sujet || !contenu) {
+        afficherMessage("forumPriveMessage", "Sélectionnez un délégué et remplissez le sujet et le message.", "error");
+        return;
+    }
+
+    const { data: conversation, error } = await supabaseClient
+        .from("forum_prive_discussions")
+        .insert({
+            eleve_id: utilisateur.id,
+            delegue_id,
+            sujet
+        })
+        .select("*")
+        .single();
+
+    if (error) {
+        afficherMessage("forumPriveMessage", error.message, "error");
+        return;
+    }
+
+    const { error: messageError } = await supabaseClient
+        .from("forum_prive_messages")
+        .insert({
+            discussion_id: conversation.id,
+            auteur_id: utilisateur.id,
+            contenu
+        });
+
+    if (messageError) {
+        await supabaseClient.from("forum_prive_discussions").delete().eq("id", conversation.id);
+        afficherMessage("forumPriveMessage", messageError.message, "error");
+        return;
+    }
+
+    document.getElementById("forumDelegue").value = "";
+    document.getElementById("forumPriveSujet").value = "";
+    document.getElementById("forumPriveContenu").value = "";
+    afficherMessage("forumPriveMessage", "Message envoyé au délégué sélectionné.");
+
+    forumPriveSelectionnee = conversation.id;
+    await chargerForumPrive();
+}
+
+
+async function chargerForumPrive() {
+    if (!profilUtilisateur || !["eleve", "admin"].includes(profilUtilisateur.role)) return;
+
+    await chargerDeleguesForum();
+
+    const formulaire = document.getElementById("forumPriveNouvelle");
+    if (formulaire) {
+        formulaire.classList.toggle("hidden", profilUtilisateur.role === "admin");
+    }
+
+    const liste = document.getElementById("listeForumPrive");
+    if (!liste) return;
+
+    liste.innerHTML = "<div class='forum-empty'>Chargement...</div>";
+
+    let query = supabaseClient
+        .from("forum_prive_discussions")
+        .select("id, eleve_id, delegue_id, sujet, created_at, updated_at")
+        .order("updated_at", { ascending: false });
+
+    if (profilUtilisateur.role === "eleve") {
+        query = query.eq("eleve_id", utilisateur.id);
+    } else {
+        query = query.eq("delegue_id", utilisateur.id);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+        liste.innerHTML = `<div class='message error'>${escapeHtml(error.message)}</div>`;
+        return;
+    }
+
+    forumPriveMemoire = data || [];
+
+    if (!forumPriveMemoire.length) {
+        liste.innerHTML = "<div class='forum-empty'>Aucune conversation pour le moment.</div>";
+        document.getElementById("forumPriveHeader").innerHTML = "<h3>Aucune conversation</h3><p>Commencez une nouvelle conversation.</p>";
+        document.getElementById("forumPriveMessages").innerHTML = "<div class='forum-empty'>Aucun message.</div>";
+        document.getElementById("forumPriveReply")?.classList.add("hidden");
+        return;
+    }
+
+    const profils = await chargerProfilsForum(
+        forumPriveMemoire.flatMap(d => [d.eleve_id, d.delegue_id])
+    );
+
+    liste.innerHTML = forumPriveMemoire.map(d => {
+        const eleve = profils.find(p => p.id === d.eleve_id);
+        const delegue = profils.find(p => p.id === d.delegue_id);
+        const personne = profilUtilisateur.role === "eleve" ? nomProfilForum(delegue, "Délégué") : nomProfilForum(eleve, "Élève");
+        return `
+            <button class="forum-discussion-item ${forumPriveSelectionnee === d.id ? "active" : ""}" onclick="ouvrirConversationPrivee('${escapeHtml(d.id)}')">
+                <div class="forum-discussion-title">${escapeHtml(d.sujet)}</div>
+                <div class="forum-discussion-meta">${profilUtilisateur.role === "eleve" ? "👤 " : "🎓 "}${escapeHtml(personne)} · ${formatDate(d.updated_at || d.created_at)}</div>
+            </button>`;
+    }).join("");
+
+    if (!forumPriveSelectionnee || !forumPriveMemoire.some(d => d.id === forumPriveSelectionnee)) {
+        forumPriveSelectionnee = forumPriveMemoire[0].id;
+    }
+
+    await ouvrirConversationPrivee(forumPriveSelectionnee, false);
+}
+
+
+async function ouvrirConversationPrivee(id, actualiserListe = true) {
+    forumPriveSelectionnee = id;
+    const discussion = forumPriveMemoire.find(d => d.id === id);
+    if (!discussion) return;
+
+    const profils = await chargerProfilsForum([discussion.eleve_id, discussion.delegue_id]);
+    const eleve = nomProfilForum(profils.find(p => p.id === discussion.eleve_id), "Élève");
+    const delegue = nomProfilForum(profils.find(p => p.id === discussion.delegue_id), "Délégué");
+
+    document.getElementById("forumPriveHeader").innerHTML = `
+        <h3>${escapeHtml(discussion.sujet)}</h3>
+        <p>👤 ${escapeHtml(eleve)} · 🎓 ${escapeHtml(delegue)} · ${formatDate(discussion.created_at)}</p>
+    `;
+
+    await chargerMessagesPrives(discussion.id);
+    document.getElementById("forumPriveReply")?.classList.remove("hidden");
+}
+
+
+async function chargerMessagesPrives(discussionId) {
+    const zone = document.getElementById("forumPriveMessages");
+    if (!zone) return;
+
+    zone.innerHTML = "<div class='forum-empty'>Chargement...</div>";
+
+    const { data, error } = await supabaseClient
+        .from("forum_prive_messages")
+        .select("id, discussion_id, auteur_id, contenu, created_at")
+        .eq("discussion_id", discussionId)
+        .order("created_at", { ascending: true });
+
+    if (error) {
+        zone.innerHTML = `<div class='message error'>${escapeHtml(error.message)}</div>`;
+        return;
+    }
+
+    if (!data?.length) {
+        zone.innerHTML = "<div class='forum-empty'>Aucun message.</div>";
+        return;
+    }
+
+    const profils = await chargerProfilsForum(data.map(m => m.auteur_id));
+
+    zone.innerHTML = data.map(m => {
+        const profil = profils.find(p => p.id === m.auteur_id);
+        const mine = m.auteur_id === utilisateur.id;
+        return `
+            <div class="forum-message ${mine ? "mine" : ""}">
+                <div class="forum-message-author">${escapeHtml(nomProfilForum(profil))}${profil?.role === "admin" ? " · Délégué" : " · Élève"}</div>
+                <div class="forum-message-content">${escapeHtml(m.contenu)}</div>
+                <div class="forum-message-date">${formatDateHeureForum(m.created_at)}</div>
+            </div>`;
+    }).join("");
+
+    zone.scrollTop = zone.scrollHeight;
+}
+
+
+async function envoyerReponsePrivee() {
+    if (!forumPriveSelectionnee) return;
+
+    const textarea = document.getElementById("forumPriveReponse");
+    const messageZone = document.getElementById("forumPriveReplyMessage");
+    const contenu = textarea?.value.trim();
+
+    if (!contenu) {
+        afficherMessage("forumPriveReplyMessage", "Écrivez une réponse.", "error");
+        return;
+    }
+
+    const currentUser = await obtenirUtilisateurAuthentifie();
+
+    if (!currentUser) {
+        afficherMessage(
+            "forumPriveReplyMessage",
+            "Votre session a expiré. Reconnectez-vous puis réessayez.",
+            "error"
+        );
+        return;
+    }
+
+    // Vérification locale supplémentaire : la conversation actuellement ouverte
+    // doit appartenir à l'utilisateur connecté.
+    const discussion = forumPriveMemoire.find(
+        d => d.id === forumPriveSelectionnee
+    );
+
+    if (!discussion ||
+        (discussion.eleve_id !== currentUser.id &&
+         discussion.delegue_id !== currentUser.id)) {
+        afficherMessage(
+            "forumPriveReplyMessage",
+            "Vous n'êtes pas autorisé à répondre à cette conversation.",
+            "error"
+        );
+        return;
+    }
+
+    let { error } = await supabaseClient
+        .from("forum_prive_messages")
+        .insert({
+            discussion_id: forumPriveSelectionnee,
+            auteur_id: currentUser.id,
+            contenu
+        });
+
+    // Si le JWT vient d'expirer au même moment, on renouvelle la session
+    // puis on effectue une seule nouvelle tentative.
+    if (error) {
+        const refreshedUser = await obtenirUtilisateurAuthentifie({
+            forcerRefresh: true
+        });
+
+        if (refreshedUser) {
+            const discussionAfterRefresh = forumPriveMemoire.find(
+                d => d.id === forumPriveSelectionnee
+            );
+
+            if (discussionAfterRefresh &&
+                (discussionAfterRefresh.eleve_id === refreshedUser.id ||
+                 discussionAfterRefresh.delegue_id === refreshedUser.id)) {
+                ({ error } = await supabaseClient
+                    .from("forum_prive_messages")
+                    .insert({
+                        discussion_id: forumPriveSelectionnee,
+                        auteur_id: refreshedUser.id,
+                        contenu
+                    }));
+            }
+        }
+    }
+
+    if (error) {
+        console.error("Erreur envoi message privé :", error);
+        afficherMessage("forumPriveReplyMessage", error.message, "error");
+        return;
+    }
+
+    if (textarea) textarea.value = "";
+    if (messageZone) messageZone.innerHTML = "";
+
+    // Ne pas faire confiance au client pour la sécurité : cette mise à jour
+    // est protégée par la RLS de forum_prive_discussions.
+    const { error: updateError } = await supabaseClient
+        .from("forum_prive_discussions")
+        .update({ updated_at: new Date().toISOString() })
+        .eq("id", forumPriveSelectionnee);
+
+    if (updateError) {
+        console.warn("Impossible de mettre à jour updated_at :", updateError.message);
+    }
+
+    await chargerForumPrive();
 }
 
 
@@ -5059,6 +6148,9 @@ async function deconnexion() {
     document.getElementById("mobileIdees")?.classList.remove("hidden");
     document.getElementById("mobileRapports")?.classList.remove("hidden");
     document.getElementById("mobileAP")?.classList.remove("hidden");
+    document.getElementById("navForumPrive")?.classList.add("hidden");
+    document.getElementById("cardForumPrive")?.classList.add("hidden");
+    document.getElementById("mobileForumPrive")?.classList.add("hidden");
 
 
     document
@@ -5088,24 +6180,27 @@ async function deconnexion() {
 
 async function verifierSession() {
 
-    const {
-        data
-    } =
-        await supabaseClient.auth.getSession();
+    try {
+        const currentUser = await obtenirUtilisateurAuthentifie();
 
-
-    if (
-        data &&
-        data.session &&
-        data.session.user
-    ) {
-
-        utilisateur =
-            data.session.user;
-
-        await chargerApplication();
+        if (currentUser) {
+            await chargerApplication();
+        }
+    } catch (error) {
+        console.error("Erreur de session :", error);
+        await deconnexion();
     }
 }
+
+
+supabaseClient.auth.onAuthStateChange((event, session) => {
+    if (session?.user) {
+        utilisateur = session.user;
+    } else if (event === "SIGNED_OUT") {
+        utilisateur = null;
+        profilUtilisateur = null;
+    }
+});
 
 
 appliquerTheme();
