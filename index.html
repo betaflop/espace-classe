@@ -4460,10 +4460,34 @@ async function creerCompteRendu() {
         const wasEditing = !!compteRenduEnModification;
         reinitialiserFormulaireCompteRendu();
         afficherMessage("compteRenduMessage", wasEditing ? "Compte-rendu modifié." : "Compte-rendu enregistré.");
+        if (!wasEditing && data?.compte_rendu?.id) {
+            const infoMail = await envoyerEmailsNotification("cr", data.compte_rendu.id);
+            afficherMessage("compteRenduMessage", "Compte-rendu enregistré." + infoMail);
+        }
         await chargerComptesRendusAdmin();
     } catch (error) {
         console.error("Compte-rendu :", error);
         afficherMessage("compteRenduMessage", error.message || "Impossible d'enregistrer le compte-rendu.", "error");
+    }
+}
+
+
+/* =====================================================
+   E-MAILS (AP créée par un professeur, compte-rendu créé par un délégué)
+   Un message personnalisé est envoyé à chaque élève concerné.
+===================================================== */
+
+async function envoyerEmailsNotification(type, id) {
+    try {
+        const { data, error } = await supabaseClient.functions.invoke("send-email", { body: { type, id } });
+        if (error) throw error;
+        if (data?.error) throw new Error(data.error);
+        if (data?.deja_envoye) return "";
+        if (!data?.envoyes) return data?.message || "";
+        return ` ${data.envoyes} e-mail${data.envoyes > 1 ? "s" : ""} envoyé${data.envoyes > 1 ? "s" : ""}` + (data.echecs ? ` (${data.echecs} échec${data.echecs > 1 ? "s" : ""})` : "") + ".";
+    } catch (e) {
+        console.warn("Envoi des e-mails :", e);
+        return " Les e-mails n’ont pas pu être envoyés.";
     }
 }
 
@@ -4866,8 +4890,13 @@ async function creerAPProf() {
     if (error) { afficherMessage("apProfMessage", error.message || "Impossible d’enregistrer l’AP.", "error"); return; }
     if (data?.error) { afficherMessage("apProfMessage", data.error, "error"); return; }
 
+    const apEtaitCreation = action === "create";
     annulerModificationAP(true);
     afficherMessage("apProfMessage", data.message || "AP enregistrée avec succès.");
+    if (apEtaitCreation && data.demande?.id) {
+        const infoMail = await envoyerEmailsNotification("ap", data.demande.id);
+        afficherMessage("apProfMessage", (data.message || "AP enregistrée avec succès.") + infoMail);
+    }
     await chargerGestionAP();
     chargerInfosAccueil();
 }
