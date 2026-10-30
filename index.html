@@ -699,6 +699,32 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 .forum-discussion-meta { font-size: 14px; opacity: .8; }
 .forum-delete-conversation { min-height: 40px; padding: 4px 12px; font-size: 14px; align-self: center; }
 
+
+/* Défi des classes */
+:root { --team-red: #c8372d; --team-blue: #2a4bb3; }
+@media (prefers-color-scheme: dark) { :root { --team-red: #ff7b72; --team-blue: #7ea3ff; } }
+.defi-panel { margin-bottom: 20px; }
+.defi-titre { font-family: var(--font-hand); font-size: 30px; line-height: 1.1; margin: 2px 0 12px; }
+.defi-bar { display: flex; height: 26px; border-radius: 999px; overflow: hidden; border: 1px solid var(--line); background: var(--paper-2); position: relative; }
+.defi-bar .defi-l { background: var(--team-red); transition: width .7s ease; }
+.defi-bar .defi-r { background: var(--team-blue); flex: 1; }
+.defi-bar::after { content: ""; position: absolute; left: 50%; top: -3px; bottom: -3px; width: 2px; background: var(--ink); opacity: .35; }
+.defi-legend { display: flex; justify-content: space-between; gap: 14px; margin-top: 12px; }
+.defi-team { display: flex; flex-direction: column; min-width: 0; }
+.defi-team b { font-size: 18px; }
+.defi-team em { font-style: normal; font-weight: 400; font-size: 14px; color: var(--ink-soft); }
+.defi-team small { color: var(--ink-soft); font-size: 13.5px; }
+.defi-team-l b { color: var(--team-red); }
+.defi-team-r { text-align: right; }
+.defi-team-r b { color: var(--team-blue); }
+.defi-recompense { margin-top: 14px; }
+.defi-chip { display: inline-block; padding: 3px 12px; border-radius: 999px; font-size: 14px; font-weight: 700; background: var(--paper-2); border: 1px solid var(--line); }
+.defi-chip-l { background: var(--team-red); border-color: var(--team-red); color: #fff; }
+.defi-chip-r { background: var(--team-blue); border-color: var(--team-blue); color: #fff; }
+@media (prefers-color-scheme: dark) { .defi-chip-l, .defi-chip-r { color: #0d1224; } }
+.goal-how { margin-top: 14px; font-size: 14.5px; color: var(--ink-soft); }
+.note-card .btn-secondary { margin-top: 12px; }
+
 /* =====================================================
    BARRE DU BAS (téléphone)
 ===================================================== */
@@ -819,6 +845,7 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></symbol>
 <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 4H5v16h4"/><path d="M16 8l4 4-4 4M20 12H9"/></symbol>
 <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+<symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 01-8 0z"/><path d="M8 6H4v1a3 3 0 003 3M16 6h4v1a3 3 0 01-3 3"/><path d="M12 13v4M8 20h8M10 17h4"/></symbol>
 </defs>
 </svg>
 
@@ -854,6 +881,7 @@ button:disabled { opacity: .55; cursor: not-allowed; }
             <button id="navRapportsEleve" class="nav-button" onclick="ouvrirMesComptesRendus()"><svg class="ico" aria-hidden="true"><use href="#i-file"/></svg><span>Mes comptes-rendus</span></button>
             <button id="navDemandeAP" class="nav-button" onclick="ouvrirDemandeAP()"><svg class="ico" aria-hidden="true"><use href="#i-lifebuoy"/></svg><span>Demande d’AP</span></button>
             <button id="navForumGeneral" class="nav-button" onclick="ouvrirForumGeneral()"><svg class="ico" aria-hidden="true"><use href="#i-chat"/></svg><span>Forum de la classe</span></button>
+            <button id="navDefi" class="nav-button" onclick="ouvrirDefi()"><svg class="ico" aria-hidden="true"><use href="#i-trophy"/></svg><span>Défi des classes</span></button>
             <button id="navForumPrive" class="nav-button hidden" onclick="ouvrirForumPrive()"><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg><span>Parler aux délégués</span></button>
 
                 <div id="menuProfesseur" class="hidden">
@@ -911,6 +939,11 @@ button:disabled { opacity: .55; cursor: not-allowed; }
                         <button class="stat" onclick="ouvrirGestionEleves()"><strong id="statEleves">—</strong> élèves</button>
                     </div>
 
+                    <section id="defiAccueil" class="panel defi-panel hidden" aria-labelledby="defiAccueilTitre">
+                        <div class="panel-heading"><h2 id="defiAccueilTitre">Défi des classes</h2><button class="link-button" onclick="ouvrirDefi()">Voir le défi</button></div>
+                        <div id="defiAccueilContenu"></div>
+                    </section>
+
                     <div class="home-grid">
                         <section id="accueilAPPanel" class="panel">
                             <div class="panel-heading"><h2>AP à venir</h2></div>
@@ -928,6 +961,34 @@ button:disabled { opacity: .55; cursor: not-allowed; }
                             <div id="accueilInfos" class="hidden" aria-hidden="true"></div>
                         </section>
                     </div>
+                </section>
+
+                <section id="defi" class="section hidden">
+                    <div class="section-header">
+                        <div>
+                            <h2>Défi des classes</h2>
+                            <p id="defiPeriode">Chaque mois, 1STL et 1STI2D se battent sur la même barre.</p>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div id="defiPageBarre"></div>
+                        <div id="defiRecompense"></div>
+                        <p class="goal-how">Comment gagner des points pour sa classe : publier une idée (+5), répondre à une AP (+3), voter à un sondage (+2), réagir à une idée ou écrire dans le forum (+1). Maximum 40 points par personne et par mois. Le classement se fait en points par élève, pour que ce soit juste entre les deux classes.</p>
+                    </div>
+
+                    <div id="defiFormulaire" class="form-card hidden">
+                        <h3>Récompense du mois</h3>
+                        <label for="defiRecompenseInput">Ce que gagne la classe en tête (réservé aux délégués)</label>
+                        <input id="defiRecompenseInput" type="text" maxlength="160" placeholder="Ex. : la classe gagnante choisit la musique en pause">
+                        <div class="form-actions"><button type="button" class="btn-primary" onclick="enregistrerRecompenseDefi()">Enregistrer la récompense</button></div>
+                        <div id="defiMessage" role="status" aria-live="polite"></div>
+                    </div>
+
+                    <hr class="section-separator">
+                    <h3>Historique des gagnants</h3>
+                    <br>
+                    <div id="defiHistorique" class="idea-list"><p class="muted">Chargement…</p></div>
                 </section>
 
                 <section id="annonces" class="section hidden">
@@ -2333,8 +2394,171 @@ async function chargerAccueilIdees() {
     }
 }
 
+
+/* =====================================================
+   DÉFI DES CLASSES (barre partagée, remise à zéro chaque lundi)
+===================================================== */
+
+let defiEtat = null;
+
+function formatPointsDefi(n) {
+    return Number(n || 0).toLocaleString("fr-FR", { maximumFractionDigits: 1 });
+}
+
+function equipesDefi(classes) {
+    const liste = Array.isArray(classes) ? classes.slice() : [];
+    // Rouge à gauche pour la STL, bleu à droite pour l'autre classe (la STI2D).
+    liste.sort((x, y) => String(x.classe).localeCompare(String(y.classe), "fr"));
+    const iGauche = liste.findIndex(c => /STL/i.test(String(c.classe)));
+    const gauche = liste[iGauche >= 0 ? iGauche : 0] || null;
+    const droite = liste.find(c => c !== gauche) || null;
+    return { gauche, droite };
+}
+
+function nomMoisDefi(iso) {
+    const d = new Date(String(iso).slice(0, 10) + "T12:00:00");
+    if (Number.isNaN(d.getTime())) return String(iso || "");
+    return d.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
+}
+
+function dateCourteDefi(iso, avecAnnee) {
+    const d = new Date(String(iso).slice(0, 10) + "T12:00:00");
+    if (Number.isNaN(d.getTime())) return String(iso || "");
+    return d.toLocaleDateString("fr-FR", avecAnnee ? { day: "numeric", month: "long", year: "numeric" } : { day: "numeric", month: "short" });
+}
+
+function barreDefiHtml(classes, maClasse) {
+    const { gauche, droite } = equipesDefi(classes);
+    if (!gauche || !droite) return "";
+    const sg = Number(gauche.score) || 0;
+    const sd = Number(droite.score) || 0;
+    const total = sg + sd;
+    let pctG = total > 0 ? (sg / total) * 100 : 50;
+    if (total > 0) pctG = Math.min(Math.max(pctG, 4), 96);
+    const egalite = Math.abs(sg - sd) < 0.05;
+    let titre = "Égalité pour l’instant";
+    if (total === 0) titre = "On démarre : à vous de jouer !";
+    else if (!egalite) titre = `${escapeHtml(sg > sd ? gauche.classe : droite.classe)} est en tête`;
+    const moi = c => String(c.classe) === String(maClasse) ? " <em>(ta classe)</em>" : "";
+    const equipe = (c, cote) => `
+        <div class="defi-team defi-team-${cote}">
+            <b>${escapeHtml(c.classe)}${moi(c)}</b>
+            <span>${formatPointsDefi(c.score)} pt${Number(c.score) >= 2 ? "s" : ""} par élève</span>
+            <small>${c.pts} point${c.pts > 1 ? "s" : ""} · ${c.membres} élèves</small>
+        </div>`;
+    return `
+        <p class="defi-titre">${titre}</p>
+        <div class="defi-bar" role="img" aria-label="${escapeHtml(gauche.classe)} : ${formatPointsDefi(sg)} points par élève. ${escapeHtml(droite.classe)} : ${formatPointsDefi(sd)} points par élève.">
+            <span class="defi-l" style="width:${pctG}%"></span><span class="defi-r"></span>
+        </div>
+        <div class="defi-legend">${equipe(gauche, "l")}${equipe(droite, "r")}</div>`;
+}
+
+function texteRecompenseDefi(etat) {
+    const attente = etat.demarre ? "" : `<p class="muted">Le défi démarre le ${new Date(String(etat.mois).slice(0, 10) + "T12:00:00").toLocaleDateString("fr-FR", { day: "numeric", month: "long" })} : les points gagnés avant cette date ne comptent pas.</p>`;
+    return attente + (etat.recompense
+        ? `<p class="defi-recompense"><strong>Récompense en jeu :</strong> ${escapeHtml(etat.recompense)}</p>`
+        : `<p class="defi-recompense muted">Pas encore de récompense ce mois-ci${etat.delegue ? " : tu peux en choisir une" : " : les délégués peuvent en choisir une"}.</p>`);
+}
+
+function dessinerDefi() {
+    const etat = defiEtat;
+    const accueil = document.getElementById("defiAccueil");
+    if (!etat) { accueil?.classList.add("hidden"); return; }
+
+    const contenuAccueil = document.getElementById("defiAccueilContenu");
+    if (contenuAccueil) contenuAccueil.innerHTML = barreDefiHtml(etat.classes, etat.ma_classe) + texteRecompenseDefi(etat);
+    accueil?.classList.remove("hidden");
+
+    const barre = document.getElementById("defiPageBarre");
+    if (barre) barre.innerHTML = barreDefiHtml(etat.classes, etat.ma_classe);
+    const recompense = document.getElementById("defiRecompense");
+    if (recompense) recompense.innerHTML = texteRecompenseDefi(etat);
+    const periode = document.getElementById("defiPeriode");
+    if (periode) {
+        const dernierJour = new Date(String(etat.fin).slice(0, 10) + "T12:00:00");
+        dernierJour.setDate(dernierJour.getDate() - 1);
+        const finTexte = dernierJour.toLocaleDateString("fr-FR", { day: "numeric", month: "long" });
+        const debutTexte = new Date(String(etat.mois).slice(0, 10) + "T12:00:00").toLocaleDateString("fr-FR", { day: "numeric", month: "long" });
+        periode.textContent = etat.demarre
+            ? `Défi de ${nomMoisDefi(etat.mois)} : du ${debutTexte} au ${finTexte}. Remise à zéro le mois suivant.`
+            : `Le premier défi commence le ${debutTexte} et se termine le ${finTexte}.`;
+    }
+    document.getElementById("defiFormulaire")?.classList.toggle("hidden", !etat.delegue);
+    const champ = document.getElementById("defiRecompenseInput");
+    if (champ && document.activeElement !== champ) champ.value = etat.recompense || "";
+
+    const histo = document.getElementById("defiHistorique");
+    if (histo) {
+        const semaines = Array.isArray(etat.historique) ? etat.historique : [];
+        if (!semaines.length) {
+            histo.innerHTML = '<p class="dashboard-empty">Pas encore de mois terminé. Le premier résultat tombera le 1er décembre.</p>';
+        } else {
+            histo.innerHTML = semaines.map(w => {
+                const scores = Array.isArray(w.scores) ? w.scores : [];
+                const { gauche, droite } = equipesDefi(scores);
+                const resume = [gauche, droite].filter(Boolean).map(c => `${escapeHtml(c.classe)} ${formatPointsDefi(c.score)}`).join(" contre ");
+                let gagnant = '<span class="defi-chip">Égalité</span>';
+                if (w.gagnante && w.gagnante !== "egalite") {
+                    const cote = gauche && String(gauche.classe) === String(w.gagnante) ? "l" : "r";
+                    gagnant = `<span class="defi-chip defi-chip-${cote}">${escapeHtml(w.gagnante)} gagne</span>`;
+                }
+                const rec = w.recompense ? `<p class="defi-recompense"><strong>Récompense :</strong> ${escapeHtml(w.recompense)}</p>` : '<p class="muted">Pas de récompense définie.</p>';
+                const bouton = etat.delegue ? `<button type="button" class="btn-secondary" onclick="modifierRecompenseDefi('${escapeHtml(String(w.mois).slice(0, 10))}')">Modifier la récompense</button>` : "";
+                return `<article class="note-card"><div class="note-head"><h3>${escapeHtml(nomMoisDefi(w.mois))}</h3>${gagnant}</div><p class="muted">${resume} (points par élève)</p>${rec}${bouton}</article>`;
+            }).join("");
+        }
+    }
+}
+
+async function chargerDefi() {
+    if (!utilisateur || !profilUtilisateur || estProfesseur()) {
+        defiEtat = null;
+        dessinerDefi();
+        return;
+    }
+    try {
+        const { data, error } = await supabaseClient.rpc("defi_etat");
+        if (error) throw error;
+        defiEtat = data || null;
+    } catch (e) {
+        console.warn("Défi des classes :", e);
+        defiEtat = null;
+    }
+    dessinerDefi();
+}
+
+function ouvrirDefi() {
+    if (!profilUtilisateur || estProfesseur()) return;
+    cacherToutesLesSections();
+    document.getElementById("defi").classList.remove("hidden");
+    changerTitre("Défi des classes");
+    mettreNavigationActive("defi");
+    chargerDefi();
+}
+
+async function enregistrerRecompenseDefi() {
+    if (!defiEtat?.delegue) return;
+    const texte = (document.getElementById("defiRecompenseInput")?.value || "").trim();
+    const { error } = await supabaseClient.rpc("defi_definir_recompense", { p_mois: String(defiEtat.mois).slice(0, 10), p_texte: texte });
+    if (error) { afficherMessage("defiMessage", error.message || "Impossible d’enregistrer la récompense.", "error"); return; }
+    afficherMessage("defiMessage", texte ? "Récompense enregistrée." : "Récompense retirée.");
+    await chargerDefi();
+}
+
+async function modifierRecompenseDefi(mois) {
+    if (!defiEtat?.delegue) return;
+    const actuelle = (defiEtat.historique || []).find(w => String(w.mois).slice(0, 10) === mois)?.recompense || "";
+    const texte = prompt("Récompense pour ce mois (160 caractères maximum) :", actuelle);
+    if (texte === null) return;
+    const { error } = await supabaseClient.rpc("defi_definir_recompense", { p_mois: mois, p_texte: texte.trim() });
+    if (error) { alert("Modification impossible : " + error.message); return; }
+    await chargerDefi();
+}
+
 async function chargerCompteursAccueil() {
     if (!utilisateur || !profilUtilisateur) return;
+    chargerDefi();
     const set = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value == null ? "—" : String(value); };
     const role = normaliserRole(profilUtilisateur.role);
     const prof = estProfesseur();
@@ -2879,6 +3103,8 @@ function mettreNavigationActive(page) {
     } else if (page === "forum") {
         document.getElementById("navForumGeneral")?.classList.add("active");
         document.getElementById("mobileForum")?.classList.add("active");
+    } else if (page === "defi") {
+        document.getElementById("navDefi")?.classList.add("active");
     } else if (page === "forumPrive") {
         document.getElementById("navForumPrive")?.classList.add("active");
         document.getElementById("mobileForumPrive")?.classList.add("active");
@@ -3085,6 +3311,7 @@ async function chargerApplication() {
         document.getElementById("navRapportsEleve")?.classList.toggle("hidden", !isEleveOuDelegue || isProf || isGestionnaire);
         document.getElementById("navDemandeAP")?.classList.toggle("hidden", !isEleveOuDelegue || isProf);
         document.getElementById("navForumGeneral")?.classList.toggle("hidden", isProf);
+        document.getElementById("navDefi")?.classList.toggle("hidden", isProf);
         document.getElementById("navForumPrive")?.classList.toggle("hidden", !(isEleveOuDelegue && !isProf));
         document.getElementById("mobileForum")?.classList.toggle("hidden", isProf);
         document.getElementById("mobileForumPrive")?.classList.toggle("hidden", !(isEleveOuDelegue && !isProf));
