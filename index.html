@@ -703,6 +703,12 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 /* Défi des classes */
 :root { --team-red: #c8372d; --team-blue: #2a4bb3; }
 @media (prefers-color-scheme: dark) { :root { --team-red: #ff7b72; --team-blue: #7ea3ff; } }
+.calc-steps { margin: 12px 0 0 22px; display: grid; gap: 10px; }
+.calc-notes { margin: 8px 0 0 20px; display: grid; gap: 8px; }
+.calc-steps code { background: var(--paper-2); padding: 1px 6px; border-radius: 6px; }
+#calculatrice .panel { margin-bottom: 16px; }
+#calculatrice h3 { font-size: 17px; margin: 20px 0 6px; }
+.calc-warning { border-left: 4px solid var(--team-red); background: var(--paper-2); border-radius: 8px; padding: 12px 14px; margin: 14px 0; }
 .defi-panel { margin-bottom: 20px; }
 .defi-titre { font-family: var(--font-hand); font-size: 30px; line-height: 1.1; margin: 2px 0 12px; }
 .defi-bar { display: flex; height: 26px; border-radius: 999px; overflow: hidden; border: 1px solid var(--line); background: var(--paper-2); position: relative; }
@@ -845,6 +851,7 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></symbol>
 <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 4H5v16h4"/><path d="M16 8l4 4-4 4M20 12H9"/></symbol>
 <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+<symbol id="i-gamepad" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="11" rx="4"/><path d="M8 10v5M5.5 12.5h5"/><circle cx="15.5" cy="11.5" r=".8"/><circle cx="18" cy="13.5" r=".8"/></symbol>
 <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 01-8 0z"/><path d="M8 6H4v1a3 3 0 003 3M16 6h4v1a3 3 0 01-3 3"/><path d="M12 13v4M8 20h8M10 17h4"/></symbol>
 </defs>
 </svg>
@@ -882,6 +889,7 @@ button:disabled { opacity: .55; cursor: not-allowed; }
             <button id="navDemandeAP" class="nav-button" onclick="ouvrirDemandeAP()"><svg class="ico" aria-hidden="true"><use href="#i-lifebuoy"/></svg><span>Demande d’AP</span></button>
             <button id="navForumGeneral" class="nav-button" onclick="ouvrirForumGeneral()"><svg class="ico" aria-hidden="true"><use href="#i-chat"/></svg><span>Forum de la classe</span></button>
             <button id="navDefi" class="nav-button" onclick="ouvrirDefi()"><svg class="ico" aria-hidden="true"><use href="#i-trophy"/></svg><span>Défi des classes</span></button>
+            <button id="navCalculatrice" class="nav-button" onclick="ouvrirCalculatrice()"><svg class="ico" aria-hidden="true"><use href="#i-gamepad"/></svg><span>Jeux calculatrice</span></button>
             <button id="navForumPrive" class="nav-button hidden" onclick="ouvrirForumPrive()"><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg><span>Parler aux délégués</span></button>
 
                 <div id="menuProfesseur" class="hidden">
@@ -960,6 +968,104 @@ button:disabled { opacity: .55; cursor: not-allowed; }
                             <div id="accueilIdees" class="neon-news-list"><p class="dashboard-empty">Chargement…</p></div>
                             <div id="accueilInfos" class="hidden" aria-hidden="true"></div>
                         </section>
+                    </div>
+                </section>
+
+                <section id="calculatrice" class="section hidden">
+                    <div class="section-header">
+                        <div>
+                            <h2>Jeux sur calculatrice</h2>
+                            <p>Installer des jeux et des applis sur une calculatrice NumWorks, pas à pas.</p>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-heading"><h2>Le site : NumStore</h2></div>
+                        <p>NumStore regroupe des jeux (Paper.io, Celeste, Doom, Cookie Clicker…), des émulateurs et des utilitaires pour la calculatrice <strong>NumWorks</strong>. C’est un site indépendant, <strong>non affilié à NumWorks</strong>.</p>
+                        <p><a class="btn-primary" href="https://numstore.fr/" target="_blank" rel="noopener noreferrer" style="display:inline-block;text-decoration:none">Ouvrir NumStore</a></p>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-heading"><h2>Tutoriel d’installation</h2></div>
+                        <p><strong>Il te faut :</strong> une calculatrice NumWorks, un câble USB, un ordinateur et un navigateur web (Chrome ou Edge conseillés). Aucun logiciel à installer.</p>
+                        <ol class="calc-steps">
+                            <li><strong>Choisis ton jeu</strong> sur <a href="https://numstore.fr/" target="_blank" rel="noopener noreferrer">numstore.fr</a> et ouvre sa page.</li>
+                            <li><strong>Télécharge le fichier.</strong> Clique sur « Vérification Anti-Bot &amp; Débloquer », puis sur le lien de téléchargement. Tu obtiens un fichier qui se termine par <code>.nwa</code>. Il peut être hébergé sur MediaFire, GitHub ou un autre site : ne clique que sur le bouton de téléchargement.</li>
+                            <li><strong>Branche la calculatrice</strong> à l’ordinateur avec le câble USB.</li>
+                            <li><strong>Ouvre la plateforme officielle</strong> : <a href="https://my.numworks.com/apps" target="_blank" rel="noopener noreferrer">my.numworks.com/apps</a> (ou le bouton « Ouvrir NumWorks Apps » sur NumStore).</li>
+                            <li><strong>Dépose le fichier <code>.nwa</code></strong> sur la page, puis envoie-le vers la calculatrice en la sélectionnant quand le navigateur te le propose.</li>
+                            <li><strong>Débranche et lance le jeu</strong> depuis le menu de la calculatrice.</li>
+                        </ol>
+                        <p class="goal-how">Certains éléments demandent une étape en plus (par exemple convertir une image avec un outil indiqué sur leur page). Suis les consignes affichées sur la page de l’élément.</p>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-heading"><h2>Plus de place : agrandir la mémoire (Nwagra)</h2></div>
+                        <p>Par défaut, la calculatrice ne laisse qu’environ <strong>2,5 Mo</strong> pour les applis et les jeux. « Nwagra » est un petit outil communautaire (non officiel) qui monte cette place à environ <strong>6 Mo</strong>, ce qui permet d’installer plus de jeux.</p>
+
+                        <div class="calc-warning">
+                            <strong>Lis ça avant :</strong>
+                            <ul class="calc-notes">
+                                <li>Ce n’est <strong>pas</strong> un outil de NumWorks : il modifie la façon dont le navigateur parle à la calculatrice. Tu le fais à tes risques.</li>
+                                <li>Il ne marche <strong>plus sur les versions récentes</strong> du logiciel de la calculatrice. Si, après avoir installé des applis, elle indique que le <em>mode examen</em> est activé, ta version est incompatible.</li>
+                                <li>En cas de souci, il faut réinstaller le système depuis my.numworks.com (mise à jour). Les applis ajoutées sont alors à remettre.</li>
+                                <li>Le site d’origine (Nwagyu) a été supprimé : il faut utiliser la version « hors ligne » ci-dessous. Ne colle jamais un code reçu d’une autre source.</li>
+                                <li>Ne l’utilise jamais pour contourner le mode examen ou tricher en contrôle.</li>
+                            </ul>
+                        </div>
+
+                        <h3>Ce qu’il te faut</h3>
+                        <p>Une calculatrice chargée, un câble USB, un ordinateur avec <strong>Google Chrome</strong> (ou Edge, Brave… tout navigateur basé sur Chromium). Firefox et Safari ne fonctionnent pas.</p>
+
+                        <h3>Étape 1 : créer le favori « Nwagra »</h3>
+                        <ol class="calc-steps">
+                            <li>Dans Chrome, affiche la barre de favoris : <code>Ctrl</code> + <code>Maj</code> + <code>B</code> (sur Mac : <code>Cmd</code> + <code>Maj</code> + <code>B</code>).</li>
+                            <li>Ouvre la page du code : <a href="https://github.com/BenchatonDev/numworksmempatch" target="_blank" rel="noopener noreferrer">github.com/BenchatonDev/numworksmempatch</a>. Copie le code du favori qui y est fourni (il commence par <code>javascript:</code>).</li>
+                            <li>Clic droit sur la barre de favoris, puis <strong>« Ajouter une page… »</strong>.</li>
+                            <li>Dans <strong>Nom</strong>, écris <code>Nwagra</code>. Dans <strong>URL</strong>, colle tout le code copié, puis <strong>Enregistrer</strong>.</li>
+                        </ol>
+                        <p class="goal-how">Chrome peut retirer le « javascript: » au début quand tu colles. Dans ce cas, retape-le à la main devant le code, sinon le favori ne fait rien.</p>
+
+                        <h3>Étape 2 : mettre la calculatrice à jour, deux fois</h3>
+                        <ol class="calc-steps">
+                            <li>Branche la calculatrice en USB.</li>
+                            <li>Va sur <a href="https://my.numworks.com/" target="_blank" rel="noopener noreferrer">my.numworks.com</a> et lance la <strong>mise à jour</strong> de la calculatrice.</li>
+                            <li>Quand c’est fini, <strong>refais la mise à jour une deuxième fois</strong>. Oui, il en faut deux.</li>
+                        </ol>
+
+                        <h3>Étape 3 : activer Nwagra</h3>
+                        <ol class="calc-steps">
+                            <li><strong>Débranche</strong> la calculatrice du câble USB (c’est important).</li>
+                            <li>Ouvre <a href="https://my.numworks.com/apps" target="_blank" rel="noopener noreferrer">my.numworks.com/apps</a> dans Chrome.</li>
+                            <li>Clique sur ton favori <strong>Nwagra</strong>. Le titre de la page doit devenir <strong>« Enlarged Extra Apps »</strong>. C’est le signe que ça a marché.</li>
+                            <li>Si un message te demande de débrancher et de recommencer, fais-le puis reprends l’étape 3 depuis le début.</li>
+                        </ol>
+
+                        <h3>Étape 4 : installer tes jeux</h3>
+                        <ol class="calc-steps">
+                            <li>Sur cette même page, branche maintenant la calculatrice.</li>
+                            <li>Dépose tes fichiers <code>.nwa</code> (téléchargés sur NumStore) et envoie-les vers la calculatrice, comme dans le tutoriel du dessus.</li>
+                            <li>Tu as maintenant jusqu’à environ 6 Mo disponibles au lieu de 2,5 Mo.</li>
+                        </ol>
+
+                        <h3>Si ça ne marche pas</h3>
+                        <ul class="calc-notes">
+                            <li>Tu utilises bien Chrome (ou un navigateur Chromium) ?</li>
+                            <li>As-tu fait la mise à jour <strong>deux fois</strong> ?</li>
+                            <li>Avais-tu <strong>débranché</strong> la calculatrice avant d’ouvrir la page et de cliquer sur le favori ?</li>
+                            <li>Le titre est-il bien devenu « Enlarged Extra Apps » ? Sinon le favori n’a pas été lancé (revois l’étape 1).</li>
+                            <li>Si le mode examen apparaît ou si la calculatrice se comporte bizarrement : ta version est trop récente. Remets le système avec une mise à jour sur my.numworks.com et arrête là.</li>
+                        </ul>
+                        <p class="goal-how">Sources : <a href="https://yaya-cout.github.io/Nwagyu/guide/help/enlarge-your-memory.html" target="_blank" rel="noopener noreferrer">guide Nwagyu « Enlarge your memory »</a> et le dépôt <a href="https://github.com/BenchatonDev/numworksmempatch" target="_blank" rel="noopener noreferrer">numworksmempatch</a>.</p>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-heading"><h2>À savoir</h2></div>
+                        <ul class="calc-notes">
+                            <li>Les fichiers viennent de tiers : télécharge seulement depuis NumStore et garde ton ordinateur à jour avec un antivirus.</li>
+                            <li>Si l’installation bloque, l’aide se trouve sur le Discord de NumStore (lien en bas de leur site).</li>
+                            <li>En cours, en contrôle et à l’examen, respecte le règlement : pas de jeux pendant les évaluations, et suis les consignes de tes professeurs.</li>
+                        </ul>
                     </div>
                 </section>
 
@@ -2537,6 +2643,14 @@ function ouvrirDefi() {
     chargerDefi();
 }
 
+function ouvrirCalculatrice() {
+    if (!profilUtilisateur || estProfesseur()) return;
+    cacherToutesLesSections();
+    document.getElementById("calculatrice").classList.remove("hidden");
+    changerTitre("Jeux sur calculatrice");
+    mettreNavigationActive("calculatrice");
+}
+
 async function enregistrerRecompenseDefi() {
     if (!defiEtat?.delegue) return;
     const texte = (document.getElementById("defiRecompenseInput")?.value || "").trim();
@@ -2794,11 +2908,16 @@ async function enregistrerAnnonce() {
         if (annonceEnModification) {
             result = await supabaseClient.from(tableAnnoncesActive).update(payload).eq("id", annonceEnModification);
         } else {
-            result = await supabaseClient.from(tableAnnoncesActive).insert(payload);
+            result = await supabaseClient.from(tableAnnoncesActive).insert(payload).select("id").maybeSingle();
         }
         if (result.error) throw result.error;
+        const nouvelleAnnonceId = annonceEnModification ? null : result.data?.id;
         annulerAnnonce();
         await chargerAnnonces();
+        if (nouvelleAnnonceId) {
+            const info = await envoyerEmailsNotification("annonce", nouvelleAnnonceId);
+            if (info.trim()) alert("Annonce publiée." + info);
+        }
     } catch (error) {
         console.error("Enregistrement annonce :", error);
         message.textContent = "Publication impossible : vérifie les colonnes et les autorisations RLS de la table Supabase.";
@@ -3103,6 +3222,8 @@ function mettreNavigationActive(page) {
     } else if (page === "forum") {
         document.getElementById("navForumGeneral")?.classList.add("active");
         document.getElementById("mobileForum")?.classList.add("active");
+    } else if (page === "calculatrice") {
+        document.getElementById("navCalculatrice")?.classList.add("active");
     } else if (page === "defi") {
         document.getElementById("navDefi")?.classList.add("active");
     } else if (page === "forumPrive") {
@@ -3312,6 +3433,7 @@ async function chargerApplication() {
         document.getElementById("navDemandeAP")?.classList.toggle("hidden", !isEleveOuDelegue || isProf);
         document.getElementById("navForumGeneral")?.classList.toggle("hidden", isProf);
         document.getElementById("navDefi")?.classList.toggle("hidden", isProf);
+        document.getElementById("navCalculatrice")?.classList.toggle("hidden", isProf);
         document.getElementById("navForumPrive")?.classList.toggle("hidden", !(isEleveOuDelegue && !isProf));
         document.getElementById("mobileForum")?.classList.toggle("hidden", isProf);
         document.getElementById("mobileForumPrive")?.classList.toggle("hidden", !(isEleveOuDelegue && !isProf));
@@ -4149,11 +4271,15 @@ async function creerSondage() {
     if (!question || options.length < 2 || options.length > 6 || new Set(options.map(v => v.toLocaleLowerCase("fr-FR"))).size !== options.length) {
         afficherMessage("sondageMessage", "Indique une question et 2 à 6 réponses différentes, une par ligne.", "error"); return;
     }
-    const { error } = await supabaseClient.from("sondages").insert({ question, options, classe, auteur: utilisateur.id });
+    const { data: nouveau, error } = await supabaseClient.from("sondages").insert({ question, options, classe, auteur: utilisateur.id }).select("id").single();
     if (error) { afficherMessage("sondageMessage", error.message, "error"); return; }
     document.getElementById("sondageQuestion").value = "";
     document.getElementById("sondageOptions").value = "";
     afficherMessage("sondageMessage", "Sondage créé.");
+    if (nouveau?.id) {
+        const info = await envoyerEmailsNotification("sondage", nouveau.id);
+        afficherMessage("sondageMessage", "Sondage créé." + info);
+    }
     await chargerSondages();
     await chargerCompteursAccueil();
 }
