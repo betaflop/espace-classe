@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#1f2a4d">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Espace Classe">
 <title>Espace Classe — Lycée Saint-François d’Assise</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -703,6 +710,21 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 /* Défi des classes */
 :root { --team-red: #c8372d; --team-blue: #2a4bb3; }
 @media (prefers-color-scheme: dark) { :root { --team-red: #ff7b72; --team-blue: #7ea3ff; } }
+.avatar-preview-row { display: flex; align-items: center; gap: 16px; margin-bottom: 6px; }
+.avatar-preview-row .profile-avatar { width: 84px; height: 84px; font-size: 30px; }
+.avatar-choices { display: flex; flex-wrap: wrap; gap: 10px; }
+.avatar-choices button { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--line); display: grid; place-items: center; cursor: pointer; background: var(--paper-2); color: var(--ink); font-weight: 700; padding: 0; }
+.avatar-choices button[aria-pressed="true"] { border-color: var(--ink); box-shadow: 0 0 0 3px var(--highlight); }
+.install-coin { position: fixed; right: 14px; bottom: 14px; z-index: 30; display: flex; align-items: center; background: var(--cover); color: #fff; border-radius: 999px; box-shadow: 0 4px 14px rgba(0,0,0,.25); font-size: 14px; }
+.install-btn { display: flex; align-items: center; gap: 6px; background: none; border: 0; color: inherit; padding: 8px 6px 8px 14px; cursor: pointer; font: inherit; font-weight: 700; }
+.install-btn .ico { width: 18px; height: 18px; }
+.install-close { background: none; border: 0; color: inherit; opacity: .75; font-size: 20px; line-height: 1; padding: 4px 12px 6px 6px; cursor: pointer; }
+.install-ios { position: fixed; right: 14px; bottom: 60px; z-index: 31; max-width: 300px; background: var(--paper); color: var(--ink); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+.install-ios ol { margin: 8px 0 12px 20px; display: grid; gap: 4px; }
+@media (max-width: 899px) {
+    .install-coin { bottom: calc(var(--bar-h) + env(safe-area-inset-bottom) + 10px); }
+    .install-ios { bottom: calc(var(--bar-h) + env(safe-area-inset-bottom) + 56px); }
+}
 .calc-steps { margin: 12px 0 0 22px; display: grid; gap: 10px; }
 .calc-notes { margin: 8px 0 0 20px; display: grid; gap: 8px; }
 .calc-steps code { background: var(--paper-2); padding: 1px 6px; border-radius: 6px; }
@@ -852,6 +874,7 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 4H5v16h4"/><path d="M16 8l4 4-4 4M20 12H9"/></symbol>
 <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
 <symbol id="i-gamepad" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="11" rx="4"/><path d="M8 10v5M5.5 12.5h5"/><circle cx="15.5" cy="11.5" r=".8"/><circle cx="18" cy="13.5" r=".8"/></symbol>
+<symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M12 6v8M9 11.5l3 3 3-3"/></symbol>
 <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 01-8 0z"/><path d="M8 6H4v1a3 3 0 003 3M16 6h4v1a3 3 0 01-3 3"/><path d="M12 13v4M8 20h8M10 17h4"/></symbol>
 </defs>
 </svg>
@@ -1214,6 +1237,37 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 
                         </div>
 
+                    </div>
+
+                    <div class="form-card avatar-editor">
+                        <h3>Mon avatar</h3>
+                        <div class="avatar-preview-row">
+                            <div id="avatarApercu" class="profile-avatar">?</div>
+                            <p class="muted">Choisis une couleur et un symbole, ou une photo de ta galerie. Seul toi la vois pour l’instant.</p>
+                        </div>
+                        <label>Couleur</label>
+                        <div id="avatarCouleurs" class="avatar-choices"></div>
+                        <label>Symbole</label>
+                        <div id="avatarIcones" class="avatar-choices"></div>
+                        <div class="form-actions">
+                            <button type="button" class="btn-primary" onclick="enregistrerAvatarPreset()">Enregistrer cet avatar</button>
+                            <button type="button" class="btn-secondary" onclick="document.getElementById('avatarFichier').click()">Choisir une photo</button>
+                            <button type="button" class="btn-secondary" onclick="retirerAvatar()">Revenir aux initiales</button>
+                        </div>
+                        <input id="avatarFichier" type="file" accept="image/*" class="hidden" onchange="choisirPhotoAvatar(this)">
+                        <div id="avatarMessage" role="status" aria-live="polite"></div>
+                    </div>
+
+                    <div class="form-card">
+                        <h3>Changer mon mot de passe</h3>
+                        <label for="mdpActuel">Mot de passe actuel</label>
+                        <input id="mdpActuel" type="password" autocomplete="current-password">
+                        <label for="mdpNouveau">Nouveau mot de passe (8 caractères minimum)</label>
+                        <input id="mdpNouveau" type="password" autocomplete="new-password">
+                        <label for="mdpConfirme">Répète le nouveau mot de passe</label>
+                        <input id="mdpConfirme" type="password" autocomplete="new-password">
+                        <div class="form-actions"><button type="button" class="btn-primary" onclick="changerMotDePasse()">Changer le mot de passe</button></div>
+                        <div id="mdpMessage" role="status" aria-live="polite"></div>
                     </div>
 
                 </section>
@@ -1998,6 +2052,20 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 
             </div>
         </main>
+    </div>
+
+    <div id="installCoin" class="install-coin hidden">
+        <button type="button" class="install-btn" onclick="installerApplication()"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg><span>Installer l’appli</span></button>
+        <button type="button" class="install-close" onclick="masquerInstallation()" aria-label="Ne plus afficher">×</button>
+    </div>
+    <div id="installIos" class="install-ios hidden" role="dialog" aria-label="Installer sur iPhone">
+        <strong>Installer sur iPhone / iPad</strong>
+        <ol>
+            <li>Ouvre le site dans <b>Safari</b>.</li>
+            <li>Touche le bouton <b>Partager</b> (le carré avec la flèche vers le haut).</li>
+            <li>Choisis <b>« Sur l’écran d’accueil »</b>, puis <b>Ajouter</b>.</li>
+        </ol>
+        <button type="button" class="btn-secondary" onclick="document.getElementById('installIos').classList.add('hidden')">Compris</button>
     </div>
 
     <nav class="mobile-nav" aria-label="Navigation rapide">
@@ -3546,6 +3614,7 @@ function mettreAJourInterface() {
         initiales(prenom, nom);
 
     personnaliserAccueilSelonRole();
+    chargerAvatar();
 }
 
 
@@ -3570,6 +3639,8 @@ function chargerProfilAffichage() {
         "profileAvatar"
     ).textContent =
         initiales(prenom, nom);
+    dessinerChoixAvatar();
+    chargerAvatar();
 
 
     document.getElementById(
@@ -4829,6 +4900,187 @@ async function creerCompteRendu() {
    E-MAILS (AP créée par un professeur, compte-rendu créé par un délégué)
    Un message personnalisé est envoyé à chaque élève concerné.
 ===================================================== */
+
+
+/* =====================================================
+   AVATAR, MOT DE PASSE, INSTALLATION
+===================================================== */
+
+const AVATAR_COULEURS = [
+    ["jaune", "#ffe36e", "#1f2a4d"], ["rouge", "#c9463d", "#ffffff"], ["bleu", "#2a4bb3", "#ffffff"], ["vert", "#25774f", "#ffffff"],
+    ["violet", "#7a4fb3", "#ffffff"], ["orange", "#d9731c", "#ffffff"], ["rose", "#d6568f", "#ffffff"], ["nuit", "#1f2a4d", "#ffe36e"]
+];
+const AVATAR_ICONES = ["initiales", "bulb", "trophy", "gamepad", "book", "chat", "megaphone", "users"];
+let avatarCourant = null;
+let avatarPour = null;
+let avatarChoix = { couleur: "jaune", icone: "initiales" };
+
+function initialesProfil() {
+    return initiales(profilUtilisateur?.prenom || "", profilUtilisateur?.nom || "");
+}
+
+function appliquerAvatarSur(el, avatar) {
+    if (!el) return;
+    el.style.background = "";
+    el.style.color = "";
+    el.style.backgroundImage = "";
+    el.style.backgroundSize = "";
+    el.style.backgroundPosition = "";
+    if (avatar?.kind === "photo" && avatar.photo) {
+        el.textContent = "";
+        el.style.backgroundImage = 'url("' + avatar.photo + '")';
+        el.style.backgroundSize = "cover";
+        el.style.backgroundPosition = "center";
+        return;
+    }
+    if (avatar?.kind === "preset" && avatar.preset) {
+        const [coul, icone] = String(avatar.preset).split("-");
+        const c = AVATAR_COULEURS.find(x => x[0] === coul);
+        if (c) { el.style.background = c[1]; el.style.color = c[2]; }
+        if (icone && icone !== "initiales" && AVATAR_ICONES.includes(icone)) {
+            el.innerHTML = '<svg class="ico" aria-hidden="true" style="width:55%;height:55%"><use href="#i-' + icone + '"/></svg>';
+            return;
+        }
+    }
+    el.textContent = initialesProfil();
+}
+
+function appliquerAvatarPartout() {
+    ["sidebarAvatar", "topbarAvatar", "profileAvatar", "avatarApercu"].forEach(id => appliquerAvatarSur(document.getElementById(id), avatarCourant));
+}
+
+async function chargerAvatar() {
+    if (!utilisateur?.id) return;
+    if (avatarPour === utilisateur.id) { appliquerAvatarPartout(); return; }
+    avatarCourant = null;
+    avatarPour = utilisateur.id;
+    const { data, error } = await supabaseClient.from("profil_avatars").select("kind, preset, photo").eq("user_id", utilisateur.id).maybeSingle();
+    if (error) { console.warn("Avatar :", error.message); avatarPour = null; return; }
+    avatarCourant = data || null;
+    if (data?.kind === "preset" && data.preset) {
+        const [c, i] = data.preset.split("-");
+        if (AVATAR_COULEURS.some(x => x[0] === c)) avatarChoix.couleur = c;
+        if (AVATAR_ICONES.includes(i)) avatarChoix.icone = i;
+    }
+    appliquerAvatarPartout();
+}
+
+function dessinerChoixAvatar() {
+    const cb = document.getElementById("avatarCouleurs");
+    const ib = document.getElementById("avatarIcones");
+    if (!cb || !ib) return;
+    cb.innerHTML = AVATAR_COULEURS.map(c => '<button type="button" aria-label="Couleur ' + c[0] + '" aria-pressed="' + (avatarChoix.couleur === c[0]) + '" style="background:' + c[1] + ';color:' + c[2] + '" onclick="choisirCouleurAvatar(\'' + c[0] + '\')"></button>').join("");
+    ib.innerHTML = AVATAR_ICONES.map(n => '<button type="button" aria-label="Symbole ' + n + '" aria-pressed="' + (avatarChoix.icone === n) + '" onclick="choisirIconeAvatar(\'' + n + '\')">' + (n === "initiales" ? "Aa" : '<svg class="ico" aria-hidden="true"><use href="#i-' + n + '"/></svg>') + '</button>').join("");
+    appliquerAvatarSur(document.getElementById("avatarApercu"), { kind: "preset", preset: avatarChoix.couleur + "-" + avatarChoix.icone });
+}
+function choisirCouleurAvatar(c) { avatarChoix.couleur = c; dessinerChoixAvatar(); }
+function choisirIconeAvatar(i) { avatarChoix.icone = i; dessinerChoixAvatar(); }
+
+async function sauverAvatar(ligne, messageOk) {
+    const { error } = await supabaseClient.from("profil_avatars").upsert({ user_id: utilisateur.id, ...ligne, updated_at: new Date().toISOString() }, { onConflict: "user_id" });
+    if (error) { afficherMessage("avatarMessage", "Enregistrement impossible : " + error.message, "error"); return false; }
+    avatarCourant = { kind: ligne.kind, preset: ligne.preset || null, photo: ligne.photo || null };
+    appliquerAvatarPartout();
+    afficherMessage("avatarMessage", messageOk);
+    return true;
+}
+
+async function enregistrerAvatarPreset() {
+    await sauverAvatar({ kind: "preset", preset: avatarChoix.couleur + "-" + avatarChoix.icone, photo: null }, "Avatar enregistré.");
+}
+
+async function retirerAvatar() {
+    const { error } = await supabaseClient.from("profil_avatars").delete().eq("user_id", utilisateur.id);
+    if (error) { afficherMessage("avatarMessage", error.message, "error"); return; }
+    avatarCourant = null;
+    appliquerAvatarPartout();
+    dessinerChoixAvatar();
+    afficherMessage("avatarMessage", "Tu es revenu aux initiales.");
+}
+
+function choisirPhotoAvatar(input) {
+    const fichier = input.files && input.files[0];
+    input.value = "";
+    if (!fichier) return;
+    if (!/^image\//.test(fichier.type)) { afficherMessage("avatarMessage", "Choisis un fichier image.", "error"); return; }
+    const img = new Image();
+    const url = URL.createObjectURL(fichier);
+    img.onload = async () => {
+        URL.revokeObjectURL(url);
+        const taille = 256;
+        const canvas = document.createElement("canvas");
+        canvas.width = taille; canvas.height = taille;
+        const ctx = canvas.getContext("2d");
+        const cote = Math.min(img.width, img.height);
+        ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, taille, taille);
+        ctx.drawImage(img, (img.width - cote) / 2, (img.height - cote) / 2, cote, cote, 0, 0, taille, taille);
+        let q = 0.85, data = canvas.toDataURL("image/jpeg", q);
+        while (data.length > 80000 && q > 0.3) { q -= 0.1; data = canvas.toDataURL("image/jpeg", q); }
+        if (data.length > 80000) { afficherMessage("avatarMessage", "Cette photo est trop lourde, essaie-en une autre.", "error"); return; }
+        await sauverAvatar({ kind: "photo", preset: null, photo: data }, "Photo enregistrée.");
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); afficherMessage("avatarMessage", "Impossible de lire cette image.", "error"); };
+    img.src = url;
+}
+
+async function changerMotDePasse() {
+    const actuel = document.getElementById("mdpActuel").value;
+    const nouveau = document.getElementById("mdpNouveau").value;
+    const confirme = document.getElementById("mdpConfirme").value;
+    if (!actuel || !nouveau || !confirme) { afficherMessage("mdpMessage", "Remplis les trois champs.", "error"); return; }
+    if (nouveau.length < 8) { afficherMessage("mdpMessage", "Le nouveau mot de passe doit faire au moins 8 caractères.", "error"); return; }
+    if (nouveau !== confirme) { afficherMessage("mdpMessage", "Les deux nouveaux mots de passe sont différents.", "error"); return; }
+    if (nouveau === actuel) { afficherMessage("mdpMessage", "Choisis un mot de passe différent de l’actuel.", "error"); return; }
+    const email = utilisateur?.email;
+    if (!email) { afficherMessage("mdpMessage", "Session invalide, reconnecte-toi.", "error"); return; }
+    const verif = await supabaseClient.auth.signInWithPassword({ email, password: actuel });
+    if (verif.error) { afficherMessage("mdpMessage", "Le mot de passe actuel est incorrect.", "error"); return; }
+    const { error } = await supabaseClient.auth.updateUser({ password: nouveau });
+    if (error) {
+        const m = /same|different/i.test(error.message || "") ? "Choisis un mot de passe différent de l’actuel." : (error.message || "Changement impossible.");
+        afficherMessage("mdpMessage", m, "error");
+        return;
+    }
+    ["mdpActuel", "mdpNouveau", "mdpConfirme"].forEach(id => { document.getElementById(id).value = ""; });
+    afficherMessage("mdpMessage", "Mot de passe changé. Utilise-le à ta prochaine connexion.");
+}
+
+/* ---- installation sur l'écran d'accueil ---- */
+let invitationInstall = null;
+const estIos = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const dejaInstallee = () => window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+
+function installMasquee() {
+    try { return Date.now() < Number(localStorage.getItem("installMasqueJusqua") || 0); } catch (e) { return false; }
+}
+function masquerInstallation() {
+    try { localStorage.setItem("installMasqueJusqua", String(Date.now() + 14 * 86400000)); } catch (e) { /* ignoré */ }
+    document.getElementById("installCoin")?.classList.add("hidden");
+    document.getElementById("installIos")?.classList.add("hidden");
+}
+function majInstallCoin() {
+    const coin = document.getElementById("installCoin");
+    if (!coin) return;
+    const connecte = !document.getElementById("app")?.classList.contains("hidden");
+    const possible = !!invitationInstall || (estIos && !dejaInstallee());
+    coin.classList.toggle("hidden", !(connecte && possible && !dejaInstallee() && !installMasquee()));
+}
+async function installerApplication() {
+    if (invitationInstall) {
+        invitationInstall.prompt();
+        try { await invitationInstall.userChoice; } catch (e) { /* ignoré */ }
+        invitationInstall = null;
+        majInstallCoin();
+    } else if (estIos) {
+        document.getElementById("installIos")?.classList.toggle("hidden");
+    }
+}
+window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); invitationInstall = e; majInstallCoin(); });
+window.addEventListener("appinstalled", () => { invitationInstall = null; majInstallCoin(); });
+setInterval(majInstallCoin, 2000);
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+    window.addEventListener("load", () => { navigator.serviceWorker.register("sw.js").catch(() => {}); });
+}
 
 async function envoyerEmailsNotification(type, id) {
     try {
