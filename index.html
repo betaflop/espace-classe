@@ -849,6 +849,52 @@ button:disabled { opacity: .55; cursor: not-allowed; }
     .mobile-nav button { font-size: 12px; }
 }
 
+/* ===== Réorganisation : menu groupé, accueil, formulaires repliables ===== */
+.nav-group { display: flex; flex-direction: column; gap: 2px; }
+.nav-group[data-titre]:has(.nav-button:not(.hidden))::before {
+    content: attr(data-titre);
+    display: block; padding: 16px 12px 6px; font-size: 13px; letter-spacing: .02em; opacity: .62;
+}
+.nav-group:not(:has(.nav-button:not(.hidden))) { display: none; }
+
+.quick-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 24px; }
+.qa { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--ink); font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: var(--shadow); }
+.qa .ico { width: 20px; height: 20px; color: var(--primary); }
+.qa:hover { border-color: var(--primary); }
+.qa.hidden { display: none; }
+
+.home-cols { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.home-main, .home-side { display: grid; gap: 20px; min-width: 0; }
+.home-side .defi-panel { margin-bottom: 0; }
+.stats-block { margin-top: 28px; }
+.stats-block:not(:has(.stat:not(.hidden))) { display: none; }
+.home-sub { font-size: 15px; font-weight: 700; color: var(--ink-soft); margin: 0 0 8px; letter-spacing: .02em; }
+.stats-block .stats-row { margin-bottom: 0; }
+@media (max-width: 1100px) { .home-cols { grid-template-columns: 1fr; } }
+
+.repliee { display: none; }
+.btn-ouvrir-form { margin: 0 0 16px; }
+.btn-ouvrir-form:has(+ .hidden) { display: none; }
+.toast { position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; z-index: 90; max-width: min(92vw, 420px); padding: 12px 18px; border-radius: 12px; background: var(--success); color: #fff; font-weight: 700; box-shadow: 0 8px 24px rgba(0,0,0,.28); transition: opacity .2s ease, transform .2s ease; }
+.toast.visible { opacity: 1; transform: translate(-50%, 0); }
+@media (max-width: 899px) { .toast { bottom: calc(var(--bar-h) + env(safe-area-inset-bottom) + 14px); } }
+
+@media (max-width: 899px) {
+    .sidebar-menu { gap: 6px; }
+    .sidebar-menu > .nav-group:first-child { display: none !important; }
+    .sidebar-menu > .nav-group, .sidebar-menu > #menuProfesseur:not(.hidden), .sidebar-menu > #menuAdmin:not(.hidden) { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .nav-group[data-titre]:has(.nav-button:not(.hidden))::before,
+    .sidebar-menu > div:not(.hidden)::before { grid-column: 1 / -1; padding: 10px 4px 0; }
+    .sidebar-menu > .nav-group:not(:has(.nav-button:not(.hidden))) { display: none; }
+    .sidebar-menu .nav-button { flex-direction: column; justify-content: center; text-align: center; gap: 6px; min-height: 78px; padding: 10px 6px; font-size: 13px; line-height: 1.15; background: rgba(255,255,255,.07); border-radius: 14px; }
+    .sidebar-menu .nav-button.active { background: var(--highlight); color: var(--highlight-ink); }
+    .sidebar-bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .sidebar-bottom .user-mini { grid-column: 1 / -1; }
+    .sidebar-bottom .nav-button { flex-direction: row; justify-content: center; min-height: 48px; font-size: 14px; background: rgba(255,255,255,.07); border-radius: 12px; }
+    .quick-actions { flex-wrap: nowrap; overflow-x: auto; margin-right: -14px; padding: 2px 14px 6px 0; scrollbar-width: none; }
+    .qa { flex: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
 }
@@ -905,15 +951,24 @@ button:disabled { opacity: .55; cursor: not-allowed; }
             </div>
 
             <nav class="sidebar-menu" aria-label="Navigation principale">
-            <button id="navAccueil" class="nav-button active" onclick="retourAccueil()"><svg class="ico" aria-hidden="true"><use href="#i-home"/></svg><span>Accueil</span></button>
-            <button id="navAnnonces" class="nav-button" onclick="ouvrirAnnonces()"><svg class="ico" aria-hidden="true"><use href="#i-megaphone"/></svg><span>Annonces</span></button>
-            <button id="navIdeesEleve" class="nav-button" onclick="ouvrirIdees()"><svg class="ico" aria-hidden="true"><use href="#i-bulb"/></svg><span>Idées de la classe</span></button>
-            <button id="navRapportsEleve" class="nav-button" onclick="ouvrirMesComptesRendus()"><svg class="ico" aria-hidden="true"><use href="#i-file"/></svg><span>Mes comptes-rendus</span></button>
-            <button id="navDemandeAP" class="nav-button" onclick="ouvrirDemandeAP()"><svg class="ico" aria-hidden="true"><use href="#i-lifebuoy"/></svg><span>Demande d’AP</span></button>
-            <button id="navForumGeneral" class="nav-button" onclick="ouvrirForumGeneral()"><svg class="ico" aria-hidden="true"><use href="#i-chat"/></svg><span>Forum de la classe</span></button>
-            <button id="navDefi" class="nav-button" onclick="ouvrirDefi()"><svg class="ico" aria-hidden="true"><use href="#i-trophy"/></svg><span>Défi des classes</span></button>
-            <button id="navCalculatrice" class="nav-button" onclick="ouvrirCalculatrice()"><svg class="ico" aria-hidden="true"><use href="#i-gamepad"/></svg><span>Jeux calculatrice</span></button>
-            <button id="navForumPrive" class="nav-button hidden" onclick="ouvrirForumPrive()"><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg><span>Parler aux délégués</span></button>
+            <div class="nav-group">
+                <button id="navAccueil" class="nav-button active" onclick="retourAccueil()"><svg class="ico" aria-hidden="true"><use href="#i-home"/></svg><span>Accueil</span></button>
+            </div>
+            <div class="nav-group" data-titre="Vie de classe">
+                <button id="navAnnonces" class="nav-button" onclick="ouvrirAnnonces()"><svg class="ico" aria-hidden="true"><use href="#i-megaphone"/></svg><span>Annonces</span></button>
+                <button id="navForumGeneral" class="nav-button" onclick="ouvrirForumGeneral()"><svg class="ico" aria-hidden="true"><use href="#i-chat"/></svg><span>Forum de la classe</span></button>
+                <button id="navSondagesAdmin" class="nav-button" onclick="ouvrirSondages()"><svg class="ico" aria-hidden="true"><use href="#i-chart"/></svg><span>Sondages</span></button>
+            </div>
+            <div class="nav-group" data-titre="Participer">
+                <button id="navIdeesEleve" class="nav-button" onclick="ouvrirIdees()"><svg class="ico" aria-hidden="true"><use href="#i-bulb"/></svg><span>Idées de la classe</span></button>
+                <button id="navDemandeAP" class="nav-button" onclick="ouvrirDemandeAP()"><svg class="ico" aria-hidden="true"><use href="#i-lifebuoy"/></svg><span>Demande d’AP</span></button>
+                <button id="navDefi" class="nav-button" onclick="ouvrirDefi()"><svg class="ico" aria-hidden="true"><use href="#i-trophy"/></svg><span>Défi des classes</span></button>
+                <button id="navCalculatrice" class="nav-button" onclick="ouvrirCalculatrice()"><svg class="ico" aria-hidden="true"><use href="#i-gamepad"/></svg><span>Jeux calculatrice</span></button>
+            </div>
+            <div class="nav-group" data-titre="Mes affaires">
+                <button id="navRapportsEleve" class="nav-button" onclick="ouvrirMesComptesRendus()"><svg class="ico" aria-hidden="true"><use href="#i-file"/></svg><span>Mes comptes-rendus</span></button>
+                <button id="navForumPrive" class="nav-button hidden" onclick="ouvrirForumPrive()"><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg><span>Parler aux délégués</span></button>
+            </div>
 
                 <div id="menuProfesseur" class="hidden">
                     <button class="nav-button" onclick="ouvrirGestionAP()"><svg class="ico" aria-hidden="true"><use href="#i-lifebuoy"/></svg><span>Gestion des AP</span></button>
@@ -922,7 +977,6 @@ button:disabled { opacity: .55; cursor: not-allowed; }
                 <div id="menuAdmin" class="hidden">
                     <button class="nav-button" onclick="ouvrirGestionEleves()"><svg class="ico" aria-hidden="true"><use href="#i-users"/></svg><span>Élèves</span></button>
                     <button class="nav-button" onclick="ouvrirIdeesAdmin()"><svg class="ico" aria-hidden="true"><use href="#i-bulb"/></svg><span>Idées</span></button>
-                    <button id="navSondagesAdmin" class="nav-button" onclick="ouvrirSondages()"><svg class="ico" aria-hidden="true"><use href="#i-chart"/></svg><span>Sondages</span></button>
                     <button class="nav-button" onclick="ouvrirComptesRendusAdmin()"><svg class="ico" aria-hidden="true"><use href="#i-clipboard"/></svg><span>Comptes-rendus</span></button>
                     <button class="nav-button" onclick="ouvrirGestionProfesseurs()"><svg class="ico" aria-hidden="true"><use href="#i-book"/></svg><span>Professeurs</span></button>
                 </div>
@@ -963,34 +1017,50 @@ button:disabled { opacity: .55; cursor: not-allowed; }
                         <p class="home-role">Connecté comme <strong id="heroRole">utilisateur</strong>.</p>
                     </div>
 
-                    <div class="stats-row">
-                        <button class="stat" onclick="ouvrirIdees()"><strong id="statIdees">—</strong> idées</button>
-                        <button class="stat" onclick="ouvrirSondages()"><strong id="statSondages">—</strong> sondages ouverts</button>
-                        <button class="stat" onclick="estDelegue() || estAdministrateur() ? ouvrirComptesRendusAdmin() : ouvrirMesComptesRendus()"><strong id="statRapports">—</strong> comptes-rendus</button>
-                        <button class="stat" onclick="ouvrirGestionEleves()"><strong id="statEleves">—</strong> élèves</button>
+                    <div class="quick-actions" aria-label="Raccourcis">
+                        <button type="button" class="qa" data-pour="eleve" onclick="ouvrirIdees()"><svg class="ico" aria-hidden="true"><use href="#i-bulb"/></svg>Proposer une idée</button>
+                        <button type="button" class="qa" data-pour="eleve" onclick="ouvrirDemandeAP()"><svg class="ico" aria-hidden="true"><use href="#i-lifebuoy"/></svg>Demander une AP</button>
+                        <button type="button" class="qa" data-pour="eleve" onclick="ouvrirSondages()"><svg class="ico" aria-hidden="true"><use href="#i-chart"/></svg>Voter</button>
+                        <button type="button" class="qa" data-pour="eleve" onclick="ouvrirForumGeneral()"><svg class="ico" aria-hidden="true"><use href="#i-chat"/></svg>Forum</button>
+                        <button type="button" class="qa" data-pour="prof" onclick="ouvrirGestionAP()"><svg class="ico" aria-hidden="true"><use href="#i-lifebuoy"/></svg>Gérer mes AP</button>
+                        <button type="button" class="qa" data-pour="prof" onclick="ouvrirAnnonces()"><svg class="ico" aria-hidden="true"><use href="#i-megaphone"/></svg>Annonces</button>
                     </div>
 
-                    <section id="defiAccueil" class="panel defi-panel hidden" aria-labelledby="defiAccueilTitre">
-                        <div class="panel-heading"><h2 id="defiAccueilTitre">Défi des classes</h2><button class="link-button" onclick="ouvrirDefi()">Voir le défi</button></div>
-                        <div id="defiAccueilContenu"></div>
-                    </section>
+                    <div class="home-cols">
+                        <div class="home-main">
+                            <section id="accueilAPPanel" class="panel">
+                                <div class="panel-heading"><h2>AP à venir</h2></div>
+                                <div id="accueilAPStatus" class="neon-news-list"><p class="dashboard-empty">Vérification des AP…</p></div>
+                            </section>
 
-                    <div class="home-grid">
-                        <section id="accueilAPPanel" class="panel">
-                            <div class="panel-heading"><h2>AP à venir</h2></div>
-                            <div id="accueilAPStatus" class="neon-news-list"><p class="dashboard-empty">Vérification des AP…</p></div>
-                        </section>
+                            <section class="panel">
+                                <div class="panel-heading"><h2>Annonces</h2><button class="link-button" onclick="ouvrirAnnonces()">Tout voir</button></div>
+                                <div id="accueilAnnonces" class="neon-news-list"><p class="dashboard-empty">Chargement…</p></div>
+                            </section>
+                        </div>
 
-                        <section class="panel">
-                            <div class="panel-heading"><h2>Annonces</h2><button class="link-button" onclick="ouvrirAnnonces()">Tout voir</button></div>
-                            <div id="accueilAnnonces" class="neon-news-list"><p class="dashboard-empty">Chargement…</p></div>
-                        </section>
+                        <div class="home-side">
+                            <section id="defiAccueil" class="panel defi-panel hidden" aria-labelledby="defiAccueilTitre">
+                                <div class="panel-heading"><h2 id="defiAccueilTitre">Défi des classes</h2><button class="link-button" onclick="ouvrirDefi()">Voir le défi</button></div>
+                                <div id="defiAccueilContenu"></div>
+                            </section>
 
-                        <section class="panel ideas-panel">
-                            <div class="panel-heading"><h2>Dernières idées</h2><button class="link-button" onclick="ouvrirIdees()">Proposer une idée</button></div>
-                            <div id="accueilIdees" class="neon-news-list"><p class="dashboard-empty">Chargement…</p></div>
-                            <div id="accueilInfos" class="hidden" aria-hidden="true"></div>
-                        </section>
+                            <section class="panel ideas-panel">
+                                <div class="panel-heading"><h2>Dernières idées</h2><button class="link-button" onclick="ouvrirIdees()">Voir tout</button></div>
+                                <div id="accueilIdees" class="neon-news-list"><p class="dashboard-empty">Chargement…</p></div>
+                                <div id="accueilInfos" class="hidden" aria-hidden="true"></div>
+                            </section>
+                        </div>
+                    </div>
+
+                    <div class="stats-block">
+                        <h3 class="home-sub">En chiffres</h3>
+                        <div class="stats-row">
+                            <button class="stat" onclick="ouvrirIdees()"><strong id="statIdees">—</strong> idées</button>
+                            <button class="stat" onclick="ouvrirSondages()"><strong id="statSondages">—</strong> sondages ouverts</button>
+                            <button class="stat" onclick="estDelegue() || estAdministrateur() ? ouvrirComptesRendusAdmin() : ouvrirMesComptesRendus()"><strong id="statRapports">—</strong> comptes-rendus</button>
+                            <button class="stat" onclick="ouvrirGestionEleves()"><strong id="statEleves">—</strong> élèves</button>
+                        </div>
                     </div>
                 </section>
 
@@ -3502,6 +3572,7 @@ async function chargerApplication() {
         document.getElementById("navForumGeneral")?.classList.toggle("hidden", isProf);
         document.getElementById("navDefi")?.classList.toggle("hidden", isProf);
         document.getElementById("navCalculatrice")?.classList.toggle("hidden", isProf);
+        document.getElementById("navSondagesAdmin")?.classList.toggle("hidden", isProf);
         document.getElementById("navForumPrive")?.classList.toggle("hidden", !(isEleveOuDelegue && !isProf));
         document.getElementById("mobileForum")?.classList.toggle("hidden", isProf);
         document.getElementById("mobileForumPrive")?.classList.toggle("hidden", !(isEleveOuDelegue && !isProf));
@@ -3549,6 +3620,7 @@ function personnaliserAccueilSelonRole() {
     afficher("statRapports", !prof);
     afficher("statEleves", delegue || admin);
     document.querySelector("#accueil .ideas-panel")?.classList.toggle("hidden", prof);
+    document.querySelectorAll("#accueil .qa").forEach(b => b.classList.toggle("hidden", (b.dataset.pour === "prof") !== prof));
     const reportStat = document.getElementById("statRapports")?.closest(".stat");
     if (reportStat) reportStat.setAttribute("onclick", delegue || admin ? "ouvrirComptesRendusAdmin()" : "ouvrirMesComptesRendus()");
 }
@@ -5081,6 +5153,89 @@ setInterval(majInstallCoin, 2000);
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
     window.addEventListener("load", () => { navigator.serviceWorker.register("sw.js").catch(() => {}); });
 }
+
+/* =====================================================
+   FORMULAIRES REPLIABLES + TOAST
+===================================================== */
+
+let toastTimer = null;
+function afficherToast(texte) {
+    let t = document.getElementById("toast");
+    if (!t) { t = document.createElement("div"); t.id = "toast"; t.className = "toast"; t.setAttribute("role", "status"); document.body.appendChild(t); }
+    t.textContent = texte;
+    t.classList.add("visible");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove("visible"), 3200);
+}
+
+function basculerFormulaireRepliable(form, ouvrir) {
+    const bouton = form.previousElementSibling;
+    const etat = ouvrir === undefined ? form.classList.contains("repliee") : ouvrir;
+    form.classList.toggle("repliee", !etat);
+    if (etat) form.querySelectorAll('[role="status"]').forEach(e => { e.innerHTML = ""; });
+    if (bouton?.classList.contains("btn-ouvrir-form")) {
+        bouton.setAttribute("aria-expanded", String(etat));
+        bouton.textContent = etat ? "Fermer le formulaire" : bouton.dataset.label;
+        bouton.classList.toggle("btn-secondary", etat);
+        bouton.classList.toggle("btn-primary", !etat);
+    }
+}
+
+function initialiserFormulairesRepliables() {
+    const liste = [
+        ["#ideeContenu", "＋ Proposer une idée"],
+        ["#sondageCreation", "＋ Nouveau sondage"],
+        ["#apProfesseur", "＋ Demander une AP"],
+        ["#creationAPProf", "＋ Créer une AP"],
+        ["#forumPriveNouvelle", "＋ Nouvelle conversation"],
+        ["#elevePrenom", "＋ Créer un élève"],
+        ["#profPrenom", "＋ Créer un professeur"],
+        ["#compteRenduEleve", "＋ Nouveau compte-rendu"]
+    ];
+    liste.forEach(([sel, label]) => {
+        const form = document.querySelector(sel)?.closest(".form-card");
+        if (!form || form.dataset.repliable) return;
+        form.dataset.repliable = "1";
+        const bouton = document.createElement("button");
+        bouton.type = "button";
+        bouton.className = "btn-primary btn-ouvrir-form";
+        bouton.dataset.label = label;
+        bouton.textContent = label;
+        bouton.setAttribute("aria-expanded", "false");
+        bouton.addEventListener("click", () => basculerFormulaireRepliable(form));
+        form.parentNode.insertBefore(bouton, form);
+        form.classList.add("repliee");
+        // Après un envoi réussi : toast + fermeture (sauf si le message contient des identifiants à lire)
+        form.addEventListener("click", (e) => {
+            const b = e.target.closest("button.btn-primary, button.btn-success");
+            if (!b || form.classList.contains("repliee")) return;
+            let essais = 0;
+            const sonde = setInterval(() => {
+                essais++;
+                const ok = form.querySelector(".message.success");
+                if (ok) {
+                    clearInterval(sonde);
+                    const texte = ok.textContent.trim();
+                    if (texte.length <= 90 && !/mot de passe|identifiant/i.test(texte)) {
+                        afficherToast(texte);
+                        basculerFormulaireRepliable(form, false);
+                    }
+                } else if (essais > 16) clearInterval(sonde);
+            }, 300);
+        });
+    });
+}
+
+// Si le code demande à faire défiler jusqu'à un champ d'un formulaire replié (modification), on l'ouvre.
+const scrollIntoViewOrigine = Element.prototype.scrollIntoView;
+Element.prototype.scrollIntoView = function (...args) {
+    const f = this.closest && this.closest(".repliee");
+    if (f) basculerFormulaireRepliable(f, true);
+    return scrollIntoViewOrigine.apply(this, args);
+};
+
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initialiserFormulairesRepliables);
+else initialiserFormulairesRepliables();
 
 async function envoyerEmailsNotification(type, id) {
     try {
