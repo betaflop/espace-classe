@@ -5678,7 +5678,13 @@ async function chargerElevesPourAPProf() {
         option.textContent = classe;
         classeSelect.appendChild(option);
     });
-    if (classes.includes(classeActuelle)) classeSelect.value = classeActuelle;
+    if (classes.length > 1) {
+        const toutes = document.createElement("option");
+        toutes.value = "__toutes__";
+        toutes.textContent = "Les deux classes (" + classes.join(" et ") + ")";
+        classeSelect.appendChild(toutes);
+    }
+    if (classes.includes(classeActuelle) || classeActuelle === "__toutes__") classeSelect.value = classeActuelle;
 
     const matiere = document.getElementById("apMatiereProf");
     if (matiere && profilUtilisateur?.role === "professeur" && !matiere.value) {
@@ -5705,84 +5711,61 @@ async function creerAPProf() {
         return;
     }
 
-    // Une AP concerne toujours tous les élèves de la classe choisie.
-    const eleves = elevesEnMemoire.filter(e => e.classe === classe).map(e => e.id);
-    if (!eleves.length) {
-        afficherMessage("apProfMessage", "Aucun élève n’a été trouvé pour cette classe. Vérifiez les classes des profils.", "error");
+    // Une AP concerne toujours tous les élèves de la classe choisie ; « les deux classes » crée une AP par classe.
+    const toutesClasses = classe === "__toutes__";
+    if (toutesClasses && apEditionId) {
+        afficherMessage("apProfMessage", "Pour modifier une AP, choisis sa classe (pas « les deux classes »).", "error");
         return;
     }
-
+    const cibles = toutesClasses
+        ? [...new Set(elevesEnMemoire.map(e => e.classe).filter(Boolean))].sort((x, y) => x.localeCompare(y, "fr"))
+        : [classe];
     const action = apEditionId ? "modifier" : "create";
-    const body = {
-        action,
-        ...(apEditionId ? { id: apEditionId } : {}),
-        classe,
-        eleves,
-        obligatoire,
-        notifier_classe: true,
-        matiere,
-        besoin,
-        date_ap,
-        heure_ap,
-        salle,
-        commentaire_prof
-    };
+    const creees = [];
+    let dernierMessage = "";
 
-    const { data, error } = await supabaseClient.functions.invoke("manage-ap", { body });
-
-    if (error) { afficherMessage("apProfMessage", error.message || "Impossible d’enregistrer l’AP.", "error"); return; }
-    if (data?.error) { afficherMessage("apProfMessage", data.error, "error"); return; }
+    for (const cible of cibles) {
+        const eleves = elevesEnMemoire.filter(e => e.classe === cible).map(e => e.id);
+        if (!eleves.length) {
+            afficherMessage("apProfMessage", "Aucun élève n’a été trouvé pour la classe " + cible + ". Vérifiez les classes des profils.", "error");
+            if (creees.length) await chargerGestionAP();
+            return;
+        }
+        const body = {
+            action,
+            ...(apEditionId ? { id: apEditionId } : {}),
+            classe: cible,
+            eleves,
+            obligatoire,
+            notifier_classe: true,
+            matiere,
+            besoin,
+            date_ap,
+            heure_ap,
+            salle,
+            commentaire_prof
+        };
+        const { data, error } = await supabaseClient.functions.invoke("manage-ap", { body });
+        if (error || data?.error) {
+            afficherMessage("apProfMessage", (data?.error || error?.message || "Impossible d’enregistrer l’AP.") + (creees.length ? " (déjà créée pour : " + creees.map(c => c.classe).join(", ") + ")" : ""), "error");
+            if (creees.length) await chargerGestionAP();
+            return;
+        }
+        dernierMessage = data.message || "";
+        if (action === "create" && data.demande?.id) creees.push({ classe: cible, id: data.demande.id });
+    }
 
     const apEtaitCreation = action === "create";
     annulerModificationAP(true);
-    afficherMessage("apProfMessage", data.message || "AP enregistrée avec succès.");
-    if (apEtaitCreation && data.demande?.id) {
-        const infoMail = await envoyerEmailsNotification("ap", data.demande.id);
-        afficherMessage("apProfMessage", (data.message || "AP enregistrée avec succès.") + infoMail);
+    const resume = toutesClasses ? "AP créée pour les deux classes." : (dernierMessage || "AP enregistrée avec succès.");
+    afficherMessage("apProfMessage", resume);
+    if (apEtaitCreation && creees.length) {
+        let infoMail = "";
+        for (const c of creees) infoMail += await envoyerEmailsNotification("ap", c.id);
+        afficherMessage("apProfMessage", resume + infoMail);
     }
     await chargerGestionAP();
     chargerInfosAccueil();
-}
-
-function preparerModificationAP(demande) {
-    apEditionId = demande.id;
-
-    const classeSelect = document.getElementById("apClasseProf");
-    if (classeSelect) classeSelect.value = demande.classe || "";
-    const typeSelect = document.getElementById("apTypeProf");
-    if (typeSelect) typeSelect.value = demande.obligatoire === true ? "true" : "false";
-    document.getElementById("apMatiereProf").value = demande.matiere || "";
-    document.getElementById("apDateProf").value = demande.date_ap || "";
-    document.getElementById("apHeureProf").value = demande.heure_ap ? String(demande.heure_ap).slice(0,5) : "";
-    document.getElementById("apSalleProf").value = demande.salle || "";
-    document.getElementById("apBesoinProf").value = demande.besoin || "";
-    document.getElementById("apCommentaireProf").value = demande.commentaire_prof || "";
-
-    document.getElementById("apProfSubmit").textContent = " Enregistrer les modifications";
-    document.getElementById("apProfCancel").classList.remove("hidden");
-    document.getElementById("creationAPProf")?.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
-function annulerModificationAP(apresSauvegarde = false) {
-    apEditionId = null;
-
-    const classe = document.getElementById("apClasseProf");
-    if (classe) classe.value = "";
-    const typeSelect = document.getElementById("apTypeProf");
-    if (typeSelect) typeSelect.value = "false";
-    ["apMatiereProf","apDateProf","apHeureProf","apSalleProf","apBesoinProf","apCommentaireProf"].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = "";
-    });
-
-    const submit = document.getElementById("apProfSubmit");
-    if (submit) submit.textContent = " Créer l’AP";
-    document.getElementById("apProfCancel")?.classList.add("hidden");
-
-    if (!apresSauvegarde) {
-        const msg = document.getElementById("apProfMessage");
-        if (msg) msg.innerHTML = "";
-    }
 }
 
 async function chargerGestionAP() {
