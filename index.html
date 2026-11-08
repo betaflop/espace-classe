@@ -1418,6 +1418,11 @@ button:disabled { opacity: .55; cursor: not-allowed; }
                         <div id="sondageCreation" class="form-card">
                             <label for="sondageQuestion">Question</label>
                             <input id="sondageQuestion" type="text" maxlength="180" placeholder="Ex. Quelle activité organiser ?">
+                            <label for="sondagePortee">Qui peut voter ?</label>
+                            <select id="sondagePortee">
+                                <option value="classe">Ma classe seulement</option>
+                                <option value="toutes">Les deux classes (1STI2D et 1STL)</option>
+                            </select>
                             <label for="sondageOptions">Réponses possibles (une par ligne, 2 à 6 réponses)</label>
                             <textarea id="sondageOptions" rows="4" placeholder="Option 1&#10;Option 2&#10;Option 3"></textarea>
                             <div class="form-actions"><button type="button" class="btn-primary" onclick="creerSondage()"> Créer le sondage</button></div>
@@ -4389,7 +4394,7 @@ async function chargerSondages() {
         const { data: totauxLignes, error: totauxError } = await supabaseClient.rpc("sondage_resultats");
         if (totauxError) throw totauxError;
         const classeCourante = String(profilUtilisateur?.classe || "").trim();
-        const sondagesClasse = (sondages || []).filter(s => !s.classe || String(s.classe).trim() === classeCourante);
+        const sondagesClasse = (sondages || []).filter(s => !s.classe || String(s.classe).trim() === "Toutes" || String(s.classe).trim() === classeCourante);
         if (!sondagesClasse.length) { liste.innerHTML = "<p class='muted'>Aucun sondage ouvert pour le moment.</p>"; return; }
         liste.innerHTML = sondagesClasse.map(s => {
             const options = Array.isArray(s.options) ? s.options : [];
@@ -4397,7 +4402,7 @@ async function chargerSondages() {
             const mesVotes = (mesVotesLignes || []).some(v => String(v.sondage_id) === String(s.id));
             const compteurs = options.map((_, index) => totauxSondage.filter(t => Number(t.option_index) === index).reduce((somme, t) => somme + Number(t.nb), 0));
             const totalVotes = compteurs.reduce((a, b) => a + b, 0);
-            return `<article class="idea-card"><h3>${escapeHtml(s.question || "Sondage")}</h3><div class="poll-options">${options.map((o,i) => `<button type="button" class="btn-secondary" ${mesVotes || s.ferme ? "disabled" : ""} onclick="voterSondage('${escapeHtml(s.id)}',${i})"><span>${escapeHtml(o)}</span><span>${compteurs[i]} vote(s)</span></button>`).join("")}</div><div class="idea-meta">${s.ferme ? "Sondage clôturé" : "Sondage ouvert"}${mesVotes ? " · Vous avez déjà voté" : ""} · ${totalVotes} vote(s)</div>${peutGererAdministration() ? `<div class="idea-actions"><button type="button" class="btn-secondary" onclick="cloturerSondage('${escapeHtml(s.id)}')">${s.ferme ? " Rouvrir" : " Clôturer"}</button><button type="button" class="btn-danger" onclick="supprimerSondage('${escapeHtml(s.id)}')"> Supprimer</button></div>` : ""}</article>`;
+            return `<article class="idea-card"><h3>${escapeHtml(s.question || "Sondage")}</h3><div class="poll-options">${options.map((o,i) => `<button type="button" class="btn-secondary" ${mesVotes || s.ferme ? "disabled" : ""} onclick="voterSondage('${escapeHtml(s.id)}',${i})"><span>${escapeHtml(o)}</span><span>${compteurs[i]} vote(s)</span></button>`).join("")}</div><div class="idea-meta">${s.classe === "Toutes" ? "Pour les deux classes · " : ""}${s.ferme ? "Sondage clôturé" : "Sondage ouvert"}${mesVotes ? " · Vous avez déjà voté" : ""} · ${totalVotes} vote(s)</div>${peutGererAdministration() ? `<div class="idea-actions"><button type="button" class="btn-secondary" onclick="cloturerSondage('${escapeHtml(s.id)}')">${s.ferme ? " Rouvrir" : " Clôturer"}</button><button type="button" class="btn-danger" onclick="supprimerSondage('${escapeHtml(s.id)}')"> Supprimer</button></div>` : ""}</article>`;
         }).join("");
     } catch (error) {
         console.error("Chargement sondages :", error);
@@ -4409,7 +4414,8 @@ async function creerSondage() {
     if (!peutGererAdministration()) { alert("Réservé aux délégués."); return; }
     const question = document.getElementById("sondageQuestion")?.value.trim() || "";
     const options = (document.getElementById("sondageOptions")?.value || "").split("\n").map(v => v.trim()).filter(Boolean);
-    const classe = String(profilUtilisateur?.classe || "").trim();
+    const portee = document.getElementById("sondagePortee")?.value === "toutes";
+    const classe = portee ? "Toutes" : String(profilUtilisateur?.classe || "").trim();
     if (!classe) { afficherMessage("sondageMessage", "La classe n’est pas renseignée sur ton profil.", "error"); return; }
     if (!question || options.length < 2 || options.length > 6 || new Set(options.map(v => v.toLocaleLowerCase("fr-FR"))).size !== options.length) {
         afficherMessage("sondageMessage", "Indique une question et 2 à 6 réponses différentes, une par ligne.", "error"); return;
