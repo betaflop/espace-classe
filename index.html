@@ -1173,7 +1173,7 @@ button:disabled { opacity: .55; cursor: not-allowed; }
                     <div class="panel">
                         <div id="defiPageBarre"></div>
                         <div id="defiRecompense"></div>
-                        <p class="goal-how">Comment gagner des points pour sa classe : publier une idée (+5), répondre à une AP (+3), voter à un sondage (+2), réagir à une idée ou écrire dans le forum (+1). Maximum 40 points par personne et par mois. Le classement se fait en points par élève, pour que ce soit juste entre les deux classes.</p>
+                        <p class="goal-how">Comment gagner des points pour sa classe : publier une idée (+5), répondre à une AP (+3), voter à un sondage (+2), réagir à une idée ou écrire dans le forum (+1). Maximum 40 points par personne et par mois. Pour que ce soit juste, la plus petite classe est ramenée à la taille de la plus grande : si toute la 1STL participe autant que toute la 1STI2D, les deux classes ont exactement le même total. Les AP et les sondages ne comptent que si les deux classes y ont eu accès ce mois-là (les sondages « deux classes » comptent toujours).</p>
                     </div>
 
                     <div id="defiFormulaire" class="form-card hidden">
@@ -2654,6 +2654,13 @@ function formatPointsDefi(n) {
     return Number(n || 0).toLocaleString("fr-FR", { maximumFractionDigits: 1 });
 }
 
+// Points « à armes égales » : la plus petite classe est ramenée à l'effectif de la plus grande.
+// Si toute la classe participe pareil, les deux classes ont le même total.
+function pointsEquilibres(c, classes) {
+    const ref = Math.max(...(classes || []).map(x => Number(x.membres) || 0), 0);
+    return (Number(c.score) || 0) * ref;
+}
+
 function equipesDefi(classes) {
     const liste = Array.isArray(classes) ? classes.slice() : [];
     // Rouge à gauche pour la STL, bleu à droite pour l'autre classe (la STI2D).
@@ -2692,12 +2699,12 @@ function barreDefiHtml(classes, maClasse) {
     const equipe = (c, cote) => `
         <div class="defi-team defi-team-${cote}">
             <b>${escapeHtml(c.classe)}${moi(c)}</b>
-            <span>${formatPointsDefi(c.score)} pt${Number(c.score) >= 2 ? "s" : ""} par élève</span>
-            <small>${c.pts} point${c.pts > 1 ? "s" : ""} · ${c.membres} élèves</small>
+            <span>${formatPointsDefi(pointsEquilibres(c, classes))} pt${pointsEquilibres(c, classes) >= 2 ? "s" : ""}</span>
+            <small>${c.pts} point${c.pts > 1 ? "s" : ""} réels · ${c.membres} élèves</small>
         </div>`;
     return `
         <p class="defi-titre">${titre}</p>
-        <div class="defi-bar" role="img" aria-label="${escapeHtml(gauche.classe)} : ${formatPointsDefi(sg)} points par élève. ${escapeHtml(droite.classe)} : ${formatPointsDefi(sd)} points par élève.">
+        <div class="defi-bar" role="img" aria-label="${escapeHtml(gauche.classe)} : ${formatPointsDefi(pointsEquilibres(gauche, classes))} points. ${escapeHtml(droite.classe)} : ${formatPointsDefi(pointsEquilibres(droite, classes))} points.">
             <span class="defi-l" style="width:${pctG}%"></span><span class="defi-r"></span>
         </div>
         <div class="defi-legend">${equipe(gauche, "l")}${equipe(droite, "r")}</div>`;
@@ -2746,7 +2753,7 @@ function dessinerDefi() {
             histo.innerHTML = semaines.map(w => {
                 const scores = Array.isArray(w.scores) ? w.scores : [];
                 const { gauche, droite } = equipesDefi(scores);
-                const resume = [gauche, droite].filter(Boolean).map(c => `${escapeHtml(c.classe)} ${formatPointsDefi(c.score)}`).join(" contre ");
+                const resume = [gauche, droite].filter(Boolean).map(c => `${escapeHtml(c.classe)} ${formatPointsDefi(pointsEquilibres(c, scores))}`).join(" contre ");
                 let gagnant = '<span class="defi-chip">Égalité</span>';
                 if (w.gagnante && w.gagnante !== "egalite") {
                     const cote = gauche && String(gauche.classe) === String(w.gagnante) ? "l" : "r";
@@ -2754,7 +2761,7 @@ function dessinerDefi() {
                 }
                 const rec = w.recompense ? `<p class="defi-recompense"><strong>Récompense :</strong> ${escapeHtml(w.recompense)}</p>` : '<p class="muted">Pas de récompense définie.</p>';
                 const bouton = etat.delegue ? `<button type="button" class="btn-secondary" onclick="modifierRecompenseDefi('${escapeHtml(String(w.mois).slice(0, 10))}')">Modifier la récompense</button>` : "";
-                return `<article class="note-card"><div class="note-head"><h3>${escapeHtml(nomMoisDefi(w.mois))}</h3>${gagnant}</div><p class="muted">${resume} (points par élève)</p>${rec}${bouton}</article>`;
+                return `<article class="note-card"><div class="note-head"><h3>${escapeHtml(nomMoisDefi(w.mois))}</h3>${gagnant}</div><p class="muted">${resume} (points à armes égales)</p>${rec}${bouton}</article>`;
             }).join("");
         }
     }
