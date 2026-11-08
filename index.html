@@ -725,6 +725,11 @@ button:disabled { opacity: .55; cursor: not-allowed; }
     .install-coin { bottom: calc(var(--bar-h) + env(safe-area-inset-bottom) + 10px); }
     .install-ios { bottom: calc(var(--bar-h) + env(safe-area-inset-bottom) + 56px); }
 }
+.defi-aide { margin-top: 14px; }
+.bareme-liste { list-style: none; display: grid; gap: 14px; margin: 6px 0 14px; padding: 0; }
+.bareme-liste li { display: flex; gap: 14px; align-items: flex-start; }
+.bareme-liste p { margin: 2px 0 0; color: var(--ink-soft); }
+.bareme-pts { flex: none; min-width: 52px; text-align: center; padding: 6px 0; border-radius: 12px; background: var(--highlight); color: var(--highlight-ink); font-weight: 700; font-size: 20px; }
 .calc-steps { margin: 12px 0 0 22px; display: grid; gap: 10px; }
 .calc-notes { margin: 8px 0 0 20px; display: grid; gap: 8px; }
 .calc-steps code { background: var(--paper-2); padding: 1px 6px; border-radius: 6px; }
@@ -1043,6 +1048,7 @@ button:disabled { opacity: .55; cursor: not-allowed; }
                             <section id="defiAccueil" class="panel defi-panel hidden" aria-labelledby="defiAccueilTitre">
                                 <div class="panel-heading"><h2 id="defiAccueilTitre">Défi des classes</h2><button class="link-button" onclick="ouvrirDefi()">Voir le défi</button></div>
                                 <div id="defiAccueilContenu"></div>
+                                <p class="defi-aide"><button type="button" class="link-button" onclick="ouvrirBaremeDefi()">Comment gagner des points ?</button></p>
                             </section>
 
                             <section class="panel ideas-panel">
@@ -1162,6 +1168,57 @@ button:disabled { opacity: .55; cursor: not-allowed; }
                     </div>
                 </section>
 
+                <section id="defiBareme" class="section hidden">
+                    <div class="section-header">
+                        <div>
+                            <h2>Comment gagner des points</h2>
+                            <p>Le barème du défi des classes, expliqué simplement.</p>
+                        </div>
+                        <button type="button" class="btn-secondary" onclick="ouvrirDefi()">Retour au défi</button>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-heading"><h2>Le principe</h2></div>
+                        <p>Chaque mois, la <strong>1STL</strong> et la <strong>1STI2D</strong> s’affrontent. Chaque fois que tu participes sur le site, ta classe gagne des points. À la fin du mois, la classe qui a le plus de points gagne <strong>la récompense choisie par les délégués</strong>.</p>
+                        <p>Le défi redémarre à zéro le 1er de chaque mois.</p>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-heading"><h2>Ce que tu fais, ce que tu gagnes</h2></div>
+                        <ul class="bareme-liste">
+                            <li><span class="bareme-pts">+5</span><div><strong>Publier une idée</strong><p>Tu proposes une idée pour la classe (rubrique « Idées de la classe »).</p></div></li>
+                            <li><span class="bareme-pts">+3</span><div><strong>Répondre à une AP</strong><p>Tu dis si tu viens ou non à une AP proposée par un professeur.</p></div></li>
+                            <li><span class="bareme-pts">+2</span><div><strong>Voter à un sondage</strong><p>Un vote par sondage. Ton vote reste anonyme.</p></div></li>
+                            <li><span class="bareme-pts">+1</span><div><strong>Réagir à une idée</strong><p>Tu mets un 👍, ❤️, 😂 ou 👎 sur l’idée d’un camarade.</p></div></li>
+                            <li><span class="bareme-pts">+1</span><div><strong>Écrire dans le forum</strong><p>Chaque message envoyé dans le forum de la classe.</p></div></li>
+                        </ul>
+                        <p class="muted">Tu peux gagner au maximum <strong>40 points par mois</strong>. Comme ça, personne ne peut gagner à la place de toute la classe : ce qui compte, c’est que le plus de monde possible participe.</p>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-heading"><h2>Exemple</h2></div>
+                        <p>Léa publie une idée (+5), vote à un sondage (+2) et réagit à 3 idées (+3). Elle rapporte <strong>10 points</strong> à sa classe ce mois-ci.</p>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-heading"><h2>Pourquoi c’est juste entre les deux classes</h2></div>
+                        <p>Les deux classes n’ont pas le même nombre d’élèves. Pour que ce soit équitable, les points de la plus petite classe sont <strong>agrandis</strong> pour être comparés à ceux de la plus grande.</p>
+                        <p><strong>Résultat :</strong> si toute la 1STL participe autant que toute la 1STI2D, les deux classes ont exactement le même total. Ce qui fait gagner, c’est que ta classe participe plus que l’autre.</p>
+                        <p>Sous la barre du défi, tu vois simplement le total de chaque classe, déjà calculé de façon équitable.</p>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-heading"><h2>Les AP et les sondages</h2></div>
+                        <p>Les AP et les sondages ne rapportent des points que si <strong>les deux classes</strong> y ont eu accès ce mois-là. Les sondages ouverts aux deux classes comptent toujours.</p>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-heading"><h2>La récompense</h2></div>
+                        <p>Les délégués choisissent la récompense du mois. Elle s’affiche sur la page du défi. À la fin du mois, un mail annonce la classe gagnante à tout le monde.</p>
+                        <p><button type="button" class="btn-primary" onclick="ouvrirDefi()">Voir le défi du mois</button></p>
+                    </div>
+                </section>
+
                 <section id="defi" class="section hidden">
                     <div class="section-header">
                         <div>
@@ -1173,7 +1230,7 @@ button:disabled { opacity: .55; cursor: not-allowed; }
                     <div class="panel">
                         <div id="defiPageBarre"></div>
                         <div id="defiRecompense"></div>
-                        <p class="goal-how">Comment gagner des points pour sa classe : publier une idée (+5), répondre à une AP (+3), voter à un sondage (+2), réagir à une idée ou écrire dans le forum (+1). Maximum 40 points par personne et par mois. Pour que ce soit juste, la plus petite classe est ramenée à la taille de la plus grande : si toute la 1STL participe autant que toute la 1STI2D, les deux classes ont exactement le même total. Les AP et les sondages ne comptent que si les deux classes y ont eu accès ce mois-là (les sondages « deux classes » comptent toujours).</p>
+                        <p class="defi-aide"><button type="button" class="btn-secondary" onclick="ouvrirBaremeDefi()">Comment gagner des points ? Voir le barème</button></p>
                     </div>
 
                     <div id="defiFormulaire" class="form-card hidden">
@@ -2686,28 +2743,32 @@ function dateCourteDefi(iso, avecAnnee) {
 function barreDefiHtml(classes, maClasse) {
     const { gauche, droite } = equipesDefi(classes);
     if (!gauche || !droite) return "";
-    const sg = Number(gauche.score) || 0;
-    const sd = Number(droite.score) || 0;
-    const total = sg + sd;
-    let pctG = total > 0 ? (sg / total) * 100 : 50;
+    const tg = pointsEquilibres(gauche, classes);
+    const td = pointsEquilibres(droite, classes);
+    const total = tg + td;
+    let pctG = total > 0 ? (tg / total) * 100 : 50;
     if (total > 0) pctG = Math.min(Math.max(pctG, 4), 96);
-    const egalite = Math.abs(sg - sd) < 0.05;
-    let titre = "Égalité pour l’instant";
+    const arrondi = n => Math.round(n);
+    let titre;
     if (total === 0) titre = "On démarre : à vous de jouer !";
-    else if (!egalite) titre = `${escapeHtml(sg > sd ? gauche.classe : droite.classe)} est en tête`;
+    else if (Math.abs(tg - td) < 0.05) titre = "Égalité parfaite pour l’instant";
+    else {
+        const tete = tg > td ? gauche : droite;
+        const ecart = Math.max(1, arrondi(Math.abs(tg - td)));
+        titre = `${escapeHtml(tete.classe)} est en tête de ${ecart} point${ecart > 1 ? "s" : ""}`;
+    }
     const moi = c => String(c.classe) === String(maClasse) ? " <em>(ta classe)</em>" : "";
-    const equipe = (c, cote) => `
+    const equipe = (c, cote, t) => `
         <div class="defi-team defi-team-${cote}">
             <b>${escapeHtml(c.classe)}${moi(c)}</b>
-            <span>${formatPointsDefi(pointsEquilibres(c, classes))} pt${pointsEquilibres(c, classes) >= 2 ? "s" : ""}</span>
-            <small>${c.pts} point${c.pts > 1 ? "s" : ""} réels · ${c.membres} élèves</small>
+            <span>${arrondi(t)} point${arrondi(t) > 1 ? "s" : ""}</span>
         </div>`;
     return `
         <p class="defi-titre">${titre}</p>
-        <div class="defi-bar" role="img" aria-label="${escapeHtml(gauche.classe)} : ${formatPointsDefi(pointsEquilibres(gauche, classes))} points. ${escapeHtml(droite.classe)} : ${formatPointsDefi(pointsEquilibres(droite, classes))} points.">
+        <div class="defi-bar" role="img" aria-label="${escapeHtml(gauche.classe)} : ${arrondi(tg)} points. ${escapeHtml(droite.classe)} : ${arrondi(td)} points.">
             <span class="defi-l" style="width:${pctG}%"></span><span class="defi-r"></span>
         </div>
-        <div class="defi-legend">${equipe(gauche, "l")}${equipe(droite, "r")}</div>`;
+        <div class="defi-legend">${equipe(gauche, "l", tg)}${equipe(droite, "r", td)}</div>`;
 }
 
 function texteRecompenseDefi(etat) {
@@ -2753,7 +2814,7 @@ function dessinerDefi() {
             histo.innerHTML = semaines.map(w => {
                 const scores = Array.isArray(w.scores) ? w.scores : [];
                 const { gauche, droite } = equipesDefi(scores);
-                const resume = [gauche, droite].filter(Boolean).map(c => `${escapeHtml(c.classe)} ${formatPointsDefi(pointsEquilibres(c, scores))}`).join(" contre ");
+                const resume = [gauche, droite].filter(Boolean).map(c => `${escapeHtml(c.classe)} ${Math.round(pointsEquilibres(c, scores))}`).join(" contre ");
                 let gagnant = '<span class="defi-chip">Égalité</span>';
                 if (w.gagnante && w.gagnante !== "egalite") {
                     const cote = gauche && String(gauche.classe) === String(w.gagnante) ? "l" : "r";
@@ -2761,7 +2822,7 @@ function dessinerDefi() {
                 }
                 const rec = w.recompense ? `<p class="defi-recompense"><strong>Récompense :</strong> ${escapeHtml(w.recompense)}</p>` : '<p class="muted">Pas de récompense définie.</p>';
                 const bouton = etat.delegue ? `<button type="button" class="btn-secondary" onclick="modifierRecompenseDefi('${escapeHtml(String(w.mois).slice(0, 10))}')">Modifier la récompense</button>` : "";
-                return `<article class="note-card"><div class="note-head"><h3>${escapeHtml(nomMoisDefi(w.mois))}</h3>${gagnant}</div><p class="muted">${resume} (points à armes égales)</p>${rec}${bouton}</article>`;
+                return `<article class="note-card"><div class="note-head"><h3>${escapeHtml(nomMoisDefi(w.mois))}</h3>${gagnant}</div><p class="muted">${resume} points</p>${rec}${bouton}</article>`;
             }).join("");
         }
     }
@@ -2791,6 +2852,15 @@ function ouvrirDefi() {
     changerTitre("Défi des classes");
     mettreNavigationActive("defi");
     chargerDefi();
+}
+
+function ouvrirBaremeDefi() {
+    if (!profilUtilisateur || estProfesseur()) return;
+    cacherToutesLesSections();
+    document.getElementById("defiBareme").classList.remove("hidden");
+    changerTitre("Comment gagner des points");
+    mettreNavigationActive("defi");
+    window.scrollTo({ top: 0 });
 }
 
 function ouvrirCalculatrice() {
