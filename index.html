@@ -6988,8 +6988,12 @@ async function enregistrerEvenement(ev) {
         date_evt: date, heure_evt: document.getElementById("evtHeure").value || null,
         description: document.getElementById("evtDescription").value.trim() || null, auteur: u?.user?.id
     };
-    const { error } = await supabaseClient.from("evenements").insert(ligne);
+    const { data: cree, error } = await supabaseClient.from("evenements").insert(ligne).select("id").single();
     if (error) { afficherMessage("evtMessage", "Impossible d’enregistrer l’évènement.", "error"); return; }
+    // Mail de prévenance à la classe (le rappel de 8h le jour J part tout seul)
+    supabaseClient.functions.invoke("evenement-email", { body: { id: cree.id } })
+        .then(({ data }) => { if (data?.envoyes > 0) afficherToast?.("Évènement ajouté — " + data.envoyes + " mail(s) envoyé(s)"); })
+        .catch(() => {});
     document.getElementById("formEvenement").reset();
     basculerFormEvenement(false);
     afficherToast?.("Évènement ajouté");
