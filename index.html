@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#1f2a4d">
+<meta name="theme-color" content="#2457d6">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -15,7 +15,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"
         onerror="this.onerror=null;this.src='https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js';"></script>
@@ -900,6 +900,133 @@ button:disabled { opacity: .55; cursor: not-allowed; }
     .qa { flex: none; }
 }
 
+
+/* =====================================================
+   STYLE « PORTAIL » — simple, clair, façon espace scolaire
+   (surcharge les jetons du thème cahier)
+===================================================== */
+:root {
+    --paper: #f3f5f9; --paper-2: #e9edf5; --card: #ffffff;
+    --ink: #1b2333; --ink-soft: #5b6578;
+    --line: #dde2ec; --grid: transparent; --grid-fine: transparent; --margin: transparent;
+    --cover: #ffffff; --cover-ink: #1b2333;
+    --highlight: #e7eeff; --highlight-ink: #1d3f9f;
+    --primary: #2457d6; --primary-dark: #1a44ad; --primary-light: #e7eeff;
+    --font-body: "Inter", "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+    --font-hand: "Inter", "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+    --radius: 12px; --side-w: 244px;
+    --shadow: 0 1px 2px rgba(20,30,60,.05), 0 2px 8px rgba(20,30,60,.04);
+    --rouge: #e5322d;
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --paper: #0f1420; --paper-2: #161d2e; --card: #181f31;
+        --ink: #e9edf6; --ink-soft: #9aa5bd; --line: #283149;
+        --cover: #131a2a; --cover-ink: #e9edf6;
+        --highlight: #22305a; --highlight-ink: #cfdcff;
+        --primary: #7ea2ff; --primary-dark: #a9c0ff; --primary-light: #22305a;
+        --rouge: #ff5a53;
+    }
+}
+body { background-image: none; font-size: 16px; }
+.main-content::before { display: none; }
+.sidebar { border-right: 1px solid var(--line); }
+.brand-title { font-size: 22px; font-weight: 800; letter-spacing: -.02em; }
+.brand-title span { background: none !important; padding: 0; color: var(--primary); }
+.brand-subtitle { opacity: .6; }
+.nav-button { color: var(--cover-ink); font-weight: 600; font-size: 15px; border-radius: 10px; position: relative; }
+.nav-button:hover { background: var(--paper-2); }
+.nav-button.active { background: var(--highlight); color: var(--highlight-ink); }
+.nav-button.active::before { content: ""; position: absolute; left: -14px; top: 8px; bottom: 8px; width: 4px; border-radius: 0 4px 4px 0; background: var(--primary); }
+.nav-button .pastille { margin-left: auto; }
+#menuAdmin:not(.hidden)::before { content: "Gestion"; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); padding: 14px 12px 4px; }
+.sidebar-bottom { border-top: 1px solid var(--line); }
+.topbar { max-width: 1040px; padding: 16px 28px 0 28px; }
+.topbar-date { font-family: var(--font-body); font-size: 15px; font-weight: 600; }
+.topbar-brand { font-family: var(--font-body); font-weight: 800; font-size: 20px; }
+.content { padding: 14px 28px 60px 28px; max-width: 1040px; }
+.section-header h2, .welcome h1, .home-hello h1 { font-family: var(--font-body); font-weight: 800; letter-spacing: -.02em; font-size: 30px; }
+.home-hello h1 { font-size: 32px; }
+.section-header h2 span, .home-hello h1 span.name { background: none; padding: 0; color: var(--primary); }
+.panel { box-shadow: var(--shadow); }
+.login-card { background-image: none; padding: 34px 28px 28px; }
+.login-card::before { display: none; }
+.login-card h1 { font-family: var(--font-body); font-weight: 800; }
+.login-card h1 span { background: none !important; color: var(--primary); }
+.stats-block { display: none; }
+
+/* Pastille rouge « nouveau » */
+.pastille { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: var(--rouge); color: #fff; font-size: 12px; font-weight: 800; line-height: 1; box-shadow: 0 0 0 2px var(--card); }
+.pastille.hidden { display: none !important; }
+
+/* Tuiles de l'accueil */
+.tuiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin: 0 0 24px; }
+.tuile { position: relative; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; gap: 18px; min-height: 104px; padding: 14px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); box-shadow: var(--shadow); text-align: left; font-weight: 700; font-size: 15px; transition: transform .12s ease, border-color .12s ease; }
+.tuile:hover { transform: translateY(-2px); border-color: var(--primary); }
+.tuile .ico { width: 30px; height: 30px; padding: 5px; border-radius: 9px; box-sizing: content-box; stroke-width: 2; }
+.tuile .pastille { position: absolute; top: 10px; right: 10px; box-shadow: none; }
+.t-bleu .ico { background: #e3ecff; color: #2457d6; } .t-rouge .ico { background: #ffe5e3; color: #c8322d; }
+.t-vert .ico { background: #dff4e8; color: #1f7a4d; } .t-violet .ico { background: #eee6fd; color: #6a3fc0; }
+.t-jaune .ico { background: #fff2cc; color: #8a5a00; } .t-orange .ico { background: #ffe9d6; color: #b4560b; }
+@media (prefers-color-scheme: dark) {
+    .t-bleu .ico { background: #22305a; color: #a9c0ff; } .t-rouge .ico { background: #4a2326; color: #ff9a94; }
+    .t-vert .ico { background: #1b3a2d; color: #6fd3a0; } .t-violet .ico { background: #33285a; color: #c6aaff; }
+    .t-jaune .ico { background: #3d3217; color: #f2c14e; } .t-orange .ico { background: #44301c; color: #ffb677; }
+}
+
+/* Agenda */
+.agenda-cols { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.agenda-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.agenda-nav h3 { text-transform: capitalize; font-size: 18px; }
+.agenda-nav button { width: 40px; padding: 6px 0; font-size: 20px; line-height: 1; }
+.agenda-semaine, .agenda-grille { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.agenda-semaine span { text-align: center; font-size: 12px; font-weight: 700; color: var(--ink-soft); padding: 4px 0; }
+.jour { position: relative; aspect-ratio: 1 / 1; min-height: 44px; border: 1px solid transparent; border-radius: 10px; background: transparent; font-size: 15px; font-weight: 600; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; }
+.jour:hover { background: var(--paper-2); }
+.jour.autre { opacity: .35; }
+.jour.aujourdhui { border-color: var(--primary); color: var(--primary); }
+.jour.choisi { background: var(--primary); color: #fff; }
+.jour .pts { display: flex; gap: 3px; height: 6px; }
+.pt { display: inline-block; width: 6px; height: 6px; border-radius: 50%; }
+.pt-controle { background: #d6382f; } .pt-devoir { background: #e08a00; } .pt-sortie { background: #1f9d63; }
+.pt-reunion { background: #6a3fc0; } .pt-ap { background: #2457d6; } .pt-autre { background: #7b8499; }
+.jour.choisi .pt { box-shadow: 0 0 0 1px #fff; }
+.agenda-legende { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin-top: 12px; font-size: 13px; color: var(--ink-soft); }
+.agenda-legende .pt { margin-right: -4px; }
+.evt { display: flex; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); }
+.evt:first-child { border-top: 0; }
+.evt-date { flex: none; width: 52px; text-align: center; line-height: 1.1; }
+.evt-date b { display: block; font-size: 22px; }
+.evt-date small { font-size: 12px; text-transform: uppercase; color: var(--ink-soft); font-weight: 700; }
+.evt-corps { flex: 1; min-width: 0; }
+.evt-titre { font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.evt-meta { font-size: 14px; color: var(--ink-soft); }
+.evt-sup { flex: none; align-self: flex-start; border: 0; background: transparent; color: var(--danger); font-size: 13px; font-weight: 700; padding: 4px 6px; }
+@media (max-width: 899px) { .agenda-cols { grid-template-columns: 1fr; } }
+
+/* Téléphone : barre du bas + feuille Menu simplifiés */
+@media (max-width: 899px) {
+    .topbar { padding: 12px 14px 0; }
+    .content { padding: 10px 14px 24px; }
+    .section-header h2, .home-hello h1 { font-size: 26px; }
+    .tuiles { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .mobile-nav { background: var(--card); border-top: 1px solid var(--line); }
+    .mobile-nav button { color: var(--ink-soft); position: relative; font-weight: 600; }
+    .mobile-nav button.active { background: var(--highlight); color: var(--highlight-ink); }
+    #mobileAnnonces { display: flex !important; }
+    #mobileGestionAP.hidden { display: none !important; }
+    .mobile-nav .pastille { position: absolute; top: 2px; left: calc(50% + 6px); height: 18px; min-width: 18px; font-size: 11px; box-shadow: 0 0 0 2px var(--card); }
+    .sidebar { background: var(--card); }
+    .sidebar-menu { gap: 2px; display: flex; }
+    .sidebar-menu > div:not(.hidden) { display: flex; flex-direction: column; }
+    .sidebar-menu .nav-button { flex-direction: row; justify-content: flex-start; text-align: left; gap: 12px; min-height: 48px; padding: 10px 12px; font-size: 16px; background: transparent; border-radius: 10px; }
+    .sidebar-menu .nav-button.active { background: var(--highlight); color: var(--highlight-ink); }
+    .sidebar-menu .nav-button.active::before { display: none; }
+    #navAccueil { display: none; }
+    .sidebar-bottom { display: flex; flex-direction: column; gap: 2px; }
+    .sidebar-bottom .nav-button { background: transparent; justify-content: flex-start; }
+}
+
 @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
 }
@@ -910,6 +1037,7 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
 <defs>
+<symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
 <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></symbol>
 <symbol id="i-megaphone" viewBox="0 0 24 24"><path d="M3 11v3a1 1 0 001 1h2l7 4V6L6 10H4a1 1 0 00-1 1z"/><path d="M16.5 9a4 4 0 010 6"/></symbol>
 <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 00-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0012 3z"/></symbol>
@@ -956,32 +1084,24 @@ button:disabled { opacity: .55; cursor: not-allowed; }
             </div>
 
             <nav class="sidebar-menu" aria-label="Navigation principale">
-            <div class="nav-group">
-                <button id="navAccueil" class="nav-button active" onclick="retourAccueil()"><svg class="ico" aria-hidden="true"><use href="#i-home"/></svg><span>Accueil</span></button>
-            </div>
-            <div class="nav-group" data-titre="Vie de classe">
-                <button id="navAnnonces" class="nav-button" onclick="ouvrirAnnonces()"><svg class="ico" aria-hidden="true"><use href="#i-megaphone"/></svg><span>Annonces</span></button>
-                <button id="navForumGeneral" class="nav-button" onclick="ouvrirForumGeneral()"><svg class="ico" aria-hidden="true"><use href="#i-chat"/></svg><span>Forum de la classe</span></button>
-                <button id="navSondagesAdmin" class="nav-button" onclick="ouvrirSondages()"><svg class="ico" aria-hidden="true"><use href="#i-chart"/></svg><span>Sondages</span></button>
-            </div>
-            <div class="nav-group" data-titre="Participer">
-                <button id="navIdeesEleve" class="nav-button" onclick="ouvrirIdees()"><svg class="ico" aria-hidden="true"><use href="#i-bulb"/></svg><span>Idées de la classe</span></button>
-                <button id="navDemandeAP" class="nav-button" onclick="ouvrirDemandeAP()"><svg class="ico" aria-hidden="true"><use href="#i-lifebuoy"/></svg><span>Demande d’AP</span></button>
-                <button id="navDefi" class="nav-button" onclick="ouvrirDefi()"><svg class="ico" aria-hidden="true"><use href="#i-trophy"/></svg><span>Défi des classes</span></button>
-                <button id="navCalculatrice" class="nav-button" onclick="ouvrirCalculatrice()"><svg class="ico" aria-hidden="true"><use href="#i-gamepad"/></svg><span>Jeux calculatrice</span></button>
-            </div>
-            <div class="nav-group" data-titre="Mes affaires">
-                <button id="navRapportsEleve" class="nav-button" onclick="ouvrirMesComptesRendus()"><svg class="ico" aria-hidden="true"><use href="#i-file"/></svg><span>Mes comptes-rendus</span></button>
-                <button id="navForumPrive" class="nav-button hidden" onclick="ouvrirForumPrive()"><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg><span>Parler aux délégués</span></button>
-            </div>
-
+<button id="navAccueil" class="nav-button active" onclick="retourAccueil()"><svg class="ico" aria-hidden="true"><use href="#i-home"/></svg><span>Accueil</span></button>
+<button id="navAnnonces" class="nav-button" onclick="ouvrirAnnonces()"><svg class="ico" aria-hidden="true"><use href="#i-megaphone"/></svg><span>Annonces</span><span class="pastille hidden" data-rub="annonces">1</span></button>
+<button id="navAgenda" class="nav-button" onclick="ouvrirAgenda()"><svg class="ico" aria-hidden="true"><use href="#i-calendar"/></svg><span>Agenda</span><span class="pastille hidden" data-rub="agenda">1</span></button>
+<button id="navForumGeneral" class="nav-button" onclick="ouvrirForumGeneral()"><svg class="ico" aria-hidden="true"><use href="#i-chat"/></svg><span>Forum</span><span class="pastille hidden" data-rub="forum">1</span></button>
+<button id="navSondagesAdmin" class="nav-button" onclick="ouvrirSondages()"><svg class="ico" aria-hidden="true"><use href="#i-chart"/></svg><span>Sondages</span><span class="pastille hidden" data-rub="sondages">1</span></button>
+<button id="navIdeesEleve" class="nav-button" onclick="ouvrirIdees()"><svg class="ico" aria-hidden="true"><use href="#i-bulb"/></svg><span>Idées</span><span class="pastille hidden" data-rub="idees">1</span></button>
+<button id="navDemandeAP" class="nav-button" onclick="ouvrirDemandeAP()"><svg class="ico" aria-hidden="true"><use href="#i-lifebuoy"/></svg><span>Demande d’AP</span><span class="pastille hidden" data-rub="ap">1</span></button>
+<button id="navDefi" class="nav-button" onclick="ouvrirDefi()"><svg class="ico" aria-hidden="true"><use href="#i-trophy"/></svg><span>Défi des classes</span></button>
+<button id="navRapportsEleve" class="nav-button" onclick="ouvrirMesComptesRendus()"><svg class="ico" aria-hidden="true"><use href="#i-file"/></svg><span>Mes comptes-rendus</span><span class="pastille hidden" data-rub="comptes_rendus">1</span></button>
+<button id="navForumPrive" class="nav-button hidden" onclick="ouvrirForumPrive()"><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg><span>Parler aux délégués</span><span class="pastille hidden" data-rub="prive">1</span></button>
+<button id="navCalculatrice" class="nav-button" onclick="ouvrirCalculatrice()"><svg class="ico" aria-hidden="true"><use href="#i-gamepad"/></svg><span>Jeux calculatrice</span></button>
                 <div id="menuProfesseur" class="hidden">
-                    <button class="nav-button" onclick="ouvrirGestionAP()"><svg class="ico" aria-hidden="true"><use href="#i-lifebuoy"/></svg><span>Gestion des AP</span></button>
+                    <button class="nav-button" onclick="ouvrirGestionAP()"><svg class="ico" aria-hidden="true"><use href="#i-lifebuoy"/></svg><span>Gestion des AP</span><span class="pastille hidden" data-rub="ap">1</span></button>
                 </div>
 
                 <div id="menuAdmin" class="hidden">
                     <button class="nav-button" onclick="ouvrirGestionEleves()"><svg class="ico" aria-hidden="true"><use href="#i-users"/></svg><span>Élèves</span></button>
-                    <button class="nav-button" onclick="ouvrirIdeesAdmin()"><svg class="ico" aria-hidden="true"><use href="#i-bulb"/></svg><span>Idées</span></button>
+                    <button class="nav-button" onclick="ouvrirIdeesAdmin()"><svg class="ico" aria-hidden="true"><use href="#i-bulb"/></svg><span>Gérer les idées</span></button>
                     <button class="nav-button" onclick="ouvrirComptesRendusAdmin()"><svg class="ico" aria-hidden="true"><use href="#i-clipboard"/></svg><span>Comptes-rendus</span></button>
                     <button class="nav-button" onclick="ouvrirGestionProfesseurs()"><svg class="ico" aria-hidden="true"><use href="#i-book"/></svg><span>Professeurs</span></button>
                 </div>
@@ -1022,13 +1142,19 @@ button:disabled { opacity: .55; cursor: not-allowed; }
                         <p class="home-role">Connecté comme <strong id="heroRole">utilisateur</strong>.</p>
                     </div>
 
-                    <div class="quick-actions" aria-label="Raccourcis">
-                        <button type="button" class="qa" data-pour="eleve" onclick="ouvrirIdees()"><svg class="ico" aria-hidden="true"><use href="#i-bulb"/></svg>Proposer une idée</button>
-                        <button type="button" class="qa" data-pour="eleve" onclick="ouvrirDemandeAP()"><svg class="ico" aria-hidden="true"><use href="#i-lifebuoy"/></svg>Demander une AP</button>
-                        <button type="button" class="qa" data-pour="eleve" onclick="ouvrirSondages()"><svg class="ico" aria-hidden="true"><use href="#i-chart"/></svg>Voter</button>
-                        <button type="button" class="qa" data-pour="eleve" onclick="ouvrirForumGeneral()"><svg class="ico" aria-hidden="true"><use href="#i-chat"/></svg>Forum</button>
-                        <button type="button" class="qa" data-pour="prof" onclick="ouvrirGestionAP()"><svg class="ico" aria-hidden="true"><use href="#i-lifebuoy"/></svg>Gérer mes AP</button>
-                        <button type="button" class="qa" data-pour="prof" onclick="ouvrirAnnonces()"><svg class="ico" aria-hidden="true"><use href="#i-megaphone"/></svg>Annonces</button>
+                    <div class="tuiles" aria-label="Rubriques">
+<button type="button" class="tuile t-rouge" data-pour="all" onclick="ouvrirAnnonces()"><span class="pastille hidden" data-rub="annonces">1</span><svg class="ico" aria-hidden="true"><use href="#i-megaphone"/></svg><span>Annonces</span></button>
+<button type="button" class="tuile t-bleu" data-pour="all" onclick="ouvrirAgenda()"><span class="pastille hidden" data-rub="agenda">1</span><svg class="ico" aria-hidden="true"><use href="#i-calendar"/></svg><span>Agenda</span></button>
+<button type="button" class="tuile t-vert" data-pour="eleve" data-nav="navForumGeneral" onclick="ouvrirForumGeneral()"><span class="pastille hidden" data-rub="forum">1</span><svg class="ico" aria-hidden="true"><use href="#i-chat"/></svg><span>Forum</span></button>
+<button type="button" class="tuile t-violet" data-pour="eleve" data-nav="navSondagesAdmin" onclick="ouvrirSondages()"><span class="pastille hidden" data-rub="sondages">1</span><svg class="ico" aria-hidden="true"><use href="#i-chart"/></svg><span>Sondages</span></button>
+<button type="button" class="tuile t-jaune" data-pour="eleve" data-nav="navIdeesEleve" onclick="ouvrirIdees()"><span class="pastille hidden" data-rub="idees">1</span><svg class="ico" aria-hidden="true"><use href="#i-bulb"/></svg><span>Idées</span></button>
+<button type="button" class="tuile t-orange" data-pour="eleve" data-nav="navDemandeAP" onclick="ouvrirDemandeAP()"><span class="pastille hidden" data-rub="ap">1</span><svg class="ico" aria-hidden="true"><use href="#i-lifebuoy"/></svg><span>Demander une AP</span></button>
+<button type="button" class="tuile t-orange" data-pour="prof" onclick="ouvrirGestionAP()"><span class="pastille hidden" data-rub="ap">1</span><svg class="ico" aria-hidden="true"><use href="#i-lifebuoy"/></svg><span>Gérer mes AP</span></button>
+<button type="button" class="tuile t-jaune" data-pour="eleve" data-nav="navDefi" onclick="ouvrirDefi()"><svg class="ico" aria-hidden="true"><use href="#i-trophy"/></svg><span>Défi des classes</span></button>
+<button type="button" class="tuile t-bleu" data-pour="eleve" data-nav="navRapportsEleve" onclick="ouvrirMesComptesRendus()"><span class="pastille hidden" data-rub="comptes_rendus">1</span><svg class="ico" aria-hidden="true"><use href="#i-file"/></svg><span>Mes comptes-rendus</span></button>
+<button type="button" class="tuile t-vert" data-pour="eleve" data-nav="navForumPrive" onclick="ouvrirForumPrive()"><span class="pastille hidden" data-rub="prive">1</span><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg><span>Parler aux délégués</span></button>
+<button type="button" class="tuile t-violet" data-pour="deleg" onclick="ouvrirGestionEleves()"><svg class="ico" aria-hidden="true"><use href="#i-users"/></svg><span>Élèves</span></button>
+<button type="button" class="tuile t-bleu" data-pour="deleg" onclick="ouvrirComptesRendusAdmin()"><svg class="ico" aria-hidden="true"><use href="#i-clipboard"/></svg><span>Comptes-rendus</span></button>
                     </div>
 
                     <div class="home-cols">
@@ -1066,6 +1192,58 @@ button:disabled { opacity: .55; cursor: not-allowed; }
                             <button class="stat" onclick="ouvrirSondages()"><strong id="statSondages">—</strong> sondages ouverts</button>
                             <button class="stat" onclick="estDelegue() || estAdministrateur() ? ouvrirComptesRendusAdmin() : ouvrirMesComptesRendus()"><strong id="statRapports">—</strong> comptes-rendus</button>
                             <button class="stat" onclick="ouvrirGestionEleves()"><strong id="statEleves">—</strong> élèves</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="agenda" class="section hidden">
+                    <div class="section-header">
+                        <div>
+                            <h2>Agenda</h2>
+                            <p>Contrôles, devoirs, sorties et AP de la classe.</p>
+                        </div>
+                        <button type="button" id="btnNouvelEvenement" class="btn-primary hidden" onclick="basculerFormEvenement()">+ Ajouter un évènement</button>
+                    </div>
+
+                    <form id="formEvenement" class="panel hidden" onsubmit="enregistrerEvenement(event)">
+                        <div class="panel-heading"><h2>Nouvel évènement</h2></div>
+                        <div class="form-grid">
+                            <div><label for="evtTitre">Titre</label><input id="evtTitre" maxlength="120" required placeholder="Ex. Contrôle de maths"></div>
+                            <div><label for="evtType">Type</label>
+                                <select id="evtType">
+                                    <option value="controle">Contrôle</option>
+                                    <option value="devoir">Devoir à rendre</option>
+                                    <option value="sortie">Sortie</option>
+                                    <option value="reunion">Réunion</option>
+                                    <option value="autre">Autre</option>
+                                </select></div>
+                            <div><label for="evtDate">Date</label><input id="evtDate" type="date" required></div>
+                            <div><label for="evtHeure">Heure (facultatif)</label><input id="evtHeure" type="time"></div>
+                            <div><label for="evtClasse">Pour</label><select id="evtClasse"></select></div>
+                        </div>
+                        <label for="evtDescription">Détails (facultatif)</label>
+                        <textarea id="evtDescription" maxlength="500" rows="2"></textarea>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary">Enregistrer</button>
+                            <button type="button" class="btn-secondary" onclick="basculerFormEvenement(false)">Annuler</button>
+                        </div>
+                        <div id="evtMessage"></div>
+                    </form>
+
+                    <div class="agenda-cols">
+                        <div class="panel agenda-mois">
+                            <div class="agenda-nav">
+                                <button type="button" class="btn-secondary" onclick="agendaMoisPrecedent()" aria-label="Mois précédent">‹</button>
+                                <h3 id="agendaTitreMois"></h3>
+                                <button type="button" class="btn-secondary" onclick="agendaMoisSuivant()" aria-label="Mois suivant">›</button>
+                            </div>
+                            <div class="agenda-semaine"><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+                            <div id="agendaGrille" class="agenda-grille"></div>
+                            <div class="agenda-legende"><span class="pt pt-controle"></span>Contrôle <span class="pt pt-devoir"></span>Devoir <span class="pt pt-sortie"></span>Sortie <span class="pt pt-reunion"></span>Réunion <span class="pt pt-ap"></span>AP <span class="pt pt-autre"></span>Autre</div>
+                        </div>
+                        <div class="panel">
+                            <div class="panel-heading"><h2 id="agendaTitreJour">À venir</h2><button type="button" class="link-button hidden" id="agendaToutVoir" onclick="agendaChoisirJour(null)">Voir à venir</button></div>
+                            <div id="agendaListe"><p class="dashboard-empty">Chargement…</p></div>
                         </div>
                     </div>
                 </section>
@@ -2202,14 +2380,11 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 
     <nav class="mobile-nav" aria-label="Navigation rapide">
         <button id="mobileAccueil" class="active" onclick="retourAccueil()"><svg class="ico" aria-hidden="true"><use href="#i-home"/></svg><span>Accueil</span></button>
-        <button id="mobileAnnonces" onclick="ouvrirAnnonces()"><svg class="ico" aria-hidden="true"><use href="#i-megaphone"/></svg><span>Annonces</span></button>
-        <button id="mobileIdees" onclick="ouvrirIdees()"><svg class="ico" aria-hidden="true"><use href="#i-bulb"/></svg><span>Idées</span></button>
-        <button id="mobileRapports" onclick="ouvrirMesComptesRendus()"><svg class="ico" aria-hidden="true"><use href="#i-file"/></svg><span>Rapports</span></button>
-        <button id="mobileAP" onclick="ouvrirDemandeAP()"><svg class="ico" aria-hidden="true"><use href="#i-lifebuoy"/></svg><span>AP</span></button>
-        <button id="mobileGestionAP" class="hidden" onclick="ouvrirGestionAP()"><svg class="ico" aria-hidden="true"><use href="#i-lifebuoy"/></svg><span>Gestion AP</span></button>
-        <button id="mobileForum" onclick="ouvrirForumGeneral()"><svg class="ico" aria-hidden="true"><use href="#i-chat"/></svg><span>Forum</span></button>
-        <button id="mobileForumPrive" class="hidden" onclick="ouvrirForumPrive()"><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg><span>Délégués</span></button>
-        <button type="button" class="mobile-menu-toggle" onclick="basculerMenuMobile()" aria-label="Ouvrir le menu complet"><svg class="ico" aria-hidden="true"><use href="#i-menu"/></svg><span>Menu</span></button>
+        <button id="mobileAnnonces" onclick="ouvrirAnnonces()"><svg class="ico" aria-hidden="true"><use href="#i-megaphone"/></svg><span>Annonces</span><span class="pastille hidden" data-rub="annonces">1</span></button>
+        <button id="mobileAgenda" onclick="ouvrirAgenda()"><svg class="ico" aria-hidden="true"><use href="#i-calendar"/></svg><span>Agenda</span><span class="pastille hidden" data-rub="agenda">1</span></button>
+        <button id="mobileAP" onclick="ouvrirDemandeAP()"><svg class="ico" aria-hidden="true"><use href="#i-lifebuoy"/></svg><span>AP</span><span class="pastille hidden" data-rub="ap">1</span></button>
+        <button id="mobileGestionAP" class="hidden" onclick="ouvrirGestionAP()"><svg class="ico" aria-hidden="true"><use href="#i-lifebuoy"/></svg><span>Gestion AP</span><span class="pastille hidden" data-rub="ap">1</span></button>
+        <button type="button" class="mobile-menu-toggle" onclick="basculerMenuMobile()" aria-label="Ouvrir le menu complet"><svg class="ico" aria-hidden="true"><use href="#i-menu"/></svg><span>Menu</span><span class="pastille hidden" id="pastilleMenu">1</span></button>
     </nav>
 </div>
 
@@ -6612,6 +6787,222 @@ verifierSession().then(() => {
     console.log("Espace Classe : session vérifiée");
 });
 
+
+/* =====================================================
+   PASTILLES « NOUVEAU » + AGENDA
+===================================================== */
+const RUBRIQUES_PASTILLES = ["annonces","agenda","ap","sondages","idees","forum","prive","comptes_rendus"];
+let nouveautesRubriques = {};
+let minuteurPastilles = null;
+
+function afficherPastilles() {
+    document.querySelectorAll(".pastille[data-rub]").forEach(el => {
+        const n = nouveautesRubriques[el.dataset.rub] || 0;
+        el.textContent = n > 9 ? "9+" : String(n);
+        el.classList.toggle("hidden", n <= 0);
+    });
+    // Pastille du bouton Menu : tout ce qui n'est pas dans la barre du bas
+    const dansBarre = ["annonces","agenda","ap"];
+    const reste = RUBRIQUES_PASTILLES.filter(r => !dansBarre.includes(r)).reduce((t, r) => t + (nouveautesRubriques[r] || 0), 0);
+    const pm = document.getElementById("pastilleMenu");
+    if (pm) { pm.textContent = reste > 9 ? "9+" : String(reste); pm.classList.toggle("hidden", reste <= 0); }
+    try { if (navigator.setAppBadge) { const total = Object.values(nouveautesRubriques).reduce((a, b) => a + b, 0); total > 0 ? navigator.setAppBadge(total) : navigator.clearAppBadge(); } } catch (e) {}
+}
+
+async function chargerPastilles() {
+    if (!profilUtilisateur) return;
+    try {
+        const { data, error } = await supabaseClient.rpc("nouveautes_rubriques");
+        if (error) return;
+        nouveautesRubriques = {};
+        (data || []).forEach(l => { nouveautesRubriques[l.rubrique] = l.nb; });
+        afficherPastilles();
+    } catch (e) {}
+}
+
+async function marquerRubriqueVue(rub) {
+    if (!profilUtilisateur || !rub) return;
+    nouveautesRubriques[rub] = 0;
+    afficherPastilles();
+    try { await supabaseClient.rpc("marquer_rubrique_vue", { p_rubrique: rub }); } catch (e) {}
+}
+
+function synchroniserTuiles() {
+    if (!profilUtilisateur) return;
+    const prof = estProfesseur(), deleg = estDelegue();
+    document.querySelectorAll("#accueil .tuile").forEach(t => {
+        const pour = t.dataset.pour;
+        let visible = pour === "all" || (pour === "eleve" && !prof) || (pour === "prof" && prof) || (pour === "deleg" && deleg);
+        if (visible && t.dataset.nav) visible = !document.getElementById(t.dataset.nav)?.classList.contains("hidden");
+        t.classList.toggle("hidden", !visible);
+    });
+}
+
+function demarrerPastilles() {
+    synchroniserTuiles();
+    chargerPastilles();
+    if (!minuteurPastilles) {
+        minuteurPastilles = setInterval(() => { if (!document.hidden) chargerPastilles(); }, 60000);
+        document.addEventListener("visibilitychange", () => { if (!document.hidden) chargerPastilles(); });
+    }
+}
+
+// Quand on ouvre une rubrique, sa pastille disparaît
+(function brancherPastilles() {
+    const liens = {
+        ouvrirAnnonces: "annonces", ouvrirForumGeneral: "forum", ouvrirSondages: "sondages",
+        ouvrirIdees: "idees", ouvrirDemandeAP: "ap", ouvrirGestionAP: "ap",
+        ouvrirMesComptesRendus: "comptes_rendus", ouvrirForumPrive: "prive"
+    };
+    Object.entries(liens).forEach(([nom, rub]) => {
+        const origine = window[nom];
+        if (typeof origine !== "function") return;
+        window[nom] = function (...args) {
+            const r = origine.apply(this, args);
+            marquerRubriqueVue(rub);
+            return r;
+        };
+    });
+    const orig = window.personnaliserAccueilSelonRole;
+    window.personnaliserAccueilSelonRole = function (...args) {
+        const r = orig.apply(this, args);
+        demarrerPastilles();
+        return r;
+    };
+})();
+
+/* ---------- Agenda ---------- */
+let agendaMois = new Date(); agendaMois.setDate(1);
+let agendaEvenements = [];
+let agendaJourChoisi = null;
+const LIBELLES_EVT = { controle: "Contrôle", devoir: "Devoir", sortie: "Sortie", reunion: "Réunion", autre: "Autre", ap: "AP" };
+
+function agendaCle(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+function peutAjouterEvenement() { return estProfesseur() || estDelegue(); }
+
+function ouvrirAgenda() {
+    if (!profilUtilisateur) return;
+    cacherToutesLesSections();
+    document.getElementById("agenda").classList.remove("hidden");
+    changerTitre("Agenda");
+    document.querySelectorAll(".nav-button, .mobile-nav button").forEach(b => b.classList.remove("active"));
+    document.getElementById("navAgenda")?.classList.add("active");
+    document.getElementById("mobileAgenda")?.classList.add("active");
+    document.getElementById("btnNouvelEvenement")?.classList.toggle("hidden", !peutAjouterEvenement());
+    preparerClassesEvenement();
+    agendaJourChoisi = null;
+    chargerAgenda();
+    marquerRubriqueVue("agenda");
+}
+
+function preparerClassesEvenement() {
+    const sel = document.getElementById("evtClasse");
+    if (!sel) return;
+    const options = estProfesseur() ? ["1STI2D", "1STL", "Toutes"] : [profilUtilisateur.classe, "Toutes"];
+    sel.innerHTML = options.map(c => `<option value="${escapeHtml(c)}">${c === "Toutes" ? "Les deux classes" : escapeHtml(c)}</option>`).join("");
+}
+
+function basculerFormEvenement(forcer) {
+    const f = document.getElementById("formEvenement");
+    const afficher = typeof forcer === "boolean" ? forcer : f.classList.contains("hidden");
+    f.classList.toggle("hidden", !afficher);
+    if (afficher) { document.getElementById("evtDate").value = agendaJourChoisi || agendaCle(new Date()); document.getElementById("evtTitre").focus(); }
+}
+
+async function chargerAgenda() {
+    const debut = new Date(agendaMois.getFullYear(), agendaMois.getMonth() - 1, 1);
+    const fin = new Date(agendaMois.getFullYear(), agendaMois.getMonth() + 2, 0);
+    const aujourdhui = agendaCle(new Date());
+    const [evts, aps] = await Promise.all([
+        supabaseClient.from("evenements").select("id,classe,titre,type,date_evt,heure_evt,description,auteur")
+            .gte("date_evt", agendaCle(debut) < aujourdhui ? agendaCle(debut) : aujourdhui).order("date_evt").order("heure_evt", { nullsFirst: true }).limit(300),
+        supabaseClient.from("ap_demandes").select("id,matiere,date_ap,heure_ap,salle,classe")
+            .eq("statut", "acceptee").not("date_ap", "is", null).gte("date_ap", agendaCle(debut)).limit(200)
+    ]);
+    const liste = [];
+    (evts.data || []).forEach(e => liste.push({ ...e, source: "evt" }));
+    (aps.data || []).forEach(a => liste.push({ id: a.id, titre: "AP " + (a.matiere || ""), type: "ap", date_evt: a.date_ap, heure_evt: a.heure_ap, description: a.salle ? "Salle " + a.salle : "", source: "ap" }));
+    liste.sort((x, y) => (x.date_evt + (x.heure_evt || "")).localeCompare(y.date_evt + (y.heure_evt || "")));
+    agendaEvenements = liste;
+    dessinerAgenda();
+}
+
+function dessinerAgenda() {
+    const an = agendaMois.getFullYear(), mois = agendaMois.getMonth();
+    document.getElementById("agendaTitreMois").textContent = agendaMois.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
+    const decalage = (new Date(an, mois, 1).getDay() + 6) % 7;
+    const debut = new Date(an, mois, 1 - decalage);
+    const aujourdhui = agendaCle(new Date());
+    const parJour = {};
+    agendaEvenements.forEach(e => { (parJour[e.date_evt] = parJour[e.date_evt] || []).push(e); });
+    let html = "";
+    for (let i = 0; i < 42; i++) {
+        const d = new Date(debut.getFullYear(), debut.getMonth(), debut.getDate() + i);
+        const cle = agendaCle(d);
+        if (i >= 35 && d.getMonth() !== mois) break;
+        const types = [...new Set((parJour[cle] || []).map(e => e.type))].slice(0, 3);
+        html += `<button type="button" class="jour${d.getMonth() !== mois ? " autre" : ""}${cle === aujourdhui ? " aujourdhui" : ""}${cle === agendaJourChoisi ? " choisi" : ""}" onclick="agendaChoisirJour('${cle}')">${d.getDate()}<span class="pts">${types.map(t => `<span class="pt pt-${t}"></span>`).join("")}</span></button>`;
+    }
+    document.getElementById("agendaGrille").innerHTML = html;
+    dessinerListeAgenda();
+}
+
+function dessinerListeAgenda() {
+    const aujourdhui = agendaCle(new Date());
+    let liste, titre;
+    if (agendaJourChoisi) {
+        liste = agendaEvenements.filter(e => e.date_evt === agendaJourChoisi);
+        titre = new Date(agendaJourChoisi + "T12:00:00").toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
+    } else {
+        liste = agendaEvenements.filter(e => e.date_evt >= aujourdhui).slice(0, 15);
+        titre = "À venir";
+    }
+    document.getElementById("agendaTitreJour").textContent = titre;
+    document.getElementById("agendaToutVoir").classList.toggle("hidden", !agendaJourChoisi);
+    const bloc = document.getElementById("agendaListe");
+    if (!liste.length) { bloc.innerHTML = `<p class="dashboard-empty">${agendaJourChoisi ? "Rien de prévu ce jour-là." : "Rien de prévu pour l’instant."}</p>`; return; }
+    bloc.innerHTML = liste.map(e => {
+        const d = new Date(e.date_evt + "T12:00:00");
+        const peutSup = e.source === "evt" && (e.auteur === profilUtilisateur.id || estDelegue());
+        const meta = [LIBELLES_EVT[e.type], e.heure_evt ? e.heure_evt.slice(0, 5) : "", e.classe === "Toutes" ? "Les deux classes" : (e.classe || "")].filter(Boolean).join(" · ");
+        return `<div class="evt"><div class="evt-date"><b>${d.getDate()}</b><small>${d.toLocaleDateString("fr-FR", { month: "short" })}</small></div>
+            <div class="evt-corps"><div class="evt-titre"><span class="pt pt-${e.type}"></span>${escapeHtml(e.titre)}</div>
+            <div class="evt-meta">${escapeHtml(meta)}</div>${e.description ? `<div class="evt-meta">${escapeHtml(e.description)}</div>` : ""}</div>
+            ${peutSup ? `<button type="button" class="evt-sup" onclick="supprimerEvenement('${e.id}')">Supprimer</button>` : ""}</div>`;
+    }).join("");
+}
+
+function agendaChoisirJour(cle) { agendaJourChoisi = cle; dessinerAgenda(); }
+function agendaMoisPrecedent() { agendaMois = new Date(agendaMois.getFullYear(), agendaMois.getMonth() - 1, 1); chargerAgenda(); }
+function agendaMoisSuivant() { agendaMois = new Date(agendaMois.getFullYear(), agendaMois.getMonth() + 1, 1); chargerAgenda(); }
+
+async function enregistrerEvenement(ev) {
+    ev.preventDefault();
+    if (!peutAjouterEvenement()) return;
+    const titre = document.getElementById("evtTitre").value.trim();
+    const date = document.getElementById("evtDate").value;
+    if (!titre || !date) { afficherMessage("evtMessage", "Titre et date obligatoires.", "error"); return; }
+    const { data: u } = await supabaseClient.auth.getUser();
+    const ligne = {
+        classe: document.getElementById("evtClasse").value, titre, type: document.getElementById("evtType").value,
+        date_evt: date, heure_evt: document.getElementById("evtHeure").value || null,
+        description: document.getElementById("evtDescription").value.trim() || null, auteur: u?.user?.id
+    };
+    const { error } = await supabaseClient.from("evenements").insert(ligne);
+    if (error) { afficherMessage("evtMessage", "Impossible d’enregistrer l’évènement.", "error"); return; }
+    document.getElementById("formEvenement").reset();
+    basculerFormEvenement(false);
+    afficherToast?.("Évènement ajouté");
+    agendaJourChoisi = null;
+    chargerAgenda();
+}
+
+async function supprimerEvenement(id) {
+    if (!confirm("Supprimer cet évènement ?")) return;
+    const { error } = await supabaseClient.from("evenements").delete().eq("id", id);
+    if (error) { afficherToast?.("Suppression impossible"); return; }
+    chargerAgenda();
+}
 </script>
 
 </body>
