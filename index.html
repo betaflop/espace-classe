@@ -1027,6 +1027,17 @@ body { background-image: none; font-size: 16px; }
     .sidebar-bottom .nav-button { background: transparent; justify-content: flex-start; }
 }
 
+
+/* Forum en direct */
+.en-direct { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--success); }
+.en-direct::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--success); animation: pulse-direct 1.8s ease-in-out infinite; }
+@keyframes pulse-direct { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+.en-ligne { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 12px; }
+.en-ligne-titre { font-size: 13px; font-weight: 700; color: var(--ink-soft); }
+.en-ligne-pers { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 8px; border-radius: 999px; background: var(--card); border: 1px solid var(--line); font-size: 14px; font-weight: 600; }
+.en-ligne-pers::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #2fbf71; }
+.en-ligne-pers.moi { background: var(--primary-light); }
+
 @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
 }
@@ -2046,8 +2057,10 @@ body { background-image: none; font-size: 16px; }
                     <div class="forum-single-intro">
                         
                         <div><strong>Discussion commune</strong><p>Écris ton message ci-dessous. Tu peux supprimer tes propres messages.</p></div>
-                        <button class="btn-secondary" onclick="chargerForumGeneral()" aria-label="Actualiser le forum"> Actualiser</button>
+                        <span class="en-direct" title="Les messages arrivent automatiquement">En direct</span>
                     </div>
+
+                    <div id="forumEnLigne" class="en-ligne hidden" aria-live="polite"></div>
 
                     <div class="forum-layout">
 
@@ -6062,7 +6075,7 @@ function demarrerEcouteForumsTempsReel() {
             .on("postgres_changes", { event: "*", schema: "public", table: "forum_messages" }, payload => {
                 const discussionId = payload.new?.discussion_id || payload.old?.discussion_id;
                 if (discussionId && String(discussionId) === String(forumDiscussionSelectionnee) && !document.getElementById("forumGeneral")?.classList.contains("hidden")) {
-                    chargerMessagesForum(discussionId);
+                    chargerMessagesForum(discussionId, true);
                 }
             }).subscribe();
 
@@ -6070,7 +6083,7 @@ function demarrerEcouteForumsTempsReel() {
             .on("postgres_changes", { event: "*", schema: "public", table: "forum_prive_messages" }, payload => {
                 const discussionId = payload.new?.discussion_id || payload.old?.discussion_id;
                 if (discussionId && String(discussionId) === String(forumPriveSelectionnee) && !document.getElementById("forumPrive")?.classList.contains("hidden")) {
-                    chargerMessagesPrives(discussionId);
+                    chargerMessagesPrives(discussionId, true);
                 }
             }).subscribe();
 
@@ -6183,11 +6196,12 @@ async function ouvrirDiscussionForum(id, actualiserListe = true) {
 }
 
 
-async function chargerMessagesForum(discussionId) {
+async function chargerMessagesForum(discussionId, silencieux = false) {
     const zone = document.getElementById("forumMessages");
     if (!zone) return;
+    const etaitEnBas = zone.scrollHeight - zone.scrollTop - zone.clientHeight < 80;
 
-    zone.innerHTML = "<div class='forum-empty'>Chargement...</div>";
+    if (!silencieux) zone.innerHTML = "<div class='forum-empty'>Chargement...</div>";
 
     const { data, error } = await supabaseClient
         .from("forum_messages")
@@ -6219,7 +6233,7 @@ async function chargerMessagesForum(discussionId) {
             </div>`;
     }).join("");
 
-    zone.scrollTop = zone.scrollHeight;
+    if (!silencieux || etaitEnBas) zone.scrollTop = zone.scrollHeight;
 }
 
 
@@ -6528,11 +6542,12 @@ async function ouvrirConversationPrivee(id, actualiserListe = true) {
 }
 
 
-async function chargerMessagesPrives(discussionId) {
+async function chargerMessagesPrives(discussionId, silencieux = false) {
     const zone = document.getElementById("forumPriveMessages");
     if (!zone) return;
+    const etaitEnBas = zone.scrollHeight - zone.scrollTop - zone.clientHeight < 80;
 
-    zone.innerHTML = "<div class='forum-empty'>Chargement...</div>";
+    if (!silencieux) zone.innerHTML = "<div class='forum-empty'>Chargement...</div>";
 
     const { data, error } = await supabaseClient
         .from("forum_prive_messages")
@@ -6564,7 +6579,7 @@ async function chargerMessagesPrives(discussionId) {
             </div>`;
     }).join("");
 
-    zone.scrollTop = zone.scrollHeight;
+    if (!silencieux || etaitEnBas) zone.scrollTop = zone.scrollHeight;
 }
 
 
@@ -7007,6 +7022,58 @@ async function supprimerEvenement(id) {
     if (error) { afficherToast?.("Suppression impossible"); return; }
     chargerAgenda();
 }
+
+/* ---------- Forum : personnes connectées (présence en direct) ---------- */
+let canalPresenceForum = null;
+
+function quitterPresenceForum() {
+    if (canalPresenceForum) {
+        try { supabaseClient.removeChannel(canalPresenceForum); } catch (e) {}
+        canalPresenceForum = null;
+    }
+    document.getElementById("forumEnLigne")?.classList.add("hidden");
+}
+
+function afficherPresenceForum() {
+    const bloc = document.getElementById("forumEnLigne");
+    if (!bloc || !canalPresenceForum) return;
+    const etat = canalPresenceForum.presenceState();
+    const gens = Object.values(etat).map(l => l[0]).filter(Boolean);
+    if (!gens.length) { bloc.classList.add("hidden"); return; }
+    gens.sort((a, b) => (a.moi ? -1 : b.moi ? 1 : 0) || String(a.nom).localeCompare(String(b.nom)));
+    bloc.innerHTML = `<span class="en-ligne-titre">En ligne (${gens.length})</span>` +
+        gens.map(g => `<span class="en-ligne-pers${g.cle === profilUtilisateur.id ? " moi" : ""}">${escapeHtml(g.nom)}${g.cle === profilUtilisateur.id ? " (toi)" : ""}</span>`).join("");
+    bloc.classList.remove("hidden");
+}
+
+function demarrerPresenceForum() {
+    quitterPresenceForum();
+    if (!profilUtilisateur?.id && !utilisateur?.id) return;
+    const monId = utilisateur?.id || profilUtilisateur.id;
+    try {
+        const nom = ((profilUtilisateur.prenom || "") + " " + (profilUtilisateur.nom || "").charAt(0) + ".").trim();
+        canalPresenceForum = supabaseClient.channel("espace-classe-forum-presence", { config: { presence: { key: monId } } });
+        canalPresenceForum
+            .on("presence", { event: "sync" }, afficherPresenceForum)
+            .subscribe(async (statut) => {
+                if (statut === "SUBSCRIBED") await canalPresenceForum.track({ cle: monId, nom: nom || "Élève" });
+            });
+    } catch (e) { console.warn("Présence indisponible :", e); }
+}
+
+(function brancherPresenceForum() {
+    const orig = window.ouvrirForumGeneral;
+    window.ouvrirForumGeneral = function (...args) {
+        const r = orig.apply(this, args);
+        if (profilUtilisateur && !estProfesseur()) demarrerPresenceForum();
+        return r;
+    };
+    const cacher = window.cacherToutesLesSections;
+    window.cacherToutesLesSections = function (...args) {
+        quitterPresenceForum();
+        return cacher.apply(this, args);
+    };
+})();
 </script>
 
 </body>
