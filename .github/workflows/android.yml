@@ -4,6 +4,9 @@ name: Construire l'application Android
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -57,19 +60,18 @@ jobs:
           grep -n "versionCode" android/app/build.gradle
           MANIFEST=android/app/src/main/AndroidManifest.xml
           grep -q POST_NOTIFICATIONS "$MANIFEST" || sed -i 's#<application#<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\n    <application#' "$MANIFEST"
-          # Google Play exige l'API 36 minimum pour les nouvelles applications
           TARGET=$(grep -o "targetSdkVersion *= *[0-9]*" android/variables.gradle | grep -o "[0-9]*$")
           echo "targetSdkVersion = $TARGET"
           if [ "${TARGET:-0}" -lt 36 ]; then
-            echo "::error::targetSdkVersion ($TARGET) est inférieur à 36, exigé par Google Play."
+            echo "::error::targetSdkVersion ($TARGET) est inférieur à 36."
             exit 1
           fi
 
-      - name: Construire le bundle (.aab)
+      - name: Construire le bundle (.aab) et l'APK
         working-directory: android
-        run: ./gradlew bundleRelease --no-daemon
+        run: ./gradlew bundleRelease assembleRelease --no-daemon
 
-      - name: Signer le bundle
+      - name: Signer le bundle et l'APK
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -80,16 +82,42 @@ jobs:
             exit 1
           fi
           printf '%s' "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/upload.keystore"
+
+          # --- Bundle (.aab) pour Google Play, si besoin un jour ---
           cp android/app/build/outputs/bundle/release/app-release.aab espace-classe.aab
           jarsigner -keystore "$RUNNER_TEMP/upload.keystore" \
             -storepass "$KEYSTORE_PASSWORD" \
             -sigalg SHA256withRSA -digestalg SHA-256 \
             espace-classe.aab "$KEY_ALIAS"
-          jarsigner -verify espace-classe.aab | head -3
+
+          # --- APK installable directement ---
+          BT="$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)"
+          APK_IN=$(find android/app/build/outputs/apk/release -name "*.apk" | head -1)
+          echo "APK trouvé : $APK_IN"
+          "$BT/zipalign" -p -f 4 "$APK_IN" "$RUNNER_TEMP/aligned.apk"
+          "$BT/apksigner" sign \
+            --ks "$RUNNER_TEMP/upload.keystore" \
+            --ks-key-alias "$KEY_ALIAS" \
+            --ks-pass env:KEYSTORE_PASSWORD \
+            --key-pass env:KEYSTORE_PASSWORD \
+            --out espace-classe.apk "$RUNNER_TEMP/aligned.apk"
+          "$BT/apksigner" verify espace-classe.apk && echo "APK signé OK"
+
           rm -f "$RUNNER_TEMP/upload.keystore"
 
       - uses: actions/upload-artifact@v4
         with:
-          name: espace-classe-aab
-          path: espace-classe.aab
+          name: espace-classe-android
+          path: |
+            espace-classe.apk
+            espace-classe.aab
           retention-days: 14
+
+      - name: Publier l'APK (lien de téléchargement fixe)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "android-${{ github.run_number }}" espace-classe.apk \
+            --title "Espace Classe Android - version ${{ github.run_number }}" \
+            --notes "Télécharge espace-classe.apk sur ton téléphone Android puis ouvre-le pour l'installer." \
+            --latest
