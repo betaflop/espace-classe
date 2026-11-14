@@ -2,6 +2,10 @@
   "appId": "fr.espaceclasse.app",
   "appName": "Espace Classe",
   "webDir": "www",
+  "server": {
+    "url": "https://betaflop.github.io/espace-classe/",
+    "androidScheme": "https"
+  },
   "android": {
     "allowMixedContent": false
   },
