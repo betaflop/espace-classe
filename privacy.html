@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>Politique de confidentialité — Espace Classe</title>
+<style>
+  :root { --bg:#f3f5f9; --card:#fff; --ink:#1b2333; --soft:#5b6578; --line:#dde2ec; --primary:#2457d6; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0f1420; --card:#181f31; --ink:#e9edf6; --soft:#9aa5bd; --line:#283149; --primary:#7ea2ff; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  main { max-width:760px; margin:0 auto; padding:24px 16px 60px; }
+  article { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:24px 22px; }
+  h1 { font-size:28px; margin:0 0 4px; }
+  h2 { font-size:19px; margin:28px 0 6px; }
+  p, li { margin:6px 0; }
+  .soft { color:var(--soft); }
+  a { color:var(--primary); }
+  table { width:100%; border-collapse:collapse; margin:10px 0; font-size:15px; }
+  th, td { text-align:left; padding:8px 10px; border-top:1px solid var(--line); vertical-align:top; }
+  th { color:var(--soft); font-weight:700; }
+</style>
+</head>
+<body>
+<main>
+<article>
+  <h1>Politique de confidentialité</h1>
+  <p class="soft">Application et site « Espace Classe » — Lycée Saint-François d'Assise. Dernière mise à jour : 14 novembre 2026.</p>
+
+  <h2>1. Qui est responsable ?</h2>
+  <p>Espace Classe est un espace numérique privé destiné aux élèves, aux délégués et aux professeurs de la classe. Il est géré à titre non commercial par <strong>[NOM ET PRÉNOM DU RESPONSABLE]</strong>, contact : <a href="mailto:[ADRESSE E-MAIL DE CONTACT]">[ADRESSE E-MAIL DE CONTACT]</a>.</p>
+  <p>Les comptes ne se créent pas librement : ils sont créés par les délégués ou l'administrateur pour les membres de la classe. L'application ne contient ni publicité ni outil de suivi publicitaire.</p>
+
+  <h2>2. Données collectées</h2>
+  <table>
+    <tr><th>Donnée</th><th>Pourquoi</th></tr>
+    <tr><td>Prénom, nom, classe, rôle (élève, délégué, professeur)</td><td>Identifier les membres et adapter l'affichage selon le rôle.</td></tr>
+    <tr><td>Adresse e-mail et mot de passe (le mot de passe est stocké chiffré, nous ne pouvons pas le lire)</td><td>Se connecter et envoyer des e-mails de notification (annonces, AP, comptes-rendus, évènements).</td></tr>
+    <tr><td>Contenus publiés : messages du forum, messages privés aux délégués, idées, réactions, votes aux sondages, réponses aux AP, demandes d'AP</td><td>Fournir les fonctions de l'application.</td></tr>
+    <tr><td>Avatar (couleur et symbole, ou photo choisie par l'utilisateur)</td><td>Personnaliser le profil. La photo est facultative.</td></tr>
+    <tr><td>Jeton de notification (identifiant technique de l'appareil)</td><td>Envoyer des notifications push.</td></tr>
+    <tr><td>Présence en ligne dans le forum (prénom et initiale, tant que la page est ouverte)</td><td>Afficher qui est connecté. Rien n'est conservé.</td></tr>
+    <tr><td>Points du défi des classes (comptés par classe)</td><td>Animer le défi mensuel entre classes.</td></tr>
+  </table>
+  <p>Nous ne collectons ni localisation, ni contacts, ni photos en dehors de l'avatar que tu choisis toi-même.</p>
+
+  <h2>3. Qui voit quoi ?</h2>
+  <ul>
+    <li>Les messages du forum sont visibles par les élèves et les délégués de l'espace.</li>
+    <li>Les messages privés ne sont visibles que par l'élève et le délégué concernés.</li>
+    <li>Les votes aux sondages sont anonymes : seuls les totaux sont affichés.</li>
+    <li>Les professeurs voient les demandes d'AP qui leur sont adressées.</li>
+  </ul>
+
+  <h2>4. Prestataires techniques</h2>
+  <ul>
+    <li><strong>Supabase</strong> : hébergement de la base de données et de l'authentification (serveurs situés en Union européenne, région Francfort).</li>
+    <li><strong>Google Firebase Cloud Messaging</strong> : acheminement des notifications push.</li>
+    <li><strong>GitHub Pages</strong> : hébergement des pages du site.</li>
+    <li>Un service d'envoi d'e-mails pour les messages de notification.</li>
+  </ul>
+  <p>Les données ne sont ni vendues, ni louées, ni utilisées à des fins publicitaires.</p>
+
+  <h2>5. Durée de conservation</h2>
+  <p>Les données sont conservées tant que le compte existe. Quand un compte est supprimé, ses données personnelles (profil, avatar, jetons de notification) sont supprimées, ainsi que ses contenus ou rendues anonymes selon les cas. Les comptes sont supprimés à la fin de la scolarité ou sur demande.</p>
+
+  <h2>6. Tes droits</h2>
+  <p>Tu peux demander à tout moment l'accès à tes données, leur correction ou leur suppression, en écrivant à l'adresse ci-dessus ou en demandant à un délégué. Pour supprimer ton compte, consulte la page <a href="delete-account.html">Suppression de compte</a>. Tu peux aussi saisir la CNIL (<a href="https://www.cnil.fr">cnil.fr</a>).</p>
+
+  <h2>7. Mineurs</h2>
+  <p>L'application s'adresse à des lycéens, dont certains sont mineurs. Les comptes sont créés dans le cadre scolaire. Les parents ou représentants légaux peuvent demander l'accès aux données de leur enfant ou leur suppression à la même adresse.</p>
+
+  <h2>8. Sécurité</h2>
+  <p>Les échanges sont chiffrés (HTTPS) et l'accès aux données est limité par des règles de sécurité de la base de données : chaque personne ne voit que ce qui la concerne.</p>
+
+  <h2>9. Modifications</h2>
+  <p>Cette politique peut évoluer. La date de mise à jour figure en haut de cette page.</p>
+</article>
+</main>
+</body>
+</html>

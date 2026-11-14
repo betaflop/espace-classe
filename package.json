@@ -1,0 +1,16 @@
+{
+  "name": "espace-classe",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Espace Classe - application Android (Capacitor) du site web.",
+  "dependencies": {
+    "@capacitor/android": "^8.0.0",
+    "@capacitor/core": "^8.0.0",
+    "@capacitor/local-notifications": "^8.0.0",
+    "@capacitor/push-notifications": "^8.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.0.0"
+  }
+}
