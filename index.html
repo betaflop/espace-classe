@@ -1042,6 +1042,22 @@ body { background-image: none; font-size: 16px; }
     * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
 }
 
+
+.idees-filtres{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:12px 0}
+.idees-onglets{display:flex;flex-wrap:wrap;gap:6px}
+.idee-onglet{border:1px solid var(--line,#dde3ee);background:var(--card,#fff);color:inherit;padding:8px 14px;border-radius:999px;font:inherit;font-size:14.5px;cursor:pointer}
+.idee-onglet.active{background:#2a5db0;border-color:#2a5db0;color:#fff;font-weight:700}
+.idea-delegue{display:flex;align-items:center;gap:10px;margin-top:10px}
+.idea-statut{font-size:13px;padding:3px 10px;border-radius:999px;background:#e6eefb;color:#1b4a96}
+.idea-statut.st-cool{background:#fff3cd;color:#7a5b00}.idea-statut.st-de_cote{background:#e9e9ee;color:#555}
+.idea-menu{position:relative;margin-left:auto}
+.idea-menu summary{list-style:none;cursor:pointer;font-size:22px;line-height:1;padding:4px 12px;border-radius:8px;user-select:none}
+.idea-menu summary::-webkit-details-marker{display:none}
+.idea-menu[open] summary{background:rgba(0,0,0,.08)}
+.idea-menu-list{position:absolute;right:0;top:100%;z-index:20;min-width:210px;background:var(--card,#fff);border:1px solid var(--line,#dde3ee);border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.18);overflow:hidden}
+.idea-menu-list button{display:block;width:100%;text-align:left;padding:12px 14px;border:0;background:none;color:inherit;font:inherit;cursor:pointer}
+.idea-menu-list button:hover{background:rgba(42,93,176,.1)}
+.idea-qui{margin-top:8px;padding:10px 12px;border-radius:10px;background:rgba(42,93,176,.08);display:grid;gap:4px}
 </style>
 </head>
 
@@ -1642,6 +1658,21 @@ body { background-image: none; font-size: 16px; }
                     <h3>
                         Toutes les idées
                     </h3>
+
+                    <div id="ideesFiltres" class="idees-filtres hidden">
+                        <div class="idees-onglets" role="tablist">
+                            <button type="button" class="idee-onglet active" data-st="toutes" onclick="ideeFiltrer('statut','toutes')">Toutes</button>
+                            <button type="button" class="idee-onglet" data-st="nouveau" onclick="ideeFiltrer('statut','nouveau')">À trier</button>
+                            <button type="button" class="idee-onglet" data-st="cool" onclick="ideeFiltrer('statut','cool')">⭐ Idées cool</button>
+                            <button type="button" class="idee-onglet" data-st="de_cote" onclick="ideeFiltrer('statut','de_cote')">📦 De côté</button>
+                        </div>
+                        <select id="ideeTri" onchange="ideeFiltrer('tri',this.value)" aria-label="Trimestre">
+                            <option value="tous">Toute l’année</option>
+                            <option value="1">1er trimestre (sept.–nov.)</option>
+                            <option value="2">2e trimestre (déc.–fév.)</option>
+                            <option value="3">3e trimestre (mars–août)</option>
+                        </select>
+                    </div>
 
                     <br>
 
@@ -4784,9 +4815,14 @@ async function reagirIdee(id, emoji) {
 }
 
 function construireActionsIdee(idee) {
+    const menu = construireMenuDelegueIdee(idee);
     const auteurId = idee.auteur_id || idee.auteur || idee.created_by || idee.user_id || "";
     const estAuteur = Boolean(utilisateur?.id) && String(auteurId) === String(utilisateur.id);
-    if (!estAuteur) return "";
+    if (!estAuteur) return menu;
+    return menu + construireActionsAuteurIdee(idee);
+}
+
+function construireActionsAuteurIdee(idee) {
     return `<div class="idea-actions"><button type="button" class="btn-secondary" onclick="modifierIdee('${escapeHtml(idee.id)}')"> Modifier</button><button type="button" class="btn-danger" onclick="supprimerIdee('${escapeHtml(idee.id)}')"> Supprimer</button></div>`;
 }
 
@@ -4854,7 +4890,7 @@ async function chargerIdees() {
         }
 
         const idees =
-            data.idees || [];
+            await preparerIdeesDelegue(data.idees || []);
 
         if (idees.length === 0) {
 
@@ -6796,6 +6832,60 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
 
 appliquerTheme();
 
+
+/* ---- Idées : tri et réactions réservés aux délégués ---- */
+const IDEE_STATUTS = { nouveau: "À trier", cool: "⭐ Idée cool", de_cote: "📦 De côté" };
+let ideeFiltres = { statut: "toutes", tri: "tous" };
+
+function trimestreIdee(dateIso) {
+    const m = new Date(dateIso).getMonth() + 1;
+    return (m >= 9 && m <= 11) ? 1 : (m === 12 || m <= 2) ? 2 : 3;
+}
+function ideeFiltrer(type, valeur) {
+    ideeFiltres[type] = valeur;
+    document.querySelectorAll(".idee-onglet").forEach(b => b.classList.toggle("active", b.dataset.st === ideeFiltres.statut));
+    chargerIdees();
+}
+async function preparerIdeesDelegue(idees) {
+    const barre = document.getElementById("ideesFiltres");
+    const delegue = typeof estDelegue === "function" && estDelegue();
+    barre?.classList.toggle("hidden", !delegue);
+    if (!delegue) return idees;
+    const { data } = await supabaseClient.from("idees").select("id,statut");
+    const map = Object.fromEntries((data || []).map(r => [String(r.id), r.statut]));
+    idees.forEach(i => { i.statut = map[String(i.id)] || "nouveau"; });
+    return idees.filter(i =>
+        (ideeFiltres.statut === "toutes" || i.statut === ideeFiltres.statut) &&
+        (ideeFiltres.tri === "tous" || String(trimestreIdee(i.created_at)) === ideeFiltres.tri));
+}
+function construireMenuDelegueIdee(idee) {
+    if (!(typeof estDelegue === "function" && estDelegue())) return "";
+    const id = escapeHtml(String(idee.id)), st = idee.statut || "nouveau";
+    const btn = (label, action) => `<button type="button" onclick="${action}">${label}</button>`;
+    return `<div class="idea-delegue"><span class="idea-statut st-${st}">${IDEE_STATUTS[st] || ""}</span>
+<details class="idea-menu"><summary aria-label="Options délégué">⋯</summary><div class="idea-menu-list">
+${btn("👀 Qui a réagi ?", `voirReactionsIdee('${id}')`)}
+${st !== "cool" ? btn("⭐ Idée cool", `classerIdee('${id}','cool')`) : ""}
+${st !== "de_cote" ? btn("📦 Mettre de côté", `classerIdee('${id}','de_cote')`) : ""}
+${st !== "nouveau" ? btn("↩️ Remettre à trier", `classerIdee('${id}','nouveau')`) : ""}
+</div></details></div><div class="idea-qui hidden" id="quiIdee-${id}"></div>`;
+}
+async function classerIdee(id, statut) {
+    const { error } = await supabaseClient.from("idees").update({ statut }).eq("id", id);
+    if (error) { alert("Classement impossible : " + error.message); return; }
+    await chargerIdees();
+}
+async function voirReactionsIdee(id) {
+    const zone = document.getElementById("quiIdee-" + id);
+    if (!zone) return;
+    zone.closest(".idea-card")?.querySelector(".idea-menu")?.removeAttribute("open");
+    if (!zone.classList.contains("hidden")) { zone.classList.add("hidden"); return; }
+    zone.textContent = "Chargement…"; zone.classList.remove("hidden");
+    const { data, error } = await supabaseClient.rpc("idee_reactions_detail", { p_idee_id: id });
+    if (error) { zone.textContent = "Impossible de charger les réactions."; return; }
+    if (!data.length) { zone.textContent = "Aucune réaction pour l’instant."; return; }
+    zone.innerHTML = data.map(r => `<div>${escapeHtml(r.emoji)} <b>${escapeHtml(((r.prenom || "") + " " + (r.nom || "")).trim() || "Élève")}</b>${r.classe ? " <small>" + escapeHtml(r.classe) + "</small>" : ""}</div>`).join("");
+}
 initialiserNotifications();
 
 verifierSession().then(() => {
