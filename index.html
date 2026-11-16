@@ -1038,26 +1038,84 @@ body { background-image: none; font-size: 16px; }
 .en-ligne-pers::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #2fbf71; }
 .en-ligne-pers.moi { background: var(--primary-light); }
 
+
+/* Idées : détail des réactions (délégués) */
+.idea-more { margin-left: auto; width: 38px; height: 38px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); font-size: 20px; font-weight: 800; line-height: 1; color: var(--ink-soft); }
+.idea-more:hover { background: var(--paper-2); color: var(--ink); }
+.idea-qui { margin-top: 10px; padding: 10px 12px; border-radius: 10px; background: var(--paper-2); font-size: 15px; display: flex; flex-direction: column; gap: 6px; }
+.idea-qui-ligne { display: flex; gap: 10px; align-items: baseline; }
+.idea-qui-emoji { flex: none; font-size: 18px; }
+.idea-qui small { color: var(--ink-soft); }
+
+
+/* Onglets (idées, sondages, discussions) */
+.onglets { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin: 0 0 18px; overflow-x: auto; scrollbar-width: none; }
+.onglet { display: inline-flex; align-items: center; gap: 8px; padding: 11px 16px; border: 0; border-bottom: 3px solid transparent; background: none; font-weight: 700; font-size: 15px; color: var(--ink-soft); white-space: nowrap; margin-bottom: -1px; }
+.onglet:hover { color: var(--ink); }
+.onglet.actif { color: var(--primary); border-bottom-color: var(--primary); }
+.tab-cache { display: none !important; }
+#navForumPrive { display: none !important; }
+.tuiles { grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 10px; }
+.tuile { min-height: 88px; padding: 12px; gap: 12px; font-size: 14px; }
+.tuile .ico { width: 24px; height: 24px; padding: 5px; }
+.login-legal { margin-top: 14px; text-align: center; }
+
+/* Défi : mes points */
+.defi-moi { margin: 0 0 16px; padding: 12px 14px; border-radius: 10px; background: var(--paper-2); }
+.defi-moi b { font-size: 17px; }
+.defi-moi-barre { height: 10px; border-radius: 999px; background: var(--line); margin: 8px 0 6px; overflow: hidden; }
+.defi-moi-barre i { display: block; height: 100%; background: var(--primary); border-radius: 999px; }
+.defi-moi small { color: var(--ink-soft); font-size: 14px; }
+
+/* Accueil : à venir */
+.avenir-ligne { display: flex; gap: 12px; align-items: center; padding: 9px 0; border-top: 1px solid var(--line); cursor: pointer; background: none; border-left: 0; border-right: 0; border-bottom: 0; width: 100%; text-align: left; }
+.avenir-ligne:first-child { border-top: 0; }
+.avenir-date { flex: none; width: 48px; text-align: center; line-height: 1.1; }
+.avenir-date b { display: block; font-size: 19px; }
+.avenir-date small { font-size: 11px; text-transform: uppercase; color: var(--ink-soft); font-weight: 700; }
+.avenir-titre { font-weight: 700; }
+.avenir-meta { font-size: 14px; color: var(--ink-soft); }
+
+/* Documents */
+.doc-barre { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 12px; }
+.doc-chemin { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; font-weight: 700; }
+.doc-chemin button { border: 0; background: none; padding: 6px 8px; border-radius: 8px; color: var(--primary); font-weight: 700; font-size: 16px; }
+.doc-chemin button:hover { background: var(--primary-light); }
+.doc-chemin .courant { color: var(--ink); padding: 6px 8px; }
+.doc-chemin .sep { color: var(--ink-soft); }
+.doc-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.doc-actions .ico { width: 18px; height: 18px; vertical-align: -3px; }
+.doc-form { margin: 0 0 12px; }
+.doc-liste-panel { padding: 6px 8px; }
+.doc-ligne { display: flex; align-items: center; gap: 12px; padding: 10px 8px; border-top: 1px solid var(--line); }
+.doc-ligne:first-child { border-top: 0; }
+.doc-icone { flex: none; width: 38px; height: 38px; border-radius: 9px; display: grid; place-items: center; background: #fff2cc; color: #8a5a00; }
+.doc-icone.fichier { background: #e3ecff; color: #2457d6; font-size: 11px; font-weight: 800; }
+.doc-icone .ico { width: 22px; height: 22px; }
+.doc-nom { flex: 1; min-width: 0; border: 0; background: none; text-align: left; padding: 0; font-weight: 700; font-size: 16px; color: var(--ink); overflow-wrap: anywhere; }
+.doc-nom:hover { color: var(--primary); text-decoration: underline; }
+.doc-meta { display: block; font-weight: 400; font-size: 13px; color: var(--ink-soft); }
+.doc-btns { flex: none; display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.doc-btns button { padding: 6px 10px; font-size: 14px; }
+.doc-aide { margin-top: 12px; font-size: 14px; }
+@media (max-width: 899px) { .doc-ligne { flex-wrap: wrap; } .doc-btns { width: 100%; justify-content: flex-start; padding-left: 50px; } }
+
+/* Modération */
+.forum-signale { margin-top: 8px; font-weight: 700; color: var(--danger); font-size: 14px; }
+
+/* Confidentialité */
+.confid { display: grid; gap: 14px; max-width: 760px; }
+.confid h3 { font-size: 18px; margin-bottom: 8px; }
+.confid ul { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+.confid p { color: var(--ink); }
+.dlg-confid { width: min(92vw, 720px); max-height: 86vh; border: 1px solid var(--line); border-radius: 14px; padding: 18px; background: var(--paper); color: var(--ink); }
+.dlg-confid::backdrop { background: rgba(10, 14, 30, .55); }
+.dlg-confid-tete { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+
 @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
 }
 
-
-.idees-filtres{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:12px 0}
-.idees-onglets{display:flex;flex-wrap:wrap;gap:6px}
-.idee-onglet{border:1px solid var(--line,#dde3ee);background:var(--card,#fff);color:inherit;padding:8px 14px;border-radius:999px;font:inherit;font-size:14.5px;cursor:pointer}
-.idee-onglet.active{background:#2a5db0;border-color:#2a5db0;color:#fff;font-weight:700}
-.idea-delegue{display:flex;align-items:center;gap:10px;margin-top:10px}
-.idea-statut{font-size:13px;padding:3px 10px;border-radius:999px;background:#e6eefb;color:#1b4a96}
-.idea-statut.st-cool{background:#fff3cd;color:#7a5b00}.idea-statut.st-de_cote{background:#e9e9ee;color:#555}
-.idea-menu{position:relative;margin-left:auto}
-.idea-menu summary{list-style:none;cursor:pointer;font-size:22px;line-height:1;padding:4px 12px;border-radius:8px;user-select:none}
-.idea-menu summary::-webkit-details-marker{display:none}
-.idea-menu[open] summary{background:rgba(0,0,0,.08)}
-.idea-menu-list{position:absolute;right:0;top:100%;z-index:20;min-width:210px;background:var(--card,#fff);border:1px solid var(--line,#dde3ee);border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.18);overflow:hidden}
-.idea-menu-list button{display:block;width:100%;text-align:left;padding:12px 14px;border:0;background:none;color:inherit;font:inherit;cursor:pointer}
-.idea-menu-list button:hover{background:rgba(42,93,176,.1)}
-.idea-qui{margin-top:8px;padding:10px 12px;border-radius:10px;background:rgba(42,93,176,.08);display:grid;gap:4px}
 </style>
 </head>
 
@@ -1065,6 +1123,9 @@ body { background-image: none; font-size: 16px; }
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
 <defs>
 <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+<symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6.5A1.5 1.5 0 014.5 5H10l2 2.5h7.5A1.5 1.5 0 0121 9v9.5a1.5 1.5 0 01-1.5 1.5h-15A1.5 1.5 0 013 18.5z"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+<symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V5M7.5 9.5L12 5l4.5 4.5M4 19h16"/></symbol>
 <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></symbol>
 <symbol id="i-megaphone" viewBox="0 0 24 24"><path d="M3 11v3a1 1 0 001 1h2l7 4V6L6 10H4a1 1 0 00-1 1z"/><path d="M16.5 9a4 4 0 010 6"/></symbol>
 <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 00-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0012 3z"/></symbol>
@@ -1098,8 +1159,64 @@ body { background-image: none; font-size: 16px; }
 
         <button class="login-button" onclick="connexion()">Se connecter</button>
         <div id="loginMessage"></div>
+        <p class="login-legal"><button type="button" class="link-button" onclick="ouvrirConfidentialiteLogin()">Confidentialité et règles du site</button></p>
     </div>
 </div>
+
+<template id="tplConfidentialite">
+<div class="panel"><h3>En deux mots</h3>
+<p>Espace Classe est géré par les délégués des classes de 1STI2D et de 1STL du lycée Saint-François d’Assise. Ce n’est pas le site officiel de l’établissement. Il sert à s’organiser : annonces, agenda, documents, idées, sondages, AP, discussions. Il n’y a <strong>aucune publicité</strong>, aucun traceur, et tes données ne sont <strong>jamais vendues</strong>.</p></div>
+
+<div class="panel"><h3>Ce que le site enregistre</h3>
+<ul>
+<li><strong>Ton identité</strong> : prénom, nom, classe, rôle (élève, délégué ou professeur) et ton adresse e-mail, qui sert à te connecter et à t’envoyer des notifications.</li>
+<li><strong>Ton mot de passe</strong> : il est stocké sous forme chiffrée. Personne, pas même un délégué, ne peut le lire.</li>
+<li><strong>Ton avatar ou ta photo</strong> si tu en choisis un : il n’est visible que par toi.</li>
+<li><strong>Ce que tu publies</strong> : idées, messages, votes, réactions, demandes d’AP, fichiers ajoutés, évènements.</li>
+</ul></div>
+
+<div class="panel"><h3>Qui peut voir quoi</h3>
+<ul>
+<li><strong>Idées</strong> : les élèves et les délégués voient l’idée et le nom de son auteur. Les élèves ne voient que leur propre réaction (👍 ❤️ 😂 👎). <strong>Les délégués voient les totaux et qui a réagi avec quel émoji.</strong></li>
+<li><strong>Sondages</strong> : les votes sont <strong>anonymes</strong>. Personne ne voit qui a voté quoi, seulement les résultats.</li>
+<li><strong>AP</strong> : ta participation à une AP de classe reste anonyme pour les autres élèves. Le professeur qui a créé l’AP voit qui participe.</li>
+<li><strong>Forum de la classe</strong> : visible par les élèves et les délégués des deux classes, pas par les professeurs. Chacun peut supprimer ses messages. Les délégués peuvent supprimer un message inapproprié, et seuls eux voient les signalements.</li>
+<li><strong>Messages aux délégués</strong> : seulement toi et les délégués. Ni les autres élèves ni les professeurs.</li>
+<li><strong>Comptes-rendus</strong> : l’élève concerné et les délégués.</li>
+<li><strong>Documents</strong> : les élèves et délégués de la classe concernée (ou des deux classes selon le dossier) et les professeurs. Le nom de la personne qui a ajouté un fichier est visible.</li>
+<li><strong>Annonces et agenda</strong> : selon la classe ou le destinataire choisi par l’auteur.</li>
+<li><strong>« En ligne » du forum</strong> : ton prénom apparaît aux autres seulement pendant que tu as le forum ouvert.</li>
+</ul></div>
+
+<div class="panel"><h3>Accès technique</h3>
+<p>Comme dans tout site, la personne qui administre la base de données du site peut techniquement accéder aux informations enregistrées, à l’exception de ton mot de passe, qui est chiffré.</p></div>
+
+<div class="panel"><h3>E-mails</h3>
+<p>Le site t’envoie des mails de notification (nouvelle AP, annonce, sondage, compte-rendu, évènement d’agenda, résultat du défi). Ils partent par un service d’envoi (Brevo) qui reçoit uniquement ton adresse et le message. Pas de publicité.</p></div>
+
+<div class="panel"><h3>Où sont les données</h3>
+<p>La page du site est hébergée sur GitHub Pages ; la base de données et les fichiers sont chez Supabase. Ton navigateur garde ta session de connexion et quelques préférences d’affichage, rien d’autre.</p></div>
+
+<div class="panel"><h3>Combien de temps</h3>
+<ul>
+<li>Les AP sont supprimées automatiquement après leur date, les évènements de l’agenda 60 jours après.</li>
+<li>Les idées, messages et fichiers restent jusqu’à ce que leur auteur ou un délégué les supprime.</li>
+<li>Tu peux demander à un délégué de supprimer ton compte et tes contenus à tout moment.</li>
+</ul></div>
+
+<div class="panel"><h3>Tes droits et les règles</h3>
+<ul>
+<li>Pour voir, corriger ou faire supprimer tes données, parle à un délégué.</li>
+<li>Ne publie pas de photo ou d’information sur une autre personne sans son accord.</li>
+<li>Reste respectueux : un message ou un fichier inapproprié peut être supprimé par un délégué.</li>
+<li>Seuls des documents scolaires sont attendus dans l’espace Documents.</li>
+</ul></div>
+</template>
+
+<dialog id="dlgConfidentialite" class="dlg-confid">
+    <div class="dlg-confid-tete"><h2>Confidentialité</h2><button type="button" class="btn-secondary" onclick="document.getElementById('dlgConfidentialite').close()">Fermer</button></div>
+    <div id="dlgConfidentialiteCorps" class="confid"></div>
+</dialog>
 
 <div id="app" class="hidden">
     <div class="app-layout">
@@ -1114,7 +1231,8 @@ body { background-image: none; font-size: 16px; }
 <button id="navAccueil" class="nav-button active" onclick="retourAccueil()"><svg class="ico" aria-hidden="true"><use href="#i-home"/></svg><span>Accueil</span></button>
 <button id="navAnnonces" class="nav-button" onclick="ouvrirAnnonces()"><svg class="ico" aria-hidden="true"><use href="#i-megaphone"/></svg><span>Annonces</span><span class="pastille hidden" data-rub="annonces">1</span></button>
 <button id="navAgenda" class="nav-button" onclick="ouvrirAgenda()"><svg class="ico" aria-hidden="true"><use href="#i-calendar"/></svg><span>Agenda</span><span class="pastille hidden" data-rub="agenda">1</span></button>
-<button id="navForumGeneral" class="nav-button" onclick="ouvrirForumGeneral()"><svg class="ico" aria-hidden="true"><use href="#i-chat"/></svg><span>Forum</span><span class="pastille hidden" data-rub="forum">1</span></button>
+<button id="navDocuments" class="nav-button" onclick="ouvrirDocuments()"><svg class="ico" aria-hidden="true"><use href="#i-folder"/></svg><span>Documents</span><span class="pastille hidden" data-rub="documents">1</span></button>
+                <button id="navForumGeneral" class="nav-button" onclick="ouvrirDiscussions()"><svg class="ico" aria-hidden="true"><use href="#i-chat"/></svg><span>Discussions</span><span class="pastille hidden" data-rub="discussions">1</span></button>
 <button id="navSondagesAdmin" class="nav-button" onclick="ouvrirSondages()"><svg class="ico" aria-hidden="true"><use href="#i-chart"/></svg><span>Sondages</span><span class="pastille hidden" data-rub="sondages">1</span></button>
 <button id="navIdeesEleve" class="nav-button" onclick="ouvrirIdees()"><svg class="ico" aria-hidden="true"><use href="#i-bulb"/></svg><span>Idées</span><span class="pastille hidden" data-rub="idees">1</span></button>
 <button id="navDemandeAP" class="nav-button" onclick="ouvrirDemandeAP()"><svg class="ico" aria-hidden="true"><use href="#i-lifebuoy"/></svg><span>Demande d’AP</span><span class="pastille hidden" data-rub="ap">1</span></button>
@@ -1143,6 +1261,7 @@ body { background-image: none; font-size: 16px; }
                     </div>
                 </div>
                 <button class="nav-button" onclick="ouvrirProfil()"><svg class="ico" aria-hidden="true"><use href="#i-user"/></svg><span>Mon profil</span></button>
+                <button class="nav-button" onclick="ouvrirConfidentialite()"><svg class="ico" aria-hidden="true"><use href="#i-shield"/></svg><span>Confidentialité</span></button>
                 <button class="nav-button" onclick="deconnexion()"><svg class="ico" aria-hidden="true"><use href="#i-logout"/></svg><span>Se déconnecter</span></button>
             </div>
         </aside>
@@ -1172,20 +1291,24 @@ body { background-image: none; font-size: 16px; }
                     <div class="tuiles" aria-label="Rubriques">
 <button type="button" class="tuile t-rouge" data-pour="all" onclick="ouvrirAnnonces()"><span class="pastille hidden" data-rub="annonces">1</span><svg class="ico" aria-hidden="true"><use href="#i-megaphone"/></svg><span>Annonces</span></button>
 <button type="button" class="tuile t-bleu" data-pour="all" onclick="ouvrirAgenda()"><span class="pastille hidden" data-rub="agenda">1</span><svg class="ico" aria-hidden="true"><use href="#i-calendar"/></svg><span>Agenda</span></button>
-<button type="button" class="tuile t-vert" data-pour="eleve" data-nav="navForumGeneral" onclick="ouvrirForumGeneral()"><span class="pastille hidden" data-rub="forum">1</span><svg class="ico" aria-hidden="true"><use href="#i-chat"/></svg><span>Forum</span></button>
+<button type="button" class="tuile t-orange" data-pour="all" onclick="ouvrirDocuments()"><span class="pastille hidden" data-rub="documents">1</span><svg class="ico" aria-hidden="true"><use href="#i-folder"/></svg><span>Documents</span></button>
+<button type="button" class="tuile t-vert" data-pour="eleve" data-nav="navForumGeneral" onclick="ouvrirDiscussions()"><span class="pastille hidden" data-rub="discussions">1</span><svg class="ico" aria-hidden="true"><use href="#i-chat"/></svg><span>Discussions</span></button>
 <button type="button" class="tuile t-violet" data-pour="eleve" data-nav="navSondagesAdmin" onclick="ouvrirSondages()"><span class="pastille hidden" data-rub="sondages">1</span><svg class="ico" aria-hidden="true"><use href="#i-chart"/></svg><span>Sondages</span></button>
 <button type="button" class="tuile t-jaune" data-pour="eleve" data-nav="navIdeesEleve" onclick="ouvrirIdees()"><span class="pastille hidden" data-rub="idees">1</span><svg class="ico" aria-hidden="true"><use href="#i-bulb"/></svg><span>Idées</span></button>
 <button type="button" class="tuile t-orange" data-pour="eleve" data-nav="navDemandeAP" onclick="ouvrirDemandeAP()"><span class="pastille hidden" data-rub="ap">1</span><svg class="ico" aria-hidden="true"><use href="#i-lifebuoy"/></svg><span>Demander une AP</span></button>
 <button type="button" class="tuile t-orange" data-pour="prof" onclick="ouvrirGestionAP()"><span class="pastille hidden" data-rub="ap">1</span><svg class="ico" aria-hidden="true"><use href="#i-lifebuoy"/></svg><span>Gérer mes AP</span></button>
 <button type="button" class="tuile t-jaune" data-pour="eleve" data-nav="navDefi" onclick="ouvrirDefi()"><svg class="ico" aria-hidden="true"><use href="#i-trophy"/></svg><span>Défi des classes</span></button>
 <button type="button" class="tuile t-bleu" data-pour="eleve" data-nav="navRapportsEleve" onclick="ouvrirMesComptesRendus()"><span class="pastille hidden" data-rub="comptes_rendus">1</span><svg class="ico" aria-hidden="true"><use href="#i-file"/></svg><span>Mes comptes-rendus</span></button>
-<button type="button" class="tuile t-vert" data-pour="eleve" data-nav="navForumPrive" onclick="ouvrirForumPrive()"><span class="pastille hidden" data-rub="prive">1</span><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg><span>Parler aux délégués</span></button>
 <button type="button" class="tuile t-violet" data-pour="deleg" onclick="ouvrirGestionEleves()"><svg class="ico" aria-hidden="true"><use href="#i-users"/></svg><span>Élèves</span></button>
-<button type="button" class="tuile t-bleu" data-pour="deleg" onclick="ouvrirComptesRendusAdmin()"><svg class="ico" aria-hidden="true"><use href="#i-clipboard"/></svg><span>Comptes-rendus</span></button>
                     </div>
 
                     <div class="home-cols">
                         <div class="home-main">
+                            <section id="accueilAVenir" class="panel">
+                                <div class="panel-heading"><h2>À venir</h2><button class="link-button" onclick="ouvrirAgenda()">Agenda</button></div>
+                                <div id="accueilAVenirListe"><p class="dashboard-empty">Chargement…</p></div>
+                            </section>
+
                             <section id="accueilAPPanel" class="panel">
                                 <div class="panel-heading"><h2>AP à venir</h2></div>
                                 <div id="accueilAPStatus" class="neon-news-list"><p class="dashboard-empty">Vérification des AP…</p></div>
@@ -1201,6 +1324,7 @@ body { background-image: none; font-size: 16px; }
                             <section id="defiAccueil" class="panel defi-panel hidden" aria-labelledby="defiAccueilTitre">
                                 <div class="panel-heading"><h2 id="defiAccueilTitre">Défi des classes</h2><button class="link-button" onclick="ouvrirDefi()">Voir le défi</button></div>
                                 <div id="defiAccueilContenu"></div>
+                                <div id="defiMesPointsAccueil"></div>
                                 <p class="defi-aide"><button type="button" class="link-button" onclick="ouvrirBaremeDefi()">Comment gagner des points ?</button></p>
                             </section>
 
@@ -1273,6 +1397,53 @@ body { background-image: none; font-size: 16px; }
                             <div id="agendaListe"><p class="dashboard-empty">Chargement…</p></div>
                         </div>
                     </div>
+                </section>
+
+                <section id="documents" class="section hidden">
+                    <div class="section-header">
+                        <div>
+                            <h2>Documents</h2>
+                            <p>Les cours et documents de la classe, rangés par dossiers.</p>
+                        </div>
+                    </div>
+
+                    <div class="doc-barre">
+                        <nav id="docChemin" class="doc-chemin" aria-label="Chemin du dossier"></nav>
+                        <div class="doc-actions">
+                            <button type="button" id="docBtnDossier" class="btn-secondary hidden" onclick="docBasculerCreation()"><svg class="ico" aria-hidden="true"><use href="#i-folder"/></svg> Nouveau dossier</button>
+                            <button type="button" id="docBtnFichier" class="btn-primary hidden" onclick="document.getElementById('docInputFichier').click()"><svg class="ico" aria-hidden="true"><use href="#i-upload"/></svg> Ajouter un fichier</button>
+                            <input type="file" id="docInputFichier" class="hidden" multiple accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.txt,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.odt,.odp,.ods" onchange="docEnvoyerFichiers(this)">
+                        </div>
+                    </div>
+
+                    <form id="docFormDossier" class="panel doc-form hidden" onsubmit="docCreerDossier(event)">
+                        <label for="docNomDossier">Nom du dossier</label>
+                        <input id="docNomDossier" maxlength="80" required placeholder="Ex. Mathématiques — Chapitre 3">
+                        <div id="docChoixClasseBloc">
+                            <label for="docClasseDossier">Pour qui ?</label>
+                            <select id="docClasseDossier"></select>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary">Créer</button>
+                            <button type="button" class="btn-secondary" onclick="docBasculerCreation(false)">Annuler</button>
+                        </div>
+                    </form>
+                    <div id="docMessage" role="status" aria-live="polite"></div>
+
+                    <div class="panel doc-liste-panel">
+                        <div id="docListe" class="doc-liste"><p class="dashboard-empty">Chargement…</p></div>
+                    </div>
+                    <p class="doc-aide muted">Formats acceptés : PDF, images, Word, PowerPoint, Excel, texte — 10 Mo maximum par fichier. Seuls les délégués créent les dossiers ; tout le monde peut y ajouter des fichiers.</p>
+                </section>
+
+                <section id="confidentialite" class="section hidden">
+                    <div class="section-header">
+                        <div>
+                            <h2>Confidentialité</h2>
+                            <p>Ce que ce site garde sur toi, qui peut le voir, et comment le faire supprimer.</p>
+                        </div>
+                    </div>
+                    <div id="confidentialiteCorps" class="confid"></div>
                 </section>
 
                 <section id="calculatrice" class="section hidden">
@@ -1433,6 +1604,7 @@ body { background-image: none; font-size: 16px; }
                     </div>
 
                     <div class="panel">
+                        <div id="defiMesPoints"></div>
                         <div id="defiPageBarre"></div>
                         <div id="defiRecompense"></div>
                         <p class="defi-aide"><button type="button" class="btn-secondary" onclick="ouvrirBaremeDefi()">Comment gagner des points ? Voir le barème</button></p>
@@ -1658,21 +1830,6 @@ body { background-image: none; font-size: 16px; }
                     <h3>
                         Toutes les idées
                     </h3>
-
-                    <div id="ideesFiltres" class="idees-filtres hidden">
-                        <div class="idees-onglets" role="tablist">
-                            <button type="button" class="idee-onglet active" data-st="toutes" onclick="ideeFiltrer('statut','toutes')">Toutes</button>
-                            <button type="button" class="idee-onglet" data-st="nouveau" onclick="ideeFiltrer('statut','nouveau')">À trier</button>
-                            <button type="button" class="idee-onglet" data-st="cool" onclick="ideeFiltrer('statut','cool')">⭐ Idées cool</button>
-                            <button type="button" class="idee-onglet" data-st="de_cote" onclick="ideeFiltrer('statut','de_cote')">📦 De côté</button>
-                        </div>
-                        <select id="ideeTri" onchange="ideeFiltrer('tri',this.value)" aria-label="Trimestre">
-                            <option value="tous">Toute l’année</option>
-                            <option value="1">1er trimestre (sept.–nov.)</option>
-                            <option value="2">2e trimestre (déc.–fév.)</option>
-                            <option value="3">3e trimestre (mars–août)</option>
-                        </select>
-                    </div>
 
                     <br>
 
@@ -2085,6 +2242,11 @@ body { background-image: none; font-size: 16px; }
                         </div>
                     </div>
 
+                    <div class="onglets" role="tablist" aria-label="Discussions">
+                        <button type="button" class="onglet actif" role="tab" onclick="ouvrirForumGeneral()">Forum de la classe <span class="pastille hidden" data-rub="forum">1</span></button>
+                        <button type="button" class="onglet" role="tab" id="ongletPrive1" onclick="ouvrirForumPrive()">Aux délégués <span class="pastille hidden" data-rub="prive">1</span></button>
+                    </div>
+
                     <div class="forum-single-intro">
                         
                         <div><strong>Discussion commune</strong><p>Écris ton message ci-dessous. Tu peux supprimer tes propres messages.</p></div>
@@ -2130,6 +2292,11 @@ body { background-image: none; font-size: 16px; }
                             <h2> Parler aux délégués</h2>
                             <p>Un espace privé entre un élève et le délégué qu’il a choisi.</p>
                         </div>
+                    </div>
+
+                    <div class="onglets" role="tablist" aria-label="Discussions">
+                        <button type="button" class="onglet" role="tab" onclick="ouvrirForumGeneral()">Forum de la classe <span class="pastille hidden" data-rub="forum">1</span></button>
+                        <button type="button" class="onglet actif" role="tab" id="ongletPrive2" onclick="ouvrirForumPrive()">Aux délégués <span class="pastille hidden" data-rub="prive">1</span></button>
                     </div>
 
                     <div class="forum-private-banner">
@@ -3666,7 +3833,7 @@ function mettreNavigationActive(page) {
     } else if (page === "defi") {
         document.getElementById("navDefi")?.classList.add("active");
     } else if (page === "forumPrive") {
-        document.getElementById("navForumPrive")?.classList.add("active");
+        document.getElementById("navForumGeneral")?.classList.add("active");
         document.getElementById("mobileForumPrive")?.classList.add("active");
     } else if (page === "sondages") {
         document.getElementById("navSondagesAdmin")?.classList.add("active");
@@ -4792,11 +4959,37 @@ const EMOJIS_REACTIONS_IDEE = ["👍", "❤️", "😂", "👎"];
 
 function construireReactionsIdee(idee) {
     const reactions = idee.reactions && typeof idee.reactions === "object" ? idee.reactions : {};
+    const plusDelegue = estDelegue() ? `<button type="button" class="idea-more" onclick="voirQuiAReagi('${escapeHtml(idee.id)}', this)" aria-label="Voir qui a réagi" title="Voir qui a réagi">⋯</button>` : "";
     return `<div class="idea-reactions" aria-label="Réactions à cette idée">${EMOJIS_REACTIONS_IDEE.map(emoji => {
         const count = Number(reactions[emoji] ?? idee.reaction_counts?.[emoji] ?? 0) || 0;
         const selected = Array.isArray(idee.mes_reactions) && idee.mes_reactions.includes(emoji);
-        return `<button type="button" class="idea-reaction ${selected ? "selected" : ""}" onclick="reagirIdee('${escapeHtml(idee.id)}','${emoji}')" aria-label="Réagir ${emoji}">${emoji}<span>${count}</span></button>`;
-    }).join("")}</div>`;
+        // Les compteurs ne sont visibles que par les délégués
+        const compteur = idee.reactions_visibles === false ? "" : `<span>${count}</span>`;
+        return `<button type="button" class="idea-reaction ${selected ? "selected" : ""}" onclick="reagirIdee('${escapeHtml(idee.id)}','${emoji}')" aria-label="Réagir ${emoji}">${emoji}${compteur}</button>`;
+    }).join("")}${plusDelegue}</div>`;
+}
+
+async function voirQuiAReagi(id, bouton) {
+    if (!estDelegue()) return;
+    const zone = bouton.closest(".idea-reactions");
+    let panneau = zone.nextElementSibling;
+    if (panneau && panneau.classList.contains("idea-qui")) { panneau.remove(); return; }
+    panneau = document.createElement("div");
+    panneau.className = "idea-qui";
+    panneau.textContent = "Chargement…";
+    zone.after(panneau);
+    try {
+        const { data, error } = await supabaseClient.functions.invoke("idee-reactions-detail", { body: { id } });
+        if (error || data?.error) throw new Error(error?.message || data?.error);
+        const liste = data.reactions || [];
+        if (!liste.length) { panneau.textContent = "Personne n’a encore réagi."; return; }
+        panneau.innerHTML = EMOJIS_REACTIONS_IDEE.map(emoji => {
+            const gens = liste.filter(r => r.emoji === emoji);
+            return gens.length ? `<div class="idea-qui-ligne"><span class="idea-qui-emoji">${emoji}</span><span>${gens.map(g => escapeHtml(g.nom) + (g.classe ? ` <small>(${escapeHtml(g.classe)})</small>` : "")).join(", ")}</span></div>` : "";
+        }).join("");
+    } catch (e) {
+        panneau.textContent = "Impossible de charger les réactions.";
+    }
 }
 
 async function reagirIdee(id, emoji) {
@@ -4815,14 +5008,9 @@ async function reagirIdee(id, emoji) {
 }
 
 function construireActionsIdee(idee) {
-    const menu = construireMenuDelegueIdee(idee);
     const auteurId = idee.auteur_id || idee.auteur || idee.created_by || idee.user_id || "";
     const estAuteur = Boolean(utilisateur?.id) && String(auteurId) === String(utilisateur.id);
-    if (!estAuteur) return menu;
-    return menu + construireActionsAuteurIdee(idee);
-}
-
-function construireActionsAuteurIdee(idee) {
+    if (!estAuteur) return "";
     return `<div class="idea-actions"><button type="button" class="btn-secondary" onclick="modifierIdee('${escapeHtml(idee.id)}')"> Modifier</button><button type="button" class="btn-danger" onclick="supprimerIdee('${escapeHtml(idee.id)}')"> Supprimer</button></div>`;
 }
 
@@ -4890,7 +5078,7 @@ async function chargerIdees() {
         }
 
         const idees =
-            await preparerIdeesDelegue(data.idees || []);
+            data.idees || [];
 
         if (idees.length === 0) {
 
@@ -5490,8 +5678,6 @@ function basculerFormulaireRepliable(form, ouvrir) {
 
 function initialiserFormulairesRepliables() {
     const liste = [
-        ["#ideeContenu", "＋ Proposer une idée"],
-        ["#sondageCreation", "＋ Nouveau sondage"],
         ["#apProfesseur", "＋ Demander une AP"],
         ["#creationAPProf", "＋ Créer une AP"],
         ["#forumPriveNouvelle", "＋ Nouvelle conversation"],
@@ -6256,6 +6442,12 @@ async function chargerMessagesForum(discussionId, silencieux = false) {
     }
 
     const profils = await chargerProfilsForum(data.map(m => m.auteur_id));
+    // Délégués : nombre de signalements par message
+    const signalements = {};
+    if (estDelegue()) {
+        const { data: sig } = await supabaseClient.from("forum_signalements").select("message_id");
+        (sig || []).forEach(x => { signalements[x.message_id] = (signalements[x.message_id] || 0) + 1; });
+    }
 
     zone.innerHTML = data.map(m => {
         const profil = profils.find(p => p.id === m.auteur_id);
@@ -6265,7 +6457,9 @@ async function chargerMessagesForum(discussionId, silencieux = false) {
                 <div class="forum-message-author">${escapeHtml(nomProfilForum(profil))}${estProfesseur(profil?.role) ? " · Professeur" : ["delegue", "admin", "administrateur"].includes(normaliserRole(profil?.role)) ? " · Délégué" : ""}</div>
                 <div class="forum-message-content">${escapeHtml(m.contenu)}</div>
                 <div class="forum-message-date">${formatDateHeureForum(m.created_at)}</div>
-                ${mine ? `<div class="idea-actions"><button type="button" class="btn-danger" onclick="supprimerMessageForum('${escapeHtml(m.id)}')"> Supprimer</button></div>` : ""}
+                ${mine ? `<div class="idea-actions"><button type="button" class="btn-danger" onclick="supprimerMessageForum('${escapeHtml(m.id)}')"> Supprimer</button></div>`
+                    : estDelegue() ? `${signalements[m.id] ? `<div class="forum-signale">⚑ Signalé ${signalements[m.id]} fois</div>` : ""}<div class="idea-actions"><button type="button" class="btn-danger" onclick="supprimerMessageForum('${escapeHtml(m.id)}')">Supprimer (modération)</button>${signalements[m.id] ? `<button type="button" class="btn-secondary" onclick="ignorerSignalementForum('${escapeHtml(m.id)}')">Ignorer le signalement</button>` : ""}</div>`
+                    : `<div class="idea-actions"><button type="button" class="btn-secondary" onclick="signalerMessageForum('${escapeHtml(m.id)}')">Signaler</button></div>`}
             </div>`;
     }).join("");
 
@@ -6832,60 +7026,6 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
 
 appliquerTheme();
 
-
-/* ---- Idées : tri et réactions réservés aux délégués ---- */
-const IDEE_STATUTS = { nouveau: "À trier", cool: "⭐ Idée cool", de_cote: "📦 De côté" };
-let ideeFiltres = { statut: "toutes", tri: "tous" };
-
-function trimestreIdee(dateIso) {
-    const m = new Date(dateIso).getMonth() + 1;
-    return (m >= 9 && m <= 11) ? 1 : (m === 12 || m <= 2) ? 2 : 3;
-}
-function ideeFiltrer(type, valeur) {
-    ideeFiltres[type] = valeur;
-    document.querySelectorAll(".idee-onglet").forEach(b => b.classList.toggle("active", b.dataset.st === ideeFiltres.statut));
-    chargerIdees();
-}
-async function preparerIdeesDelegue(idees) {
-    const barre = document.getElementById("ideesFiltres");
-    const delegue = typeof estDelegue === "function" && estDelegue();
-    barre?.classList.toggle("hidden", !delegue);
-    if (!delegue) return idees;
-    const { data } = await supabaseClient.from("idees").select("id,statut");
-    const map = Object.fromEntries((data || []).map(r => [String(r.id), r.statut]));
-    idees.forEach(i => { i.statut = map[String(i.id)] || "nouveau"; });
-    return idees.filter(i =>
-        (ideeFiltres.statut === "toutes" || i.statut === ideeFiltres.statut) &&
-        (ideeFiltres.tri === "tous" || String(trimestreIdee(i.created_at)) === ideeFiltres.tri));
-}
-function construireMenuDelegueIdee(idee) {
-    if (!(typeof estDelegue === "function" && estDelegue())) return "";
-    const id = escapeHtml(String(idee.id)), st = idee.statut || "nouveau";
-    const btn = (label, action) => `<button type="button" onclick="${action}">${label}</button>`;
-    return `<div class="idea-delegue"><span class="idea-statut st-${st}">${IDEE_STATUTS[st] || ""}</span>
-<details class="idea-menu"><summary aria-label="Options délégué">⋯</summary><div class="idea-menu-list">
-${btn("👀 Qui a réagi ?", `voirReactionsIdee('${id}')`)}
-${st !== "cool" ? btn("⭐ Idée cool", `classerIdee('${id}','cool')`) : ""}
-${st !== "de_cote" ? btn("📦 Mettre de côté", `classerIdee('${id}','de_cote')`) : ""}
-${st !== "nouveau" ? btn("↩️ Remettre à trier", `classerIdee('${id}','nouveau')`) : ""}
-</div></details></div><div class="idea-qui hidden" id="quiIdee-${id}"></div>`;
-}
-async function classerIdee(id, statut) {
-    const { error } = await supabaseClient.from("idees").update({ statut }).eq("id", id);
-    if (error) { alert("Classement impossible : " + error.message); return; }
-    await chargerIdees();
-}
-async function voirReactionsIdee(id) {
-    const zone = document.getElementById("quiIdee-" + id);
-    if (!zone) return;
-    zone.closest(".idea-card")?.querySelector(".idea-menu")?.removeAttribute("open");
-    if (!zone.classList.contains("hidden")) { zone.classList.add("hidden"); return; }
-    zone.textContent = "Chargement…"; zone.classList.remove("hidden");
-    const { data, error } = await supabaseClient.rpc("idee_reactions_detail", { p_idee_id: id });
-    if (error) { zone.textContent = "Impossible de charger les réactions."; return; }
-    if (!data.length) { zone.textContent = "Aucune réaction pour l’instant."; return; }
-    zone.innerHTML = data.map(r => `<div>${escapeHtml(r.emoji)} <b>${escapeHtml(((r.prenom || "") + " " + (r.nom || "")).trim() || "Élève")}</b>${r.classe ? " <small>" + escapeHtml(r.classe) + "</small>" : ""}</div>`).join("");
-}
 initialiserNotifications();
 
 verifierSession().then(() => {
@@ -6896,11 +7036,12 @@ verifierSession().then(() => {
 /* =====================================================
    PASTILLES « NOUVEAU » + AGENDA
 ===================================================== */
-const RUBRIQUES_PASTILLES = ["annonces","agenda","ap","sondages","idees","forum","prive","comptes_rendus"];
+const RUBRIQUES_PASTILLES = ["annonces","agenda","ap","sondages","idees","forum","prive","comptes_rendus","documents"];
 let nouveautesRubriques = {};
 let minuteurPastilles = null;
 
 function afficherPastilles() {
+    nouveautesRubriques.discussions = (nouveautesRubriques.forum || 0) + (nouveautesRubriques.prive || 0);
     document.querySelectorAll(".pastille[data-rub]").forEach(el => {
         const n = nouveautesRubriques[el.dataset.rub] || 0;
         el.textContent = n > 9 ? "9+" : String(n);
@@ -7164,6 +7305,332 @@ function demarrerPresenceForum() {
         return cacher.apply(this, args);
     };
 })();
+
+/* =====================================================
+   V3 : onglets, discussions, documents, modération, confidentialité
+===================================================== */
+const $el = (id) => document.getElementById(id);
+
+/* ---------- Onglets (idées / sondages) : formulaire séparé de la liste ---------- */
+function installerOnglets(idSection, selecteurChamp, labelListe, labelForm) {
+    const sec = $el(idSection);
+    if (!sec || sec.dataset.onglets) return null;
+    const champ = sec.querySelector(selecteurChamp);
+    const form = champ?.classList.contains("form-card") ? champ : champ?.closest(".form-card");
+    const entete = sec.querySelector(".section-header");
+    if (!form || !entete) return null;
+    sec.dataset.onglets = "1";
+    const barre = document.createElement("div");
+    barre.className = "onglets";
+    barre.setAttribute("role", "tablist");
+    barre.innerHTML = `<button type="button" class="onglet actif" data-onglet="liste" role="tab">${labelListe}</button><button type="button" class="onglet" data-onglet="form" role="tab">${labelForm}</button>`;
+    entete.after(barre);
+    const autres = () => Array.from(sec.children).filter(el => el !== entete && el !== barre && el !== form);
+    const choisir = (nom) => {
+        barre.querySelectorAll(".onglet").forEach(b => b.classList.toggle("actif", b.dataset.onglet === nom));
+        autres().forEach(el => el.classList.toggle("tab-cache", nom !== "liste"));
+        form.classList.toggle("tab-cache", nom !== "form");
+    };
+    barre.addEventListener("click", (e) => { const b = e.target.closest(".onglet"); if (b) choisir(b.dataset.onglet); });
+    choisir("liste");
+    return { sec, barre, choisir };
+}
+
+let ongletsIdees = null, ongletsSondages = null;
+(function brancherOnglets() {
+    ongletsIdees = installerOnglets("idees", "#ideeContenu", "Les idées", "＋ Proposer une idée");
+    ongletsSondages = installerOnglets("sondagesDelegues", "#sondageCreation", "Sondages", "＋ Créer un sondage");
+
+    const enrober = (nom, apres) => {
+        const o = window[nom];
+        if (typeof o !== "function") return;
+        window[nom] = function (...a) { const r = o.apply(this, a); apres(); return r; };
+    };
+    enrober("ouvrirIdees", () => ongletsIdees?.choisir("liste"));
+    enrober("ouvrirSondages", () => {
+        ongletsSondages?.choisir("liste");
+        ongletsSondages?.barre.classList.toggle("tab-cache", !estDelegue());
+    });
+    const apresEnvoi = (nom, idMessage, get, texte) => {
+        const o = window[nom];
+        if (typeof o !== "function") return;
+        window[nom] = async function (...a) {
+            const r = await o.apply(this, a);
+            if (document.querySelector("#" + idMessage + " .success")) { afficherToast?.(texte); get()?.choisir("liste"); }
+            return r;
+        };
+    };
+    apresEnvoi("envoyerIdee", "ideeMessage", () => ongletsIdees, "Idée publiée");
+    apresEnvoi("creerSondage", "sondageMessage", () => ongletsSondages, "Sondage créé");
+})();
+
+/* ---------- Discussions : une seule entrée, deux onglets ---------- */
+function ouvrirDiscussions() {
+    if (!profilUtilisateur || estProfesseur()) return;
+    const n = nouveautesRubriques || {};
+    if ((n.prive || 0) > 0 && !(n.forum || 0)) ouvrirForumPrive(); else ouvrirForumGeneral();
+}
+
+/* ---------- Défi : points qu'il me reste à gagner ---------- */
+async function chargerMesPointsDefi() {
+    if (!profilUtilisateur || estProfesseur()) return;
+    try {
+        const { data, error } = await supabaseClient.rpc("defi_mes_points");
+        if (error || !data) return;
+        const pct = Math.min(100, Math.round((data.points / data.plafond) * 100));
+        const reste = data.restant;
+        const phrase = reste > 0
+            ? `Il te reste <b>${reste} point${reste > 1 ? "s" : ""}</b> à gagner ce mois-ci.`
+            : "Tu as atteint le maximum du mois, bravo !";
+        const html = (court) => `<div class="defi-moi"><b>Mes points : ${data.points} / ${data.plafond}</b>
+            <div class="defi-moi-barre" role="img" aria-label="${data.points} points sur ${data.plafond}"><i style="width:${pct}%"></i></div>
+            <small>${phrase}${court ? "" : " Chaque élève peut gagner au maximum " + data.plafond + " points par mois."}</small></div>`;
+        const page = $el("defiMesPoints"); if (page) page.innerHTML = html(false);
+        const acc = $el("defiMesPointsAccueil"); if (acc) acc.innerHTML = html(true);
+    } catch (e) { /* silencieux */ }
+}
+(function () {
+    const o = window.chargerDefi;
+    if (typeof o !== "function") return;
+    window.chargerDefi = async function (...a) { const r = await o.apply(this, a); chargerMesPointsDefi(); return r; };
+})();
+
+/* ---------- Accueil : tout ce qui arrive ---------- */
+async function chargerAVenirAccueil() {
+    const bloc = $el("accueilAVenirListe");
+    if (!bloc || !profilUtilisateur) return;
+    const auj = agendaCle(new Date());
+    const fin = agendaCle(new Date(Date.now() + 21 * 86400000));
+    try {
+        const [evts, aps] = await Promise.all([
+            supabaseClient.from("evenements").select("id,titre,type,date_evt,heure_evt,classe").gte("date_evt", auj).lte("date_evt", fin).order("date_evt").limit(10),
+            supabaseClient.from("ap_demandes").select("id,matiere,date_ap,heure_ap,salle").eq("statut", "acceptee").gte("date_ap", auj).lte("date_ap", fin).limit(10)
+        ]);
+        const liste = [];
+        (evts.data || []).forEach(e => liste.push({ titre: e.titre, type: e.type, date: e.date_evt, heure: e.heure_evt, meta: LIBELLES_EVT[e.type] || "" }));
+        (aps.data || []).forEach(a => liste.push({ titre: "AP " + (a.matiere || ""), type: "ap", date: a.date_ap, heure: a.heure_ap, meta: a.salle ? "AP · salle " + a.salle : "AP" }));
+        liste.sort((x, y) => (x.date + (x.heure || "")).localeCompare(y.date + (y.heure || "")));
+        if (!liste.length) { bloc.innerHTML = '<p class="dashboard-empty">Rien de prévu dans les 3 prochaines semaines.</p>'; return; }
+        bloc.innerHTML = liste.slice(0, 6).map(e => {
+            const d = new Date(e.date + "T12:00:00");
+            const quand = e.date === auj ? "Aujourd’hui" : "";
+            return `<button type="button" class="avenir-ligne" onclick="ouvrirAgenda()"><span class="avenir-date"><b>${d.getDate()}</b><small>${d.toLocaleDateString("fr-FR", { month: "short" })}</small></span>
+                <span><span class="avenir-titre"><span class="pt pt-${e.type}"></span> ${escapeHtml(e.titre)}</span><span class="avenir-meta" style="display:block">${escapeHtml([quand, e.meta, e.heure ? e.heure.slice(0, 5) : ""].filter(Boolean).join(" · "))}</span></span></button>`;
+        }).join("");
+    } catch (e) { bloc.innerHTML = '<p class="dashboard-empty">Impossible de charger l’agenda.</p>'; }
+}
+(function () {
+    const o = window.personnaliserAccueilSelonRole;
+    window.personnaliserAccueilSelonRole = function (...a) { const r = o.apply(this, a); chargerAVenirAccueil(); return r; };
+})();
+
+/* ---------- Modération du forum ---------- */
+async function signalerMessageForum(id) {
+    if (!confirm("Signaler ce message aux délégués ?")) return;
+    const { error } = await supabaseClient.from("forum_signalements").insert({ message_id: id, signale_par: utilisateur.id });
+    if (error && error.code !== "23505") { alert("Le signalement n’a pas pu être envoyé."); return; }
+    afficherToast?.("Merci, les délégués ont été prévenus");
+}
+async function ignorerSignalementForum(id) {
+    if (!estDelegue()) return;
+    await supabaseClient.from("forum_signalements").delete().eq("message_id", id);
+    chargerMessagesForum(forumDiscussionSelectionnee, true);
+}
+
+/* ---------- Confidentialité ---------- */
+function ouvrirConfidentialite() {
+    if (!profilUtilisateur) return;
+    cacherToutesLesSections();
+    $el("confidentialite").classList.remove("hidden");
+    $el("confidentialiteCorps").innerHTML = $el("tplConfidentialite").innerHTML;
+    changerTitre("Confidentialité");
+    document.querySelectorAll(".nav-button, .mobile-nav button").forEach(b => b.classList.remove("active"));
+}
+function ouvrirConfidentialiteLogin() {
+    $el("dlgConfidentialiteCorps").innerHTML = $el("tplConfidentialite").innerHTML;
+    $el("dlgConfidentialite").showModal();
+}
+
+/* ---------- Documents (gestionnaire de fichiers) ---------- */
+const DOC_TYPES = {
+    pdf: "application/pdf", png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", webp: "image/webp", gif: "image/gif", txt: "text/plain",
+    doc: "application/msword", docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ppt: "application/vnd.ms-powerpoint", pptx: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    xls: "application/vnd.ms-excel", xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    odt: "application/vnd.oasis.opendocument.text", odp: "application/vnd.oasis.opendocument.presentation", ods: "application/vnd.oasis.opendocument.spreadsheet"
+};
+let docPile = [];
+let docCache = { dossiers: [], fichiers: [] };
+const docCourant = () => (docPile.length ? docPile[docPile.length - 1] : null);
+const libelleClasse = (c) => (c === "Toutes" ? "Les deux classes" : c);
+function docTaille(o) { return o < 1024 ? o + " o" : o < 1048576 ? Math.round(o / 1024) + " Ko" : (o / 1048576).toFixed(1).replace(".", ",") + " Mo"; }
+
+function ouvrirDocuments() {
+    if (!profilUtilisateur) return;
+    cacherToutesLesSections();
+    $el("documents").classList.remove("hidden");
+    changerTitre("Documents");
+    document.querySelectorAll(".nav-button, .mobile-nav button").forEach(b => b.classList.remove("active"));
+    $el("navDocuments")?.classList.add("active");
+    docPile = [];
+    $el("docMessage").innerHTML = "";
+    docBasculerCreation(false);
+    const sel = $el("docClasseDossier");
+    if (sel) {
+        const choix = [profilUtilisateur.classe, "Toutes"].filter(Boolean);
+        sel.innerHTML = choix.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(libelleClasse(c))}</option>`).join("");
+    }
+    chargerDocuments();
+    marquerRubriqueVue("documents");
+}
+
+function docDessinerChemin() {
+    const nav = $el("docChemin");
+    let h = docPile.length ? `<button type="button" onclick="docAller(-1)">Documents</button>` : `<span class="courant">Documents</span>`;
+    docPile.forEach((d, i) => {
+        h += `<span class="sep">›</span>` + (i === docPile.length - 1 ? `<span class="courant">${escapeHtml(d.nom)}</span>` : `<button type="button" onclick="docAller(${i})">${escapeHtml(d.nom)}</button>`);
+    });
+    nav.innerHTML = h;
+}
+function docAller(i) { docPile = i < 0 ? [] : docPile.slice(0, i + 1); docBasculerCreation(false); chargerDocuments(); }
+function docOuvrirDossier(id) {
+    const d = docCache.dossiers.find(x => x.id === id);
+    if (!d) return;
+    docPile.push({ id: d.id, nom: d.nom, classe: d.classe });
+    docBasculerCreation(false);
+    chargerDocuments();
+}
+function docBasculerCreation(forcer) {
+    const f = $el("docFormDossier");
+    const afficher = typeof forcer === "boolean" ? forcer : f.classList.contains("hidden");
+    f.classList.toggle("hidden", !afficher);
+    if (afficher) $el("docNomDossier").focus(); else f.reset();
+}
+
+async function chargerDocuments() {
+    const cur = docCourant();
+    docDessinerChemin();
+    $el("docBtnDossier").classList.toggle("hidden", !estDelegue());
+    $el("docBtnFichier").classList.toggle("hidden", !cur);
+    $el("docChoixClasseBloc").classList.toggle("hidden", !!cur);
+    const liste = $el("docListe");
+    let qd = supabaseClient.from("doc_dossiers").select("id,nom,classe,created_at").order("nom");
+    qd = cur ? qd.eq("parent_id", cur.id) : qd.is("parent_id", null);
+    const qf = cur
+        ? supabaseClient.from("doc_fichiers").select("id,nom,chemin,taille,ajoute_par,created_at").eq("dossier_id", cur.id).order("created_at", { ascending: false })
+        : Promise.resolve({ data: [] });
+    const [rd, rf] = await Promise.all([qd, qf]);
+    if (rd.error || rf.error) { liste.innerHTML = '<p class="dashboard-empty">Impossible de charger les documents.</p>'; return; }
+    docCache = { dossiers: rd.data || [], fichiers: rf.data || [] };
+    let profils = [];
+    try { profils = await chargerProfilsForum(docCache.fichiers.map(f => f.ajoute_par)); } catch (e) { /* noms facultatifs */ }
+    const deleg = estDelegue();
+    let h = "";
+    docCache.dossiers.forEach(d => {
+        h += `<div class="doc-ligne"><span class="doc-icone"><svg class="ico" aria-hidden="true"><use href="#i-folder"/></svg></span>
+            <button type="button" class="doc-nom" onclick="docOuvrirDossier('${d.id}')">${escapeHtml(d.nom)}${!cur ? `<span class="doc-meta">${escapeHtml(libelleClasse(d.classe))}</span>` : ""}</button>
+            ${deleg ? `<span class="doc-btns"><button type="button" class="btn-secondary" onclick="docRenommer('${d.id}')">Renommer</button><button type="button" class="btn-danger" onclick="docSupprimerDossier('${d.id}')">Supprimer</button></span>` : ""}</div>`;
+    });
+    docCache.fichiers.forEach(f => {
+        const p = profils.find(x => x.id === f.ajoute_par);
+        const qui = f.ajoute_par === utilisateur.id ? "toi" : (p ? nomProfilForum(p) : "un camarade");
+        const ext = (f.nom.split(".").pop() || "").slice(0, 4).toUpperCase();
+        const peut = f.ajoute_par === utilisateur.id || deleg;
+        h += `<div class="doc-ligne"><span class="doc-icone fichier">${escapeHtml(ext)}</span>
+            <button type="button" class="doc-nom" onclick="docOuvrirFichier('${f.id}')">${escapeHtml(f.nom)}<span class="doc-meta">${docTaille(f.taille)} · ajouté par ${escapeHtml(qui)} · ${new Date(f.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}</span></button>
+            <span class="doc-btns"><button type="button" class="btn-secondary" onclick="docOuvrirFichier('${f.id}')">Ouvrir</button>${peut ? `<button type="button" class="btn-danger" onclick="docSupprimerFichier('${f.id}')">Supprimer</button>` : ""}</span></div>`;
+    });
+    if (!h) h = `<p class="dashboard-empty">${cur ? "Ce dossier est vide. Ajoute le premier fichier !" : (deleg ? "Aucun dossier pour l’instant. Crée le premier avec « Nouveau dossier »." : "Aucun dossier pour l’instant : les délégués les créent.")}</p>`;
+    liste.innerHTML = h;
+}
+
+async function docCreerDossier(ev) {
+    ev.preventDefault();
+    if (!estDelegue()) return;
+    const nom = $el("docNomDossier").value.trim();
+    if (!nom) return;
+    const cur = docCourant();
+    const ligne = { parent_id: cur ? cur.id : null, classe: cur ? cur.classe : $el("docClasseDossier").value, nom, created_by: utilisateur.id };
+    const { error } = await supabaseClient.from("doc_dossiers").insert(ligne);
+    if (error) { afficherMessage("docMessage", "Impossible de créer le dossier.", "error"); return; }
+    docBasculerCreation(false);
+    afficherToast?.("Dossier créé");
+    chargerDocuments();
+}
+async function docRenommer(id) {
+    if (!estDelegue()) return;
+    const d = docCache.dossiers.find(x => x.id === id);
+    const nom = prompt("Nouveau nom du dossier :", d?.nom || "");
+    if (nom === null || !nom.trim()) return;
+    const { error } = await supabaseClient.from("doc_dossiers").update({ nom: nom.trim().slice(0, 80) }).eq("id", id);
+    if (error) { alert("Renommage impossible."); return; }
+    chargerDocuments();
+}
+async function docOuvrirFichier(id) {
+    const f = docCache.fichiers.find(x => x.id === id);
+    if (!f) return;
+    const { data, error } = await supabaseClient.storage.from("documents").createSignedUrl(f.chemin, 300);
+    if (error || !data?.signedUrl) { alert("Impossible d’ouvrir ce fichier."); return; }
+    const a = document.createElement("a");
+    a.href = data.signedUrl; a.target = "_blank"; a.rel = "noopener noreferrer";
+    document.body.appendChild(a); a.click(); a.remove();
+}
+async function docSupprimerFichier(id) {
+    const f = docCache.fichiers.find(x => x.id === id);
+    if (!f || !confirm("Supprimer « " + f.nom + " » ?")) return;
+    const { error } = await supabaseClient.from("doc_fichiers").delete().eq("id", id);
+    if (error) { alert("Suppression impossible."); return; }
+    await supabaseClient.storage.from("documents").remove([f.chemin]);
+    chargerDocuments();
+}
+async function docSupprimerDossier(id) {
+    if (!estDelegue()) return;
+    const d = docCache.dossiers.find(x => x.id === id);
+    if (!d || !confirm("Supprimer le dossier « " + d.nom + " » et tout ce qu’il contient ?")) return;
+    // 1) retrouver tous les fichiers du dossier et de ses sous-dossiers, 2) les effacer du stockage, 3) supprimer le dossier
+    let ids = [id], aVoir = [id];
+    while (aVoir.length) {
+        const { data: sub } = await supabaseClient.from("doc_dossiers").select("id").in("parent_id", aVoir);
+        aVoir = (sub || []).map(x => x.id);
+        ids = ids.concat(aVoir);
+    }
+    const { data: fs } = await supabaseClient.from("doc_fichiers").select("chemin").in("dossier_id", ids);
+    const chemins = (fs || []).map(x => x.chemin);
+    for (let i = 0; i < chemins.length; i += 50) await supabaseClient.storage.from("documents").remove(chemins.slice(i, i + 50));
+    const { error } = await supabaseClient.from("doc_dossiers").delete().eq("id", id);
+    if (error) { alert("Suppression impossible."); return; }
+    chargerDocuments();
+}
+
+async function docEnvoyerFichiers(input) {
+    const cur = docCourant();
+    const fichiers = Array.from(input.files || []);
+    input.value = "";
+    if (!cur || !fichiers.length) return;
+    let ok = 0;
+    const erreurs = [];
+    afficherMessage("docMessage", "Envoi en cours…");
+    for (const f of fichiers) {
+        const ext = (f.name.split(".").pop() || "").toLowerCase();
+        const mime = DOC_TYPES[ext];
+        if (!mime) { erreurs.push(f.name + " : format non accepté"); continue; }
+        if (f.size > 10 * 1024 * 1024) { erreurs.push(f.name + " : plus de 10 Mo"); continue; }
+        const sur = f.name.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-zA-Z0-9._-]+/g, "_").slice(-80);
+        const chemin = cur.id + "/" + crypto.randomUUID() + "-" + sur;
+        const up = await supabaseClient.storage.from("documents").upload(chemin, f, { contentType: mime, upsert: false });
+        if (up.error) { erreurs.push(f.name + " : envoi impossible"); continue; }
+        const ins = await supabaseClient.from("doc_fichiers").insert({ dossier_id: cur.id, nom: f.name.slice(0, 160), chemin, taille: f.size, type_mime: mime, ajoute_par: utilisateur.id });
+        if (ins.error) {
+            await supabaseClient.storage.from("documents").remove([chemin]);
+            erreurs.push(f.name + " : " + (String(ins.error.message).includes("Trop") ? "trop de fichiers en peu de temps" : "refusé"));
+            continue;
+        }
+        ok++;
+    }
+    if (erreurs.length) afficherMessage("docMessage", (ok ? ok + " fichier(s) ajouté(s). " : "") + erreurs.join(" · "), "error");
+    else { afficherMessage("docMessage", ""); afficherToast?.(ok + " fichier" + (ok > 1 ? "s" : "") + " ajouté" + (ok > 1 ? "s" : "")); }
+    chargerDocuments();
+}
 </script>
 
 </body>
