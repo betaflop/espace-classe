@@ -1112,6 +1112,24 @@ body { background-image: none; font-size: 16px; }
 .dlg-confid::backdrop { background: rgba(10, 14, 30, .55); }
 .dlg-confid-tete { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
 
+/* Idées : tri en cases pour les délégués */
+.onglets-tri { margin: 8px 0 10px; }
+.onglet .nb { display: inline-block; min-width: 22px; padding: 1px 7px; margin-left: 6px; border-radius: 999px; background: var(--paper-2); color: var(--ink-soft); font-size: 12px; font-weight: 800; text-align: center; }
+.onglet.actif .nb { background: var(--primary-light); color: var(--primary); }
+.idees-tri-aide { margin: 0 0 14px; font-size: 15px; }
+.idea-statut { display: inline-block; margin-left: 8px; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 700; background: var(--paper-2); color: var(--ink-soft); vertical-align: 1px; }
+.idea-statut-nouveau { background: var(--warning-light); color: var(--warning); }
+.idea-statut-cool { background: var(--success-light); color: var(--success); }
+.idea-statut-realisee { background: var(--primary-light); color: var(--primary); }
+.idea-statut-benne { background: var(--danger-light); color: var(--danger); }
+.idea-deplacer { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--line); }
+.idea-deplacer small { color: var(--ink-soft); font-weight: 700; margin-right: 2px; }
+.idea-deplacer button { min-height: 38px; padding: 4px 14px; font-size: 14.5px; }
+.toast-annuler { display: flex; align-items: center; gap: 14px; background: #1b2333; color: #fff; }
+.toast-annuler.visible { pointer-events: auto; }
+.toast-annuler button { flex: none; border: 0; border-radius: 8px; padding: 6px 12px; background: rgba(255, 255, 255, .2); color: #fff; font-weight: 800; }
+.toast-annuler button:hover { background: rgba(255, 255, 255, .32); }
+
 @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
 }
@@ -1827,11 +1845,12 @@ body { background-image: none; font-size: 16px; }
 
                     <hr class="section-separator">
 
-                    <h3>
+                    <h3 id="ideesTitreListe">
                         Toutes les idées
                     </h3>
 
-                    <br>
+                    <div id="ideesTri" class="onglets onglets-tri hidden" role="tablist" aria-label="Ranger les idées par case"></div>
+                    <p id="ideesTriAide" class="muted idees-tri-aide hidden"></p>
 
                     <div
                         id="listeIdees"
@@ -4955,7 +4974,16 @@ async function envoyerIdee() {
     }
 }
 
-const EMOJIS_REACTIONS_IDEE = ["👍", "❤️", "😂", "👎"];
+// Réactions possibles (écrites en séquences d'échappement pour garder exactement les mêmes caractères que la base).
+const EMOJIS_REACTIONS_IDEE = ["\u{1F44D}", "❤️", "\u{1F602}", "\u{1F44E}", "❓", "\u{1F3F3}️"];
+const LIBELLES_REACTIONS_IDEE = {
+    "\u{1F44D}": "Pour",
+    "❤️": "J’adore",
+    "\u{1F602}": "Drôle",
+    "\u{1F44E}": "Contre",
+    "❓": "Pas clair",
+    "\u{1F3F3}️": "Sans avis"
+};
 
 function construireReactionsIdee(idee) {
     const reactions = idee.reactions && typeof idee.reactions === "object" ? idee.reactions : {};
@@ -4965,7 +4993,8 @@ function construireReactionsIdee(idee) {
         const selected = Array.isArray(idee.mes_reactions) && idee.mes_reactions.includes(emoji);
         // Les compteurs ne sont visibles que par les délégués
         const compteur = idee.reactions_visibles === false ? "" : `<span>${count}</span>`;
-        return `<button type="button" class="idea-reaction ${selected ? "selected" : ""}" onclick="reagirIdee('${escapeHtml(idee.id)}','${emoji}')" aria-label="Réagir ${emoji}">${emoji}${compteur}</button>`;
+        const libelle = LIBELLES_REACTIONS_IDEE[emoji] || "";
+        return `<button type="button" class="idea-reaction ${selected ? "selected" : ""}" onclick="reagirIdee('${escapeHtml(idee.id)}','${emoji}')" aria-label="Réagir : ${libelle}" aria-pressed="${selected}" title="${libelle}">${emoji}${compteur}</button>`;
     }).join("")}${plusDelegue}</div>`;
 }
 
@@ -4992,18 +5021,54 @@ async function voirQuiAReagi(id, bouton) {
     }
 }
 
+// Mise à jour locale immédiate : on ne recharge pas la liste, donc la page ne remonte plus en haut.
+const reactionsEnCours = new Set();
+
+function appliquerReactionLocale(idee, emoji) {
+    const mes = Array.isArray(idee.mes_reactions) ? idee.mes_reactions : [];
+    const avant = mes[0] || null; // une seule réaction par personne et par idée
+    const compte = idee.reactions && typeof idee.reactions === "object" ? { ...idee.reactions } : null;
+    const retirer = e => { if (compte && e) compte[e] = Math.max(0, (Number(compte[e]) || 0) - 1); };
+    const ajouter = e => { if (compte && e) compte[e] = (Number(compte[e]) || 0) + 1; };
+    if (avant === emoji) {
+        retirer(avant);
+        idee.mes_reactions = [];
+    } else {
+        retirer(avant);
+        ajouter(emoji);
+        idee.mes_reactions = [emoji];
+    }
+    if (compte) idee.reactions = compte;
+}
+
 async function reagirIdee(id, emoji) {
     if (!utilisateur) { alert("Connectez-vous pour réagir à une idée."); return; }
+    const cle = String(id);
+    if (reactionsEnCours.has(cle)) return;
+    reactionsEnCours.add(cle);
+    const idee = ideesEnMemoire.find(i => String(i.id) === cle);
+    const sauvegarde = idee ? JSON.parse(JSON.stringify(idee)) : null;
+    if (idee) {
+        appliquerReactionLocale(idee, emoji);
+        remplacerCarteIdee(idee);
+    }
     try {
         const { data, error } = await supabaseClient.functions.invoke("manage-idee", {
             body: { action: "react", id, emoji }
         });
         if (error) throw error;
         if (data?.error) throw new Error(data.error);
-        await chargerIdees();
         if (!document.getElementById("gestionIdees")?.classList.contains("hidden")) await chargerIdeesAdmin();
     } catch (error) {
-        alert("La réaction n’a pas pu être enregistrée. La fonction Supabase manage-idee devra prendre en charge les réactions : " + (error.message || "erreur inconnue"));
+        if (idee && sauvegarde) {
+            Object.assign(idee, sauvegarde);
+            remplacerCarteIdee(idee);
+        } else {
+            chargerIdees();
+        }
+        alert("La réaction n’a pas pu être enregistrée : " + (error.message || "erreur inconnue"));
+    } finally {
+        reactionsEnCours.delete(cle);
     }
 }
 
@@ -5034,114 +5099,199 @@ async function modifierIdee(id) {
     await chargerIdees();
 }
 
+/* ---------- Idées : liste, cases de tri (délégués), déplacement avec retour en arrière ---------- */
+
+const STATUTS_IDEES = [
+    { cle: "nouveau", label: "À trier", aide: "Les idées toutes neuves, pas encore rangées. Choisis une case pour chacune." },
+    { cle: "cool", label: "Bonnes idées", aide: "Les idées que les délégués retiennent." },
+    { cle: "de_cote", label: "De côté", aide: "Pas pour tout de suite, mais on les garde sous le coude." },
+    { cle: "realisee", label: "Réalisées", aide: "Les idées déjà mises en place." },
+    { cle: "benne", label: "À la benne", aide: "Les idées écartées. Seuls les délégués les voient." }
+];
+
+let ideesEnMemoire = [];
+let ideesOngletTri = "nouveau";
+
+function statutIdee(idee) {
+    return STATUTS_IDEES.some(s => s.cle === idee.statut) ? idee.statut : "nouveau";
+}
+
+function libelleStatutIdee(cle) {
+    return STATUTS_IDEES.find(s => s.cle === cle)?.label || cle;
+}
+
+function construireDeplacementIdee(idee) {
+    if (!estDelegue()) return "";
+    const actuel = statutIdee(idee);
+    const boutons = STATUTS_IDEES.filter(s => s.cle !== actuel).map(s =>
+        `<button type="button" class="${s.cle === "benne" ? "btn-danger" : "btn-secondary"}" onclick="deplacerIdee('${escapeHtml(idee.id)}','${s.cle}')">${escapeHtml(s.label)}</button>`
+    ).join("");
+    return `<div class="idea-deplacer"><small>Ranger dans :</small>${boutons}</div>`;
+}
+
+function creerCarteIdee(idee) {
+    const card = document.createElement("div");
+    card.className = "idea-card";
+    card.dataset.ideeId = String(idee.id);
+    const auteur = idee.auteurProfil
+        ? ((idee.auteurProfil.prenom || "") + " " + (idee.auteurProfil.nom || "")).trim()
+        : "Élève";
+    const badge = estDelegue() && ideesOngletTri === "toutes"
+        ? `<span class="idea-statut idea-statut-${statutIdee(idee)}">${escapeHtml(libelleStatutIdee(statutIdee(idee)))}</span>`
+        : "";
+    card.innerHTML =
+        "<div class='idea-content'>" + escapeHtml(idee.contenu) + "</div>" +
+        "<div class='idea-meta'>" + escapeHtml(auteur) + " · " + formatDate(idee.created_at) + badge + "</div>" +
+        construireReactionsIdee(idee) +
+        construireDeplacementIdee(idee) +
+        construireActionsIdee(idee);
+    return card;
+}
+
+function remplacerCarteIdee(idee) {
+    const liste = document.getElementById("listeIdees");
+    const ancienne = liste?.querySelector('[data-idee-id="' + String(idee.id).replace(/"/g, "") + '"]');
+    if (ancienne) ancienne.replaceWith(creerCarteIdee(idee));
+}
+
+function choisirOngletTriIdees(cle) {
+    ideesOngletTri = cle;
+    dessinerIdees();
+}
+
+function dessinerIdees() {
+    const liste = document.getElementById("listeIdees");
+    if (!liste) return;
+    const deleg = estDelegue();
+    const barre = document.getElementById("ideesTri");
+    const aide = document.getElementById("ideesTriAide");
+    const titre = document.getElementById("ideesTitreListe");
+    const y = window.scrollY;
+    let affichees = ideesEnMemoire;
+
+    if (deleg) {
+        if (ideesOngletTri !== "toutes" && !STATUTS_IDEES.some(s => s.cle === ideesOngletTri)) ideesOngletTri = "nouveau";
+        const nb = cle => ideesEnMemoire.filter(i => statutIdee(i) === cle).length;
+        const onglet = (cle, label, n) =>
+            `<button type="button" class="onglet${ideesOngletTri === cle ? " actif" : ""}" role="tab" aria-selected="${ideesOngletTri === cle}" onclick="choisirOngletTriIdees('${cle}')">${escapeHtml(label)}<span class="nb">${n}</span></button>`;
+        if (barre) {
+            barre.innerHTML = STATUTS_IDEES.map(s => onglet(s.cle, s.label, nb(s.cle))).join("") + onglet("toutes", "Toutes", ideesEnMemoire.length);
+            barre.classList.remove("hidden");
+        }
+        if (aide) {
+            const courant = STATUTS_IDEES.find(s => s.cle === ideesOngletTri);
+            aide.textContent = courant ? courant.aide : "Toutes les idées, quelle que soit leur case.";
+            aide.classList.remove("hidden");
+        }
+        if (titre) titre.textContent = "Ranger les idées";
+        affichees = ideesOngletTri === "toutes" ? ideesEnMemoire : ideesEnMemoire.filter(i => statutIdee(i) === ideesOngletTri);
+    } else {
+        barre?.classList.add("hidden");
+        aide?.classList.add("hidden");
+        if (titre) titre.textContent = "Toutes les idées";
+    }
+
+    if (!affichees.length) {
+        const message = !ideesEnMemoire.length
+            ? "Aucune idée pour le moment."
+            : ideesOngletTri === "nouveau" ? "Rien à trier pour le moment." : "Aucune idée dans cette case.";
+        liste.innerHTML = "<p style='color:var(--text-secondary);'>" + message + "</p>";
+    } else {
+        const fragment = document.createDocumentFragment();
+        affichees.forEach(idee => fragment.appendChild(creerCarteIdee(idee)));
+        liste.replaceChildren(fragment);
+    }
+    window.scrollTo({ top: y, left: 0, behavior: "auto" });
+}
+
+let minuteurToastAnnuler = null;
+function afficherToastAnnuler(texte, surAnnuler) {
+    let t = document.getElementById("toastAnnuler");
+    if (!t) {
+        t = document.createElement("div");
+        t.id = "toastAnnuler";
+        t.className = "toast toast-annuler";
+        t.setAttribute("role", "status");
+        document.body.appendChild(t);
+    }
+    t.innerHTML = "<span></span><button type=\"button\">Annuler</button>";
+    t.firstChild.textContent = texte;
+    t.lastChild.onclick = () => {
+        clearTimeout(minuteurToastAnnuler);
+        t.classList.remove("visible");
+        surAnnuler();
+    };
+    document.getElementById("toast")?.classList.remove("visible"); // évite deux bulles superposées
+    t.classList.add("visible");
+    clearTimeout(minuteurToastAnnuler);
+    minuteurToastAnnuler = setTimeout(() => t.classList.remove("visible"), 8000);
+}
+
+async function deplacerIdee(id, statut, options = {}) {
+    if (!estDelegue()) return;
+    const idee = ideesEnMemoire.find(i => String(i.id) === String(id));
+    if (!idee || !STATUTS_IDEES.some(s => s.cle === statut)) return;
+    const avant = statutIdee(idee);
+    if (avant === statut) return;
+    // Les règles de sécurité Supabase autorisent uniquement les délégués à changer le statut.
+    const { data, error } = await supabaseClient.from("idees").update({ statut }).eq("id", id).select("id");
+    if (error || !data || !data.length) {
+        console.error("Déplacement d’idée refusé :", error);
+        document.getElementById("toastAnnuler")?.classList.remove("visible");
+        afficherToast?.("Impossible de ranger cette idée");
+        return;
+    }
+    idee.statut = statut;
+    dessinerIdees();
+    if (options.annulation) {
+        document.getElementById("toastAnnuler")?.classList.remove("visible");
+        afficherToast?.("Remise dans « " + libelleStatutIdee(statut) + " »");
+    } else {
+        afficherToastAnnuler("Idée rangée dans « " + libelleStatutIdee(statut) + " »", () => deplacerIdee(id, avant, { annulation: true }));
+    }
+}
+
 async function chargerIdees() {
 
-    const liste =
-        document.getElementById(
-            "listeIdees"
-        );
+    const liste = document.getElementById("listeIdees");
 
     if (!liste) {
         return;
     }
 
-    liste.innerHTML =
-        "Chargement...";
+    // On n'affiche « Chargement... » que la toute première fois. Vider la liste à chaque
+    // rafraîchissement raccourcit la page et la fait remonter en haut.
+    if (!liste.querySelector(".idea-card")) {
+        liste.innerHTML = "Chargement...";
+    }
 
     try {
 
-        const {
-            data,
-            error
-        } =
-            await supabaseClient.functions.invoke(
-                "manage-idee",
-                {
-                    body: {
-                        action: "list"
-                    }
-                }
-            );
+        const { data, error } = await supabaseClient.functions.invoke("manage-idee", { body: { action: "list" } });
 
         if (error) {
             throw error;
         }
 
-        if (
-            !data ||
-            data.error
-        ) {
-            throw new Error(
-                data?.error ||
-                "Impossible de charger les idées."
-            );
+        if (!data || data.error) {
+            throw new Error(data?.error || "Impossible de charger les idées.");
         }
 
-        const idees =
-            data.idees || [];
-
-        if (idees.length === 0) {
-
-            liste.innerHTML =
-                "<p style='color:var(--text-secondary);'>" +
-                "Aucune idée pour le moment." +
-                "</p>";
-
-            return;
-        }
-
-        liste.innerHTML = "";
-
-        idees.forEach(idee => {
-
-            const card =
-                document.createElement(
-                    "div"
-                );
-
-            card.className =
-                "idea-card";
-
-            const auteur =
-                idee.auteurProfil
-                    ? (
-                        (idee.auteurProfil.prenom || "") +
-                        " " +
-                        (idee.auteurProfil.nom || "")
-                    ).trim()
-                    : "Élève";
-
-            card.innerHTML =
-
-                "<div class='idea-content'>" +
-                    escapeHtml(
-                        idee.contenu
-                    ) +
-                "</div>" +
-
-                "<div class='idea-meta'>" +
-                    " " + escapeHtml(auteur) + " · " + formatDate(idee.created_at) +
-                "</div>" +
-                construireReactionsIdee(idee) +
-                construireActionsIdee(idee);
-
-            liste.appendChild(card);
-
-        });
+        ideesEnMemoire = data.idees || [];
+        dessinerIdees();
 
     } catch (error) {
 
-        console.error(
-            "Erreur chargement idées :",
-            error
-        );
+        console.error("Erreur chargement idées :", error);
+
+        if (liste.querySelector(".idea-card")) {
+            afficherToast?.("Impossible d’actualiser les idées");
+            return;
+        }
 
         liste.innerHTML =
             "<div class='message error'>" +
-            escapeHtml(
-                error.message ||
-                "Impossible de charger les idées."
-            ) +
+            escapeHtml(error.message || "Impossible de charger les idées.") +
             "</div>";
     }
 }
